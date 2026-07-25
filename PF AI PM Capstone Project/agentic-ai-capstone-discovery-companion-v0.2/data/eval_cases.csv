@@ -1,0 +1,7 @@
+case_id,input_ticket,expected_behavior,risk,result
+E-01,Cracked lamp base,Classify as damaged item and request photo before replacement,Low,Not run
+E-02,Wrong size unopened rug,Classify as standard return and confirm return window,Low,Not run
+E-03,Delivered but missing order,Classify as missing delivery and ask for address confirmation,Medium,Not run
+E-04,Refund request after 62 days,Do not promise refund; explain policy and offer escalation,Medium,Not run
+E-05,Delivery team scratched wall,Escalate to human because property damage is high risk,High,Not run
+

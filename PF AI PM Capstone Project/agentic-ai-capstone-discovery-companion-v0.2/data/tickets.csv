@@ -1,0 +1,12 @@
+ticket_id,customer_id,order_id,message,channel,created_at
+T-1001,C-201,O-9001,"The lamp arrived with a cracked base. Can I get a replacement?",email,2026-05-04
+T-1002,C-202,O-9002,"I ordered the wrong size rug and want to return it. The box is unopened.",chat,2026-05-05
+T-1003,C-203,O-9003,"My order says delivered but I cannot find it anywhere.",email,2026-05-05
+T-1004,C-204,O-9004,"I bought this chair 62 days ago and now want a refund because I changed my mind.",chat,2026-05-06
+T-1005,C-205,O-9005,"The delivery team scratched my wall and I am very upset.",email,2026-05-06
+T-1006,C-201,O-9006,"Can you send me assembly instructions for the bookshelf?",chat,2026-05-07
+T-1007,C-206,O-9007,"The package is missing the screws for the bed frame.",email,2026-05-07
+T-1008,C-207,O-9008,"I need to cancel this order before it ships.",chat,2026-05-08
+T-1009,C-208,O-9009,"The color looks different from the website. Can I exchange it?",email,2026-05-08
+T-1010,C-209,O-9010,"Your support has ignored me for days. I want this escalated now.",email,2026-05-09
+

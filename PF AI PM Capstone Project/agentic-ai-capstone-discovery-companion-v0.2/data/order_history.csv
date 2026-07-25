@@ -1,0 +1,12 @@
+order_id,customer_id,item,order_date,delivery_status,days_since_delivery
+O-9001,C-201,Arc floor lamp,2026-04-26,delivered,7
+O-9002,C-202,Wool rug,2026-04-29,delivered,4
+O-9003,C-203,Dining chair set,2026-05-01,delivered,2
+O-9004,C-204,Lounge chair,2026-03-01,delivered,62
+O-9005,C-205,Oak dresser,2026-05-02,delivered,1
+O-9006,C-201,Bookshelf,2026-05-03,delivered,1
+O-9007,C-206,Bed frame,2026-05-03,delivered,1
+O-9008,C-207,Coffee table,2026-05-08,processing,0
+O-9009,C-208,Curtain set,2026-04-24,delivered,10
+O-9010,C-209,Sectional sofa,2026-04-28,delivered,6
+
