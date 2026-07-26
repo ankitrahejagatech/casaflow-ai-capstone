@@ -1,0 +1,10 @@
+SYNTHETIC CAPSTONE RECORD - NOT A REAL PROFESSIONAL DOCUMENT
+
+Project ID: CF-DEMO-001
+Synthetic professional record: PRO-REV-DEMO-007
+Subject: Revised patio-door structural-opening detail
+Recorded status: Accepted for the METRIC-18 evaluation snapshot
+Recorded date: 2026-10-02
+Synthetic source: Demo Structural Professional 03
+
+This evidence is valid only inside the isolated METRIC-18 snapshot. It cannot be reused to infer approval in EVAL-05 or any other snapshot.

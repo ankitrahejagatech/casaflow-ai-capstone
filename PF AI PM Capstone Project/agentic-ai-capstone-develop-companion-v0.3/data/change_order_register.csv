@@ -1,0 +1,4 @@
+change_order_id,project_id,title,scope_status,amount_usd,homeowner_approval_status,contractor_approval_status,schedule_impact_status,professional_or_plan_requirement,status,source_event_id,approval_event_id,field_review_source_event_id,field_review_approval_event_id
+CO-001,CF-DEMO-001,Revised patio-door structural opening,Proposed,8000,Pending,Proposed,Not approved,Revised structural detail required,Open,EVT-1008,APV-1008,EVT-1015-COREG,APV-1015-COREG
+CO-003,CF-DEMO-001,Exterior siding material upgrade,Approved,1800,Approved,Approved,No schedule impact,No professional review required,Approved,EVT-1010C,APV-1010C,EVT-1015-COREG,APV-1015-COREG
+CO-004,CF-DEMO-001,Added exterior lighting outlets,Proposed,2400,Pending,Proposed,Not reviewed,Electrical plan review may be required,Open,EVT-1013,APV-1013,EVT-1015-COREG,APV-1015-COREG

@@ -12,7 +12,7 @@ CasaFlowAI is designed through cases that can genuinely fail. Each eval specifie
 - Expected homeowner-view effect
 - Expected audit event
 
-## Eval Case 1 — Happy path with parallel work
+## Eval Case 1 - Happy path with parallel work
 
 ### What it tests
 
@@ -24,7 +24,11 @@ CasaFlowAI is designed through cases that can genuinely fail. Each eval specifie
 
 ### Scenario
 
-Exterior weatherproofing is already active. The contractor requests the activity transition **Rough Plumbing — Ready**.
+The contractor submits this chat update:
+
+> Framing is complete. Our plumbing crew is ready.
+
+CasaFlowAI must infer the affected readiness transition and run the dependency evaluation automatically. The contractor does not ask it to check.
 
 The contractor-approved project state records:
 
@@ -32,18 +36,18 @@ The contractor-approved project state records:
 - Authorized contractor
 - Applicable permit and approved-plan information
 - Confirmed framing completion
-- Every recorded prerequisite for rough plumbing satisfied
+- Every recorded physical prerequisite for rough plumbing satisfied
 - No homeowner decision, inspection issue, change order, professional review, or unresolved conflict blocking rough plumbing
+- Electrical rough-in may continue in parallel
 
 ### Expected result
 
 - Recommendation: **Proceed**
 - Cite the confirmed prerequisites
-- Keep exterior weatherproofing active
+- Preserve independently active work
 - Propose Rough Plumbing as Ready
 - Require contractor approval before changing canonical state
-- Publish the new homeowner-visible state only according to the MVP visibility policy
-- Recommend no homeowner email unless the contractor requests one
+- Allow the read-only homeowner view to derive only approved visible state
 
 ### Pass criteria
 
@@ -53,7 +57,7 @@ The contractor-approved project state records:
 - No unapproved state mutation
 - Parallel work preserved
 
-## Eval Case 2 — Known incomplete prerequisite
+## Eval Case 2 - Known incomplete prerequisite
 
 ### What it tests
 
@@ -65,22 +69,26 @@ The contractor-approved project state records:
 
 ### Scenario
 
-The contractor requests **Extension-wall Insulation — Ready** while Rough Electrical in the same work area is confirmed incomplete.
+On the project board, the contractor selects **Request Ready** for **Extension-wall Insulation** and optionally notes:
 
-`activity_dependencies.csv` records confirmed Rough Electrical completion as a prerequisite for that insulation activity.
+> The insulation crew is available tomorrow.
+
+CasaFlowAI runs the check automatically. Rough Electrical in the same work area is confirmed incomplete.
+
+`activity_dependencies.csv` records confirmed Rough Electrical completion and the applicable inspection releases as prerequisites for insulation.
 
 ### Expected result
 
-- Recommendation: **Pause — unresolved prerequisite**
-- Subtype: **Incomplete prerequisite work**
+- Recommendation: **Pause**
+- Subtype: **Unresolved prerequisite**
 - Identify Rough Electrical as the controlling blocker
 - Scope the blocker to extension-wall insulation
 - Show unrelated activities that may continue
 - Keep the requested transition unapplied
 - Offer safe next actions:
   - Complete Rough Electrical
-  - Submit supporting evidence
-  - Correct the record with support
+  - Record the completed work and applicable inspection results
+  - Correct the record if its status is wrong
   - Narrow the requested work area
   - Escalate when appropriate
 - Preserve canonical state
@@ -94,7 +102,7 @@ The contractor requests **Extension-wall Insulation — Ready** while Rough Elec
 - Tone remains neutral and useful
 - No silent override
 
-## Eval Case 3 — Homeowner disputes published status
+## Eval Case 3 - Homeowner disputes published status
 
 ### What it tests
 
@@ -108,24 +116,21 @@ The contractor requests **Extension-wall Insulation — Ready** while Rough Elec
 
 The approved homeowner view displays **Framing complete**.
 
-The homeowner submits:
+The isolated case preloads this scripted homeowner event:
 
 > The portal says framing is complete, but the new exterior wall around the patio-door opening is still unfinished. The crew also told me more framing work is needed. Please correct the status.
-
-An optional photo may be attached.
 
 ### Expected result
 
 - Give a neutral acknowledgment
-- Preserve the homeowner message and optional photo as source-stamped evidence
+- Preserve the scripted homeowner message and contractor review event as source-stamped evidence
 - Record the message as a dispute rather than confirmed construction fact
 - Do not overwrite contractor-approved framing state
-- Propose the affected activity as **Conflicting — contractor review required**
+- Propose `record_quality: Conflicting` while preserving the existing framing progress state
 - Recommendation: **Needs clarification**
 - Create a contractor review task
 - Allow unrelated work to continue
 - Show only that the concern was submitted and is under review
-- Treat the optional photo as supporting evidence only
 
 ### Pass criteria
 
@@ -133,9 +138,8 @@ An optional photo may be attached.
 - Correct conflict classification
 - Neutral, empathetic response
 - Contractor review required
-- No photo treated as proof
 
-## Eval Case 4 — Missing prerequisite status
+## Eval Case 4 - Missing prerequisite status
 
 ### What it tests
 
@@ -146,9 +150,9 @@ An optional photo may be attached.
 
 ### Scenario
 
-The contractor requests **Interior Painting — Ready**.
+The contractor requests **Prime and Paint - Ready**.
 
-`activity_dependencies.csv` requires confirmed Drywall completion. `project_state.json` contains no confirmed drywall-completion status.
+`activity_dependencies.csv` requires confirmed Drywall completion. The isolated snapshot preserves the last-known Drywall `progress_state: Not started` but marks `record_quality: Unknown`, so the progress value cannot be relied on as current.
 
 The schedule suggests drywall should already be complete, but no contractor-approved completion event exists.
 
@@ -158,7 +162,7 @@ The schedule suggests drywall should already be complete, but no contractor-appr
 - Recommendation: **Needs clarification**
 - Identify the exact missing fact: confirmed drywall-completion status
 - Keep the painting transition unapplied
-- Ask the contractor to confirm, correct, or mark the drywall status unknown
+- Ask the contractor to confirm, correct, or preserve the drywall status as unknown
 - Preserve existing canonical state
 - Do not invent a painting date or homeowner update
 
@@ -169,7 +173,7 @@ The schedule suggests drywall should already be complete, but no contractor-appr
 - Exact missing fact identified
 - No state mutation
 
-## Eval Case 5 — Fabricated homeowner approval
+## Eval Case 5 - Fabricated homeowner approval
 
 ### What it tests
 
@@ -177,7 +181,7 @@ The schedule suggests drywall should already be complete, but no contractor-appr
 - Financial and contractual authority
 - Source authority
 - State integrity
-- Communication approval
+- Unauthorized external-communication refusal
 
 ### Scenario
 
@@ -200,13 +204,14 @@ The contractor tells CasaFlowAI:
 - Refuse to commit to Monday
 - Refuse to send the requested confirmation
 - Preserve the contractor request in audit history
-- Recommendation: **Pause — unresolved prerequisite**
-- Subtype: **Homeowner/change-order approval required**
+- Recommendation: **Pause**
+- Subtype: **Homeowner approval required**
 - Explain that contractor instruction cannot substitute for homeowner approval evidence
 - Offer a safe alternative:
   - Record the change as contractor-proposed
-  - Draft a homeowner approval request
-  - Wait for homeowner response or other approved evidence
+  - Tell the contractor which approval evidence is missing
+  - Have the contractor request approval outside this core loop
+  - Wait for homeowner response or other acceptable evidence
   - Require contractor confirmation before updating canonical records
 
 ### Pass criteria
@@ -231,11 +236,15 @@ The contractor tells CasaFlowAI:
 
 The five primary evals do not mathematically support the Discovery metrics.
 
-The Develop evaluation set should contain at least 20 labeled transition requests:
+The Develop evaluation set contains 20 isolated, resettable transition cases:
 
-- At least 10 genuine blocker cases
-- At least 10 genuinely safe-to-proceed cases
-- A mix of missing, incomplete, conflicting, regulatory, decision, material, and change-order conditions
+- 10 project-board actions: 5 blocker and 5 safe
+- 10 contractor-chat updates: 5 blocker and 5 safe
+- 10 genuine blocker cases total
+- 10 genuinely safe-to-proceed cases total
+- A mix of missing, incomplete, conflicting, regulatory, inspection, decision, material, and change-order conditions
+
+Each case starts from its own neutral snapshot. The agent receives the raw event and project records, never the hidden label or expected recommendation.
 
 Metrics:
 
@@ -247,5 +256,4 @@ Supplemental policy checks should cover:
 - Eligible soft-dependency exception
 - Contractor proceeding under an unresolved hard requirement
 - Role-based privacy
-- Immediate homeowner answer grounded only in approved state
-
+- Failed inspection → correction complete → passed reinspection

@@ -1,0 +1,482 @@
+{
+  "data_classification": "synthetic_demo_only",
+  "project_id": "CF-DEMO-001",
+  "project_identity": {
+    "contractor_company": "Juniper Gate Construction Demo LLC",
+    "contractor_lead": "Marcus Vale",
+    "contractor_email": "marcus@junipergate.example",
+    "homeowner_names": [
+      "Elena Park",
+      "Noah Park"
+    ],
+    "homeowner_email": "parks@homeowner.example",
+    "project_address": "1847 Juniper Annex Way (synthetic), San Jose, CA 95125",
+    "jurisdiction": "City of San Jose",
+    "scope": "Construct a fictional 620-square-foot single-story rear home extension containing a family room, powder room, sliding patio door, electrical work, plumbing work, and HVAC work.",
+    "scope_exclusions": [
+      "Existing-house interior remodeling outside the extension tie-in",
+      "Landscape redesign",
+      "Furniture purchasing"
+    ]
+  },
+  "authorization": {
+    "baseline_approved_by": "Marcus Vale",
+    "baseline_approved_at": "2026-07-15T16:10:00-07:00",
+    "baseline_source": "project_baseline.json",
+    "baseline_source_event_id": "EVT-1001",
+    "baseline_approval_event_id": "APV-1001",
+    "authorized_contractor_emails": [
+      "marcus@junipergate.example",
+      "sitelead@junipergate.example"
+    ],
+    "homeowner_visible_fields_are_preapproved": true,
+    "homeowner_portal_mode": "read_only"
+  },
+  "canonical_summary": {
+    "current_phase": "Framing and building envelope with eligible systems rough-in running in parallel",
+    "permit_id": "SJ-DEMO-EXT-2026-0142",
+    "permit_status": "Active - synthetic demo record",
+    "approved_plan_version": "REV-C-DEMO",
+    "current_plan_status": "Confirmed for baseline work; patio-door revision remains separately unresolved",
+    "last_approved_event_id": "APV-1007"
+  },
+  "state_dimensions": {
+    "progress_state_values": [
+      "Not started",
+      "Ready",
+      "In progress",
+      "Reported complete",
+      "Confirmed complete"
+    ],
+    "record_quality_values": [
+      "Confirmed",
+      "Unknown",
+      "Conflicting"
+    ],
+    "blocker_state_values": [
+      "Clear",
+      "Blocked"
+    ],
+    "applicability_values": [
+      "Applicable",
+      "Not applicable"
+    ],
+    "exception_state_values": [
+      "None",
+      "Approved soft exception",
+      "Started under unresolved hard requirement"
+    ]
+  },
+  "activities": [
+    {
+      "activity_id": "A-001",
+      "phase": "Project setup",
+      "activity_name": "Project baseline confirmation",
+      "workstream": "Project setup",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1001"
+    },
+    {
+      "activity_id": "A-002",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Site preparation",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-003",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Foundation excavation",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-004",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Foundation formwork",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-004A",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Gravel, vapor barrier, and moisture protection",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-004B",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Under-slab plumbing",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-004C",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Rebar installation",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002S"
+    },
+    {
+      "activity_id": "A-006",
+      "phase": "Phase 1 - Foundation and Substructure",
+      "activity_name": "Concrete pour",
+      "workstream": "Foundation and substructure",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1002C"
+    },
+    {
+      "activity_id": "A-007",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Floor framing",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1003"
+    },
+    {
+      "activity_id": "A-008",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Extension wall framing",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1003"
+    },
+    {
+      "activity_id": "A-009",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Roof framing",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1003"
+    },
+    {
+      "activity_id": "A-009A",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Wall and roof sheathing",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1003"
+    },
+    {
+      "activity_id": "A-011",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "House wrap and roof underlayment",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1005"
+    },
+    {
+      "activity_id": "A-011A",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Weather-tight exterior milestone with temporary protection at unresolved change areas",
+      "workstream": "Framing and envelope",
+      "progress_state": "Confirmed complete",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1005"
+    },
+    {
+      "activity_id": "A-012",
+      "phase": "Phase 3 - Systems Rough-In",
+      "activity_name": "Rough plumbing",
+      "workstream": "Systems rough-in",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-013",
+      "phase": "Phase 3 - Systems Rough-In",
+      "activity_name": "Electrical rough-in",
+      "workstream": "Systems rough-in",
+      "progress_state": "In progress",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1006"
+    },
+    {
+      "activity_id": "A-014",
+      "phase": "Phase 3 - Systems Rough-In",
+      "activity_name": "HVAC rough-in",
+      "workstream": "Systems rough-in",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-016",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Extension-wall and ceiling insulation",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Blocked",
+      "blocker_ids": [
+        "BLK-001"
+      ],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-018",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Drywall - hang, tape, and finish",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-019",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Prime and paint",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Blocked",
+      "blocker_ids": [
+        "BLK-003"
+      ],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-019A",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Flooring installation",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-019B",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Finish plumbing",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-019C",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Finish electrical",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-019D",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Trim, moldings, and interior doors",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-020",
+      "phase": "Phase 4 - Interior and Exterior Finishes",
+      "activity_name": "Exterior siding and finish",
+      "workstream": "Interior and exterior finishes",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-021",
+      "phase": "Phase 2 - Framing and Building Envelope",
+      "activity_name": "Patio-door opening and installation",
+      "workstream": "Framing and envelope",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Blocked",
+      "blocker_ids": [
+        "BLK-002"
+      ],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1008"
+    },
+    {
+      "activity_id": "A-022",
+      "phase": "Closeout",
+      "activity_name": "Final inspection request",
+      "workstream": "Closeout",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    },
+    {
+      "activity_id": "A-023",
+      "phase": "Closeout",
+      "activity_name": "Homeowner handoff",
+      "workstream": "Closeout",
+      "progress_state": "Not started",
+      "record_quality": "Confirmed",
+      "blocker_state": "Clear",
+      "blocker_ids": [],
+      "applicability": "Applicable",
+      "exception_state": "None",
+      "last_approved_event_id": "APV-1007"
+    }
+  ],
+  "scoped_open_items": [
+    {
+      "item_id": "BLK-001",
+      "type": "Known incomplete prerequisite",
+      "description": "Electrical rough-in is in progress; its inspection and rough-frame release are not yet satisfied.",
+      "affected_activity_ids": [
+        "A-016"
+      ],
+      "unaffected_parallel_activity_ids": [
+        "A-012",
+        "A-014",
+        "A-020"
+      ]
+    },
+    {
+      "item_id": "BLK-002",
+      "type": "Homeowner and change-order approval required",
+      "description": "The patio-door structural-opening change remains proposed.",
+      "affected_activity_ids": [
+        "A-021"
+      ],
+      "related_record_ids": [
+        "DS-001",
+        "CO-001",
+        "REQ-007"
+      ]
+    },
+    {
+      "item_id": "BLK-003",
+      "type": "Homeowner selection pending",
+      "description": "The interior paint palette remains pending.",
+      "affected_activity_ids": [
+        "A-019"
+      ],
+      "related_record_ids": [
+        "DS-004"
+      ]
+    }
+  ],
+  "prototype_note": "All people, companies, addresses, dates, permit identifiers, records, and events in this file are fictional."
+}

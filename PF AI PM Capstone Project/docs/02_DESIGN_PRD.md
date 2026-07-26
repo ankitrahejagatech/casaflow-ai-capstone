@@ -8,6 +8,8 @@ It uses only authorized project information, makes no financial, contractual, re
 
 The contractor or project lead is the primary operational user. The homeowner is a secondary user who receives approved visibility and may submit questions, concerns, selections, acknowledgments, and supporting information.
 
+**Develop role statement:** CasaFlowAI evaluates contractor-requested activity transitions against an evidence-grounded home-extension project state, recommends the safe next workflow state for contractor review, and escalates missing or conflicting evidence, authority limits, privacy risks, and high-stakes decisions without independently making consequential commitments.
+
 ### Develop MVP cutline
 
 The Develop MVP prioritizes:
@@ -22,9 +24,13 @@ The Develop MVP prioritizes:
 
 Live homeowner Q&A and the simulated email channel remain documented product capabilities but are outside the core four-minute demo.
 
+The single Develop loop is:
+
+> Authorized contractor attempts a project-board transition or submits a natural chat update → CasaFlowAI automatically preserves the event, extracts claims and intent, loads canonical state, dependencies, inspections, and policies, and evaluates the affected transition → CasaFlowAI produces a review package → contractor approves, corrects, rejects, or escalates → only an explicitly approved state change is applied and audited.
+
 ## 2. Target workflow
 
-1. The contractor creates a fictional residential home-extension project using five minimum inputs: contractor email, homeowner email, project address, scope description, and current stage or most recently completed activity.
+1. The dataset represents creation of a fictional residential home-extension project using five minimum inputs: contractor email, homeowner email, project address, scope description, and current stage or most recently completed activity. Onboarding is not an interactive Develop screen.
 
 2. CasaFlowAI proposes an initial project model containing workstreams, activities, dependencies, homeowner decisions, recorded requirements, unknowns, and potentially parallel work.
 
@@ -40,32 +46,32 @@ Live homeowner Q&A and the simulated email channel remain documented product cap
 
 5. The contractor operates CasaFlowAI through an internal workspace rather than emailing the agent. The contractor may:
 
-   - Request an activity transition
-   - Change an activity status
-   - Enter a structured update
+   - Select Request Ready, Start Work, Mark Done, Report Blocker, or Correct Status on an activity
    - Chat with CasaFlowAI
    - Upload optional evidence
 
-6. Multiple activities may be active simultaneously. The overall project phase is a summary; each activity has its own status and dependencies.
+   Every board action or chat update triggers dependency evaluation automatically; the contractor does not need to ask CasaFlowAI to check.
 
-7. Activity states include:
+6. Multiple activities may be active simultaneously. The overall project phase is a summary; each activity has its own progress, data-quality, blocker, applicability, exception, and dependency records.
 
-   - Proposed
+7. Normal activity progress states are:
+
    - Not started
    - Ready
    - In progress
    - Reported complete
    - Confirmed complete
-   - Blocked
-   - Unknown
-   - Conflicting
-   - Not applicable
-   - Proceeding under approved soft exception
-   - Contractor-reported started under unresolved hard requirement
+
+   Separate state dimensions are:
+
+   - Record quality: Confirmed, Unknown, or Conflicting
+   - Blocker state: Clear or Blocked
+   - Applicability: Applicable or Not applicable
+   - Exception state: None, Approved soft exception, or Started under unresolved hard requirement
 
 8. A contractor-facing “Mark Done” action becomes a proposed **Reported complete** update. CasaFlowAI evaluates dependencies and evidence before offering **Confirmed complete** for contractor approval.
 
-9. Activity completion and regulatory approval remain separate. Confirmed complete does not automatically mean that an inspection passed.
+9. Activity completion and inspection status remain separate. Confirmed complete does not automatically mean that an inspection passed.
 
 10. The homeowner portal may display:
 
@@ -82,9 +88,9 @@ Live homeowner Q&A and the simulated email channel remain documented product cap
 
 12. Email is an optional external communication channel between contractor and homeowner. CasaFlowAI may draft an email on the contractor’s behalf, but the core Develop demo does not require a simulated email channel.
 
-13. Every workspace action, portal submission, email, chat message, and upload becomes a source-stamped project event.
+13. Every workspace action, scripted portal event, chat message, and upload becomes a source-stamped project event. CasaFlowAI automatically stores extracted atomic claims as Unreviewed without changing canonical state.
 
-14. CasaFlowAI evaluates the requested activity status—including Ready, In Progress, Reported complete, or Confirmed complete—and checks:
+14. CasaFlowAI evaluates the requested activity status-including Ready, In Progress, Reported complete, or Confirmed complete-and checks:
 
     - Applicable prerequisites
     - Parallel activities
@@ -96,19 +102,19 @@ Live homeowner Q&A and the simulated email channel remain documented product cap
 15. CasaFlowAI produces one of four recommendations:
 
     1. Proceed
-    2. Pause — unresolved prerequisite
+    2. Pause
     3. Needs inspection, permit, or professional review
     4. Needs clarification
 
 16. A blocker applies only to the affected activity, workstream, work area, or project scope identified by the evidence. Unaffected work may continue.
 
-17. For an eligible soft dependency, the contractor may request a scoped exception with a reason, evidence, and acknowledgment. If approved, CasaFlowAI may recommend **Proceed — contractor-approved exception**.
+17. For an eligible soft dependency, the contractor may request a scoped exception with a reason, evidence, and acknowledgment. If approved, CasaFlowAI uses recommendation **Proceed**, subtype **Contractor-approved soft exception**, and exception state **Approved soft exception**.
 
 18. CasaFlowAI cannot clear a hard safety, inspection, permit, regulatory, privacy, or professional requirement. A contractor may record that work proceeded, but CasaFlowAI preserves the unresolved requirement and does not endorse the transition.
 
-19. CasaFlowAI creates a contractor review package containing the recommendation, evidence, blockers, proposed state changes, available parallel work, next action, proposed homeowner view, and optional communication draft.
+19. CasaFlowAI creates a contractor review package containing the recommendation, evidence, blockers, proposed state changes, available parallel work, next action, and derived homeowner-view preview.
 
-20. Canonical project changes, homeowner publication, and external communication are separate effects. The full product requires separate approval for each.
+20. The Develop MVP has one interactive Project-Change Gate. The read-only homeowner portal automatically derives predesignated homeowner-visible fields from approved state. External communication is outside the core loop.
 
 21. CasaFlowAI preserves all previous states, evidence, warnings, exceptions, acknowledgments, corrections, approvals, and rejections.
 
@@ -120,10 +126,10 @@ CasaFlowAI reads:
 
 - Contractor workspace actions and chat messages
 - Scripted homeowner submissions
-- Simulated homeowner emails when included
 - Optional photos and documents
 - Canonical project and activity state
 - Activity dependencies
+- Contractor-attested Inspection Register
 - Homeowner decisions and selections
 - Change-order records
 - Permit, inspection, plan, and professional-review requirements
@@ -164,7 +170,6 @@ CasaFlowAI produces:
 - Exception availability
 - Recommended next action
 - Proposed homeowner rendering
-- Optional homeowner communication draft
 - Contractor approval and escalation controls
 
 ### Check
@@ -180,7 +185,6 @@ Before presenting its output, CasaFlowAI validates:
 - Exception eligibility
 - Privacy and role-based visibility
 - Professional and regulatory boundaries
-- Draft communication accuracy
 - Homeowner-view safety
 - Recommendation consistency
 - One-minute contractor readability
@@ -191,13 +195,17 @@ A material validation failure changes the result to the appropriate clarificatio
 
 ### Project facts
 
-- `project_state.json` — contractor-approved project summary and activity states
-- `activity_dependencies.csv` — workstreams, prerequisites, parallel-work rules, blocking scope, and exception eligibility
-- `decision_selection_register.csv` — homeowner decisions and selections
-- `change_order_register.csv` — proposed and approved change impacts and approval status
-- `project_requirements.csv` — recorded permit, inspection, plan, and professional-review requirements
-- `event_log.jsonl` — immutable source events, claims, approvals, rejections, corrections, warnings, and escalations
-- `homeowner_portal_view.json` — derived homeowner-visible state; never canonical source of truth
+- `project_baseline.json` - the five onboarding inputs, field classifications, and baseline approval fixture
+- `project_state.json` - contractor-approved project summary and activity states
+- `activity_dependencies.csv` - workstreams, prerequisites, parallel-work rules, blocking scope, and exception eligibility
+- `inspection_register.csv` - project-specific City of San Jose inspection applicability and contractor-attested statuses
+- `decision_selection_register.csv` - homeowner decisions and selections
+- `change_order_register.csv` - proposed and approved change impacts and approval status
+- `project_requirements.csv` - static permit, plan, jurisdiction, weather-tight, professional-review, authorization, and closeout rules
+- `event_log.jsonl` - immutable raw source events
+- `source_claims.jsonl` - source-specific atomic claims and review status
+- `eval_snapshots.jsonl` - isolated, resettable eval starting states
+- `homeowner_portal_view.json` - generated homeowner-visible fixture; never agent input or canonical truth
 
 ### Activity dependency fields
 
@@ -206,7 +214,8 @@ A material validation failure changes the result to the appropriate clarificatio
 - `activity_id`
 - `workstream`
 - `activity_name`
-- `predecessor_activity`
+- `predecessor_activity_ids`
+- `required_inspection_ids`
 - `dependency_type`
 - `parallel_allowed`
 - `blocking_scope`
@@ -217,12 +226,11 @@ A material validation failure changes the result to the appropriate clarificatio
 
 ```text
 project_evidence/
-  emails/
   photos/
   documents/
 ```
 
-Photos are optional. Documents may include synthetic inspection results, permit-card images, professional-review records, or material-selection information.
+Photos are optional. Documents may include the synthetic permit-applicability profile, professional-review records, or material-selection information. Inspection screenshots, permit-card images, and City integrations are outside the MVP.
 
 ### Rules
 
@@ -230,6 +238,8 @@ Photos are optional. Documents may include synthetic inspection results, permit-
 - `dependency_exception_policy.md`
 - `authority_escalation_policy.md`
 - `communication_privacy_policy.md`
+- `project_lifecycle_policy.md`
+- `inspection_status_policy.md`
 
 ### Examples
 
@@ -241,33 +251,29 @@ All identities, communications, addresses, evidence, and project documents are f
 
 ## 5. Tools or simulated tools
 
-1. **`submit_project_event`**  
-   Normalizes contractor status changes, transition requests, chat messages, homeowner submissions, and uploads into source-stamped project events.
+1. **`submit_project_event`**
 
-2. **`read_simulated_email`**  
-   Loads a synthetic external homeowner email and its referenced attachments when the email scenario is enabled.
+   Preserves a raw project-board action, contractor chat update, scripted homeowner event, or optional upload as an immutable source event.
 
-3. **`load_project_context`**  
+2. **`append_source_claims`**
+
+   Stores automatically extracted atomic claims as Unreviewed without modifying canonical state.
+
+3. **`load_project_context`**
+
    Loads only the matched fictional project’s authorized state, registers, policies, and history.
 
-4. **`inspect_simulated_attachment`**  
+4. **`inspect_optional_attachment`**
+
    Extracts available text and metadata and reports readability and relevance. It cannot authenticate evidence, detect alteration, or certify work.
 
-5. **`append_evidence_event`**  
-   Appends source evidence and claims to `event_log.jsonl` without modifying canonical state.
+5. **`apply_approved_project_change`**
 
-6. **`apply_approved_project_change`**  
    Applies only field-specific, contractor-approved changes to canonical state or project registers.
 
-7. **`publish_approved_homeowner_view`**  
-   Publishes only contractor-approved and homeowner-authorized fields to `homeowner_portal_view.json`.
+The read-only homeowner view is derived from approved, predesignated fields rather than published through a separate core tool. Email tools remain future-product capabilities.
 
-8. **`simulate_email_send`**  
-   Records a contractor-approved external email as simulated. It does not connect to a real email service.
-
-Reasoning, state-diff creation, dependency evaluation, and review-package validation remain parts of the agent loop rather than separate tools.
-
-For the Develop MVP, tools 1, 3, 5, and 6 are core. The homeowner view may be rendered read-only from approved state. Email tools are optional.
+Reasoning, intent extraction, state-diff creation, dependency evaluation, and review-package validation remain parts of the agent loop rather than separate tools.
 
 ## 6. Memory decision
 
@@ -276,7 +282,8 @@ CasaFlowAI uses explicit, project-scoped memory only.
 ### Persistent confirmed memory
 
 - Contractor-approved project state
-- Activity statuses and dependencies
+- Multidimensional activity state and dependencies
+- Contractor-approved Inspection Register status
 - Homeowner decisions and selections
 - Change-order statuses
 - Recorded project requirements
@@ -285,24 +292,24 @@ CasaFlowAI uses explicit, project-scoped memory only.
 ### Persistent evidence memory
 
 - Workspace and portal events
-- Emails, chats, and attachments
+- Chats and optional attachments
 - Source-specific claims
 - Approvals, corrections, rejections, and escalations
 - Hard-requirement warnings and contractor acknowledgments
 
 ### Derived homeowner memory
 
-`homeowner_portal_view.json` contains only approved homeowner-visible information. It cannot expose unrestricted canonical state or contractor-only information.
+`homeowner_portal_view.json` is a generated fixture containing only approved homeowner-visible information. It cannot expose unrestricted canonical state or contractor-only information and is never a truth source.
 
 ### Temporary working context
 
-Information used during one Observe–Decide–Act–Check cycle is discarded unless explicitly recorded through an approved tool action.
+Information used during one Observe-Decide-Act-Check cycle is discarded unless explicitly recorded through an approved tool action.
 
 CasaFlowAI has no unrestricted conversational or cross-project memory. It cannot promote an inference, assumption, template dependency, or proposed value into confirmed memory without contractor approval.
 
 If a contractor proceeds despite a hard requirement:
 
-- The activity may be recorded as **contractor-reported started under unresolved hard requirement**.
+- The activity’s exception state may be recorded as **Started under unresolved hard requirement**.
 - The hard requirement remains unresolved.
 - CasaFlowAI’s recommendation remains unchanged.
 - The acknowledgment and warning remain in the audit history.
@@ -313,18 +320,19 @@ If a contractor proceeds despite a hard requirement:
 
 The contractor should understand the card in under one minute. It contains:
 
+- Boundary result: Allowed, Refused, or Escalated
 - Project and requested activity
 - Work area and workstream
-- Proposed recommendation
+- Proposed base recommendation
+- Recommendation subtype
 - Controlling reason
 - Blocker scope
 - Other activities that may continue
 - Top cited evidence
 - Current-versus-proposed state
-- Exception availability
+- Exception state or availability
 - Recommended next action
 - Proposed homeowner-visible update
-- Optional communication draft
 - Approval controls
 
 Expandable details contain the full decision path, evidence table, dependency graph, policy checks, pending effects, confidence factors, and audit history.
@@ -377,7 +385,7 @@ CasaFlowAI refuses requests involving:
 
 ### High stakes
 
-Failed or unclear inspections, and unresolved or unapproved material scope or cost changes, prevent a Proceed recommendation for the affected activity.
+Unresolved failed or unclear inspections, and unresolved or unapproved material scope or cost changes, prevent a Proceed recommendation for the affected activity. A prior failure is resolved only after correction completion and a passed reinspection are separately recorded.
 
 Other high-stakes triggers include apparent injury or danger, structural uncertainty, permit uncertainty, licensed-professional judgment, contractual liability, and possible cross-project data exposure.
 
@@ -401,25 +409,15 @@ CasaFlowAI identifies unaffected work rather than treating the entire project as
 
 ## 9. Human approval point
 
-The complete product has three independent gates.
-
-### Project-change gate
+### Develop MVP Project-Change Gate
 
 The contractor selects the exact canonical state or register fields to approve, correct, reject, or mark unknown.
 
-### Homeowner-publication gate
+It is the only interactive approval gate in the core Develop loop and covers proposed activity, Inspection Register, Decision Register, and Change-Order Register changes.
 
-The contractor approves information published to the homeowner, including status, schedule, change impact, evidence, and messages.
+Immutable event preservation, unreviewed claim extraction, and read-only homeowner-view derivation happen automatically. External email is outside the core loop.
 
-### External-communication gate
-
-The contractor separately approves external recipients, content, attachments, deadlines, and requested actions.
-
-Approval of one gate never approves another.
-
-### Develop MVP simplification
-
-The core MVP implements the project-change gate. The homeowner portal is a read-only rendering of preapproved homeowner-visible fields. External email approval is included only if email drafting is demonstrated.
+The full product may later add separate homeowner-publication and external-communication gates.
 
 ### Hard-requirement acknowledgment
 
@@ -442,5 +440,4 @@ Evaluation targets:
 - No unapproved canonical-state updates
 - No unsupported claim represented as confirmed fact
 
-The five cases are qualitative design anchors. At least 20 labeled transition requests—starting with 10 blocker and 10 safe-to-proceed cases—are required before calculating blocker recall and false-pause rate.
-
+The five cases are qualitative design anchors. The Develop set contains 20 isolated, resettable transition cases: 10 project-board and 10 contractor-chat inputs, with 5 safe and 5 blocker cases in each mode. Hidden labels are never provided to the agent.

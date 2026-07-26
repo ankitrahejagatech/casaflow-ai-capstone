@@ -1,0 +1,60 @@
+{
+  "data_classification": "synthetic_demo_only",
+  "project_id": "CF-DEMO-001",
+  "mode": "read_only",
+  "truth_source": false,
+  "generated_from": "Preapproved homeowner-visible fields in contractor-approved canonical state",
+  "project_name": "Juniper Annex Extension Demo",
+  "project_phase": "Framing and building envelope with eligible systems rough-in underway",
+  "active_workstreams": [
+    {
+      "name": "Building envelope",
+      "status": "Weather-tight milestone confirmed complete"
+    },
+    {
+      "name": "Systems rough-in",
+      "status": "Electrical rough-in in progress"
+    }
+  ],
+  "recently_completed": [
+    "Extension wall framing",
+    "Roof framing and sheathing",
+    "Weather-tight exterior milestone"
+  ],
+  "next_expected_activities": [
+    "Rough plumbing",
+    "HVAC rough-in",
+    "Exterior siding"
+  ],
+  "inspection_statuses": [
+    {
+      "inspection_id": "INSP-003",
+      "title": "Structural/Shear/Roof-nailing",
+      "status": "Passed - contractor confirmed",
+      "public_note": "This records the contractor's reported status; CasaFlowAI does not independently verify the City record."
+    }
+  ],
+  "open_homeowner_decisions": [
+    {
+      "decision_id": "DS-001",
+      "title": "Revised patio-door opening and door configuration",
+      "status": "Decision required",
+      "approved_public_note": "The affected patio-door work remains paused while the proposed change is reviewed."
+    },
+    {
+      "decision_id": "DS-004",
+      "title": "Interior paint palette",
+      "status": "Selection requested",
+      "approved_public_note": "This selection is needed before prime and paint begins and does not block current rough work."
+    }
+  ],
+  "restricted_fields_excluded": [
+    "Contractor-only notes",
+    "Internal reasoning",
+    "Confidence calculations",
+    "Margins and bids",
+    "Unapproved changes",
+    "Another project's information"
+  ],
+  "prototype_note": "This generated fixture is not agent input and cannot submit live homeowner questions during Develop."
+}
