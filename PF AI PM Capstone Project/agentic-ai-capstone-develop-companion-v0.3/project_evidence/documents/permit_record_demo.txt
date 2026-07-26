@@ -1,0 +1,23 @@
+SYNTHETIC CAPSTONE PERMIT PROFILE - NOT A REAL MUNICIPAL DOCUMENT
+
+Project ID: CF-DEMO-001
+Jurisdiction: City of San Jose
+Synthetic permit ID: SJ-DEMO-EXT-2026-0142
+Recorded status: Active
+Recorded baseline plan version: REV-C-DEMO
+Scope: Fictional 620-square-foot rear home extension with plumbing, electrical, and mechanical/HVAC work
+Recorded date: 2026-07-15
+
+Project-specific synthetic inspection applicability:
+- Footing/Foundation/Rebar: Applicable
+- Underfloor/Slab: Applicable
+- Structural/Shear/Roof-nailing: Applicable
+- Rough Plumbing: Applicable
+- Rough Electrical: Applicable
+- Rough Mechanical/HVAC: Applicable
+- Rough-frame Release: Applicable
+- Insulation/Energy: Applicable
+- Fire-rated Assembly/Drywall: Not applicable
+- Final inspection: Applicable as one composite MVP gate
+
+This profile supports permit status, plan version, jurisdiction, and inspection applicability only. It does not establish any inspection result, construction completion, code compliance, professional approval, or permission to bypass a prerequisite.

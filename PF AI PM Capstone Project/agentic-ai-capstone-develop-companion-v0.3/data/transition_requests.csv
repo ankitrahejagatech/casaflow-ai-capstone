@@ -1,0 +1,21 @@
+request_id,project_id,snapshot_id,trigger_event_id,input_mode,display_name,primary_demo_case
+TR-001,CF-DEMO-001,SNAP-TR-001,EVT-2001,contractor_chat,Rough-plumbing activity update,Yes
+TR-002,CF-DEMO-001,SNAP-TR-002,EVT-2002,project_board,Insulation activity update,Yes
+TR-003,CF-DEMO-001,SNAP-TR-003,EVT-2003,contractor_chat,Framing activity update,Yes
+TR-004,CF-DEMO-001,SNAP-TR-004,EVT-2004,project_board,Prime and paint activity update,Yes
+TR-005,CF-DEMO-001,SNAP-TR-005,EVT-2005,contractor_chat,Patio-door activity update,Yes
+TR-006,CF-DEMO-001,SNAP-TR-006,EVT-3006,project_board,Site-preparation activity update,No
+TR-007,CF-DEMO-001,SNAP-TR-007,EVT-3007,project_board,Concrete pour status update,No
+TR-008,CF-DEMO-001,SNAP-TR-008,EVT-3008,contractor_chat,Weatherproofing activity update,No
+TR-009,CF-DEMO-001,SNAP-TR-009,EVT-3009,project_board,Exterior-siding activity update,No
+TR-010,CF-DEMO-001,SNAP-TR-010,EVT-3010,contractor_chat,HVAC rough-in activity update,No
+TR-011,CF-DEMO-001,SNAP-TR-011,EVT-3011,contractor_chat,Rough-plumbing activity update,No
+TR-012,CF-DEMO-001,SNAP-TR-012,EVT-3012,contractor_chat,Electrical rough-in update,No
+TR-013,CF-DEMO-001,SNAP-TR-013,EVT-3013,project_board,Insulation activity update,No
+TR-014,CF-DEMO-001,SNAP-TR-014,EVT-3014,project_board,Drywall activity update,No
+TR-015,CF-DEMO-001,SNAP-TR-015,EVT-3015,contractor_chat,Prime and paint activity update,No
+TR-016,CF-DEMO-001,SNAP-TR-016,EVT-3016,project_board,Exterior-siding activity update,No
+TR-017,CF-DEMO-001,SNAP-TR-017,EVT-3017,project_board,Patio-door activity update,No
+TR-018,CF-DEMO-001,SNAP-TR-018,EVT-3018,contractor_chat,Patio-door activity update,No
+TR-019,CF-DEMO-001,SNAP-TR-019,EVT-3019,contractor_chat,Closeout activity update,No
+TR-020,CF-DEMO-001,SNAP-TR-020,EVT-3020,project_board,Closeout activity update,No

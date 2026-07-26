@@ -1,0 +1,79 @@
+{
+  "data_classification": "synthetic_demo_only",
+  "project_id": "CF-DEMO-001",
+  "mvp_treatment": "represented_not_interactive",
+  "raw_inputs": {
+    "contractor_verified_email": "marcus@junipergate.example",
+    "homeowner_verified_email": "parks@homeowner.example",
+    "project_address": "1847 Juniper Annex Way (synthetic), San Jose, CA 95125",
+    "scope_description": "Construct a fictional 620-square-foot single-story rear extension containing a family room, powder room, sliding patio door, electrical work, plumbing work, and HVAC work.",
+    "current_stage_or_latest_activity": "Project setup complete; site preparation is the next proposed activity."
+  },
+  "reviewed_fields": [
+    {
+      "field": "jurisdiction",
+      "value": "City of San Jose",
+      "initial_classification": "AI inference",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "scope_summary",
+      "value": "620-square-foot single-story rear home extension; no unrelated interior remodeling.",
+      "initial_classification": "AI inference",
+      "contractor_review": "Corrected and confirmed"
+    },
+    {
+      "field": "lifecycle_template",
+      "value": "CasaFlowAI San Jose home-extension lifecycle",
+      "initial_classification": "Policy default",
+      "contractor_review": "Confirmed as proposed workflow"
+    },
+    {
+      "field": "permit_id",
+      "value": "SJ-DEMO-EXT-2026-0142",
+      "initial_classification": "Confirmed fact",
+      "source_origin": "Optional enrichment from synthetic permit profile",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "approved_plan_version",
+      "value": "REV-C-DEMO",
+      "initial_classification": "Confirmed fact",
+      "source_origin": "Optional enrichment from synthetic permit profile",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "rough_trade_scope",
+      "value": "Plumbing, electrical, and mechanical/HVAC all apply.",
+      "initial_classification": "Proposed value",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "site_access",
+      "value": "Weekday access from 07:30 to 16:30.",
+      "initial_classification": "Proposed value",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "fire_rated_assembly_or_drywall_inspection",
+      "value": "Not applicable",
+      "initial_classification": "Proposed value",
+      "source_origin": "Synthetic permit profile",
+      "contractor_review": "Confirmed"
+    },
+    {
+      "field": "certificate_of_occupancy",
+      "value": "Not assumed; composite Final inspection followed by homeowner handoff.",
+      "initial_classification": "Policy default",
+      "contractor_review": "Confirmed for MVP"
+    }
+  ],
+  "baseline_approval": {
+    "status": "Approved",
+    "approved_by": "Marcus Vale",
+    "approved_at": "2026-07-15T16:10:00-07:00",
+    "source_event_id": "EVT-1001",
+    "approval_event_id": "APV-1001"
+  },
+  "prototype_note": "Onboarding is represented for provenance but is outside the interactive Develop demo."
+}

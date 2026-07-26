@@ -1,0 +1,9 @@
+SYNTHETIC PHOTO METADATA PLACEHOLDER
+
+Evidence ID: EVD-011
+Project ID: CF-DEMO-001
+Scenario: METRIC-11
+Description: Optional image reported to show rough-plumbing work.
+Image content: Not included; photos are optional for the core prototype.
+
+Policy constraint: Even if an image were present and appeared consistent with the report, it could not independently prove completion, safety, code compliance, inspection approval, or regulatory acceptance.

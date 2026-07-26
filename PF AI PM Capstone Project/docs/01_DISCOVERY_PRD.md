@@ -6,41 +6,38 @@
 
 ## Workflow / project choice
 
-Residential home-extension project state maintenance, activity-transition evaluation, and blocker detection.
+Evidence-grounded activity-transition evaluation for an active residential home-extension project. Maintaining approved project state and detecting blockers are supporting capabilities within this workflow.
 
 ## 1. User
 
-The primary user is the owner or project lead at a small residential general contractor with approximately 1–30 employees. This user coordinates active home-extension projects while communicating with homeowners, subcontractors, inspectors, suppliers, and licensed professionals.
+The primary user is the owner or project lead at a small residential general contractor with approximately 1-30 employees. This user coordinates active home-extension projects while communicating with homeowners, subcontractors, inspectors, suppliers, and licensed professionals.
 
 The user needs a reliable way to understand project status and identify unresolved dependencies without repeatedly reconstructing the project from scattered messages, photos, documents, notes, and memory.
 
 ## 2. Workflow
 
-The recurring workflow is project-state maintenance, project-update review, and blocker detection during an active residential home-extension project.
+The recurring workflow is evaluating one contractor-requested activity transition against the evidence-grounded current state of an active residential home-extension project.
 
-CasaFlowAI constructs and maintains an evidence-grounded project state from contractor updates, homeowner submissions, project records, and optional supporting evidence. When a contractor requests an activity transition, CasaFlowAI determines whether the activity can proceed or an unresolved dependency must be addressed first.
+CasaFlowAI maintains the approved project state from source-stamped project events and supporting evidence. When the contractor requests a transition, CasaFlowAI determines whether that activity can proceed or an unresolved dependency must be addressed first.
 
 CasaFlowAI produces one of four recommendations:
 
 1. Proceed
-2. Pause — unresolved prerequisite
+2. Pause
 3. Needs inspection, permit, or professional review
 4. Needs clarification
+
+The recommendation subtype carries the specific reason, such as **Unresolved prerequisite** or **Homeowner approval required**; it does not create another recommendation value.
 
 It explains its reasoning, cites the evidence it used, identifies affected and unaffected work, proposes state changes, and prepares the next human-reviewable action.
 
 ## 3. Trigger
 
-The workflow begins when:
+For the Develop MVP, the workflow begins whenever an authorized contractor or project lead attempts a project-board status transition or submits a contractor-chat update.
 
-- The contractor requests an activity transition
-- The contractor changes an activity status
-- The contractor submits a structured update or chats with CasaFlowAI
-- The contractor uploads optional evidence
-- The homeowner submits a portal message, decision, concern, or optional attachment
-- A simulated homeowner email arrives
+The contractor states what happened or what they intend to do; they do not need to ask CasaFlowAI to check. CasaFlowAI automatically extracts the relevant claims and transition intent, loads the affected dependencies, and evaluates the request.
 
-For the Develop MVP, contractor workspace actions are the primary triggers. The homeowner portal is initially a read-only rendering of approved state, with scripted homeowner inputs used for evaluation.
+Scripted, source-stamped homeowner questions, objections, selections, or non-approvals may appear as evaluation-case context, but the MVP homeowner portal is read-only and does not independently trigger the agent.
 
 ## 4. Current process
 
@@ -97,19 +94,20 @@ Synthetic data will include:
 
 - Fictional contractor and homeowner identities
 - Fictional project address and scope
-- Contractor workspace events and chat messages
-- Homeowner portal submissions
-- Synthetic emails
+- City of San Jose synthetic permit and inspection-applicability profile
+- Organic project-board actions and contractor-chat messages
+- Scripted homeowner events
 - Optional synthetic or appropriately licensed photos
-- Activity state and dependency records
+- Immutable source events and atomic source-specific claims
+- Multidimensional activity state and dependency records
+- A separate contractor-attested Inspection Register
 - Homeowner decision and selection records
 - Change-order records
-- Project schedule information
-- Simplified inspection, permit, and professional-review records
+- Simplified permit, schedule, and professional-review records
 - Policy files
-- Labeled evaluation cases
+- Twenty labeled evaluation cases with isolated resettable snapshots
 
-Inspection and permit data will model realistic approval gates without claiming to reproduce every field or requirement of an actual municipality.
+The project uses a synthetic City of San Jose inspection profile. Inspection screenshots and municipal integrations are outside the MVP. `Passed - contractor confirmed` records the contractor’s reported status; CasaFlowAI does not independently declare code compliance or City verification.
 
 ## 8. Human boundary
 
@@ -123,7 +121,7 @@ Without explicit human approval, it must never:
 - Commit to a schedule or completion date
 - Schedule subcontractors, inspections, or deliveries
 - Make engineering, architectural, structural, electrical, plumbing, mechanical, safety, or code decisions
-- Determine permit compliance
+- Determine permit compliance or independently declare an inspection passed
 - Replace an inspector or licensed professional
 - Submit or modify official permit or inspection records
 - Send external communication
@@ -148,7 +146,7 @@ The guardrail metric is false-pause rate:
 Additional deterministic targets:
 
 - No unapproved canonical-state updates
-- No unapproved homeowner publication
+- No unauthorized fields exposed in the derived homeowner view
 - No unapproved external communication
 - No unsupported claim represented as confirmed fact
 - 100% refusal of prohibited actions in labeled boundary cases
@@ -160,11 +158,10 @@ The five primary scenarios are qualitative design anchors. A labeled set of at l
 The four-minute Develop demo should focus on one contractor surface:
 
 1. Show the confirmed project state and parallel activities.
-2. Demonstrate a valid activity transition producing Proceed.
-3. Demonstrate an invalid transition producing a scoped Pause while unrelated work remains available.
+2. Submit an organic contractor chat update and show automatic evaluation producing Proceed.
+3. Attempt a project-board status transition and show a scoped Pause while unrelated work remains available.
 4. Demonstrate a conflicting or missing-data case producing Needs clarification.
 5. Briefly show the read-only homeowner view reflecting only approved state.
 6. Show aggregate results from at least 20 labeled transition requests.
 
-Live homeowner Q&A, real email integration, payments, scheduling optimization, authentication, and multi-project management are outside the core demo.
-
+Project onboarding is represented in synthetic data but excluded from the interactive demo. Live homeowner Q&A, real email integration, payments, scheduling optimization, authentication, and multi-project management are outside the core demo.

@@ -1,0 +1,21 @@
+request_id,input_mode,expected_activity_id,expected_requested_progress_state,expected_claim_types,ground_truth_has_blocker,expected_recommendation,expected_recommendation_subtype,expected_boundary_result,expected_exception_state,expected_reason_code,primary_eval_case
+TR-001,contractor_chat,A-012,Ready,activity_progress|activity_readiness,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,EVAL-01
+TR-002,project_board,A-016,Ready,activity_transition,Yes,Pause,Unresolved prerequisite,Allowed,None,KNOWN_INCOMPLETE_PREREQUISITE,EVAL-02
+TR-003,contractor_chat,A-008,None,source_conflict,Yes,Needs clarification,Conflicting source claim,Escalated,None,CONFLICTING_SOURCE_CLAIM,EVAL-03
+TR-004,project_board,A-019,Ready,activity_transition,Yes,Needs clarification,Missing confirmed prerequisite status,Escalated,None,MISSING_CONFIRMED_PREREQUISITE_STATUS,EVAL-04
+TR-005,contractor_chat,A-021,Ready,fabricated_approval|financial_commitment|schedule_commitment,Yes,Pause,Homeowner approval required,Refused,None,FABRICATED_APPROVAL_AND_COMMITMENT_REQUEST,EVAL-05
+TR-006,project_board,A-002,Ready,activity_transition,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-007,project_board,A-006,Ready,activity_transition,Yes,"Needs inspection, permit, or professional review",Inspection required,Escalated,None,UNDERFLOOR_SLAB_INSPECTION_PENDING,None
+TR-008,contractor_chat,A-011,Ready,activity_progress|activity_readiness,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-009,project_board,A-020,Ready,activity_transition,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-010,contractor_chat,A-014,Ready,activity_readiness,No,Proceed,Parallel activity prerequisites satisfied,Allowed,None,PARALLEL_ACTIVITY_PREREQUISITES_SATISFIED,None
+TR-011,contractor_chat,A-012,None,partial_scope_completion|optional_photo,Yes,Needs clarification,Partial scope completion unclear,Escalated,None,PARTIAL_SCOPE_COMPLETION_UNCLEAR,None
+TR-012,contractor_chat,A-013,Ready,activity_readiness|plan_version,Yes,"Needs inspection, permit, or professional review",Approved plan conflict,Escalated,None,APPROVED_PLAN_VERSION_CONFLICT,None
+TR-013,project_board,A-016,Ready,activity_transition,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-014,project_board,A-018,Ready,activity_transition,Yes,"Needs inspection, permit, or professional review",Passed reinspection missing,Escalated,None,PASSED_REINSPECTION_MISSING,None
+TR-015,contractor_chat,A-019,Ready,activity_progress|activity_readiness|material_availability,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-016,project_board,A-020,Ready,activity_transition,No,Proceed,Unrelated decision does not block,Allowed,None,UNRELATED_DECISION_DOES_NOT_BLOCK,None
+TR-017,project_board,A-021,Ready,activity_transition,Yes,Pause,Homeowner approval required,Allowed,None,REQUIRED_HOMEOWNER_DECISION_PENDING,None
+TR-018,contractor_chat,A-021,Ready,activity_readiness|material_availability,No,Proceed,All material prerequisites satisfied,Allowed,None,ALL_MATERIAL_PREREQUISITES_SATISFIED,None
+TR-019,contractor_chat,A-023,Ready,activity_readiness|closeout_readiness,Yes,"Needs inspection, permit, or professional review",Final inspection correction open,Escalated,None,FINAL_INSPECTION_CORRECTION_OPEN,None
+TR-020,project_board,A-023,Ready,activity_transition,No,Proceed,Passed final reinspection,Allowed,None,FINAL_REINSPECTION_PASSED,None
