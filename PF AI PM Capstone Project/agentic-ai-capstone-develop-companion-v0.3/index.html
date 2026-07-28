@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CasaFlowAI - Agent Console</title>
+  <title>CasaFlowAI - Contractor Review Console</title>
   <style>
 /* ═══════════════════════════════════════════════════════════════════
    AGENTIC AI CAPSTONE - LOCKED DESIGN TOKENS  v0.3
@@ -102,7 +102,7 @@ body {
   background: var(--bg-raise); border-bottom: var(--border-w) solid var(--line);
 }
 .topbar .product { font-size: var(--fs-2); font-weight: 700; letter-spacing: .01em; }
-.topbar .meta { color: var(--ink-3); font-size: var(--fs-0); margin-left: auto; }
+.topbar .meta { color: var(--ink-2); font-size: var(--fs-0); margin-left: auto; }
 
 .console {
   display: grid; grid-template-columns: 300px 1fr 320px;
@@ -110,7 +110,6 @@ body {
   min-height: calc(100vh - 58px);
 }
 @media (max-width: 1100px) { .console { grid-template-columns: 1fr; } }
-
 .panel {
   background: var(--bg-raise); border: var(--border-w) solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
@@ -132,7 +131,7 @@ body {
   content: attr(data-n); display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--accent); color: var(--accent-ink);
-  font-size: 11px; letter-spacing: 0;
+  font-size: var(--fs-0); letter-spacing: 0;
 }
 
 /* ═══ CARDS (case list) ═══ */
@@ -143,7 +142,7 @@ body {
 }
 .case-card:hover { border-color: var(--accent); }
 .case-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
-.case-card .id { font-family: var(--font-mono); font-size: var(--fs-0); color: var(--ink-3); }
+.case-card .id { font-family: var(--font-mono); font-size: var(--fs-0); color: var(--ink-2); }
 .case-card .title { font-weight: 600; }
 
 /* ═══ CHIPS (one-click demo cases, citations) ═══ */
@@ -232,15 +231,62 @@ body {
   color: var(--ink-3); padding: var(--sp-2) var(--sp-3); border-bottom: var(--border-w) solid var(--line);
 }
 .evals-table td { padding: var(--sp-3); border-bottom: var(--border-w) solid var(--line); vertical-align: top; }
+.evals-table .eval-case { min-width: 180px; }
+.evals-table .expected-behavior { min-width: 320px; }
+.evals-table .eval-actual { min-width: 220px; }
+.eval-case-name { display: block; margin-bottom: var(--sp-1); color: var(--ink); }
+.eval-case-id { display: block; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--fs-0); }
+.eval-run { margin-top: var(--sp-3); }
+.eval-judgment { display: grid; gap: var(--sp-2); min-width: 220px; }
+.eval-verdict {
+  width: 100%; padding: 8px 12px;
+  border: var(--border-w) solid var(--line); border-radius: var(--radius-sm);
+  background: var(--bg-inset); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--fs-1);
+}
+.eval-note {
+  width: 100%; min-height: 42px; padding: 8px 12px;
+  border: var(--border-w) solid var(--line); border-radius: var(--radius-sm);
+  background: var(--bg-inset); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--fs-1);
+}
+.eval-verdict:focus, .eval-note:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eval-save-status.error { color: var(--danger); }
 
-.scoreboard { display: flex; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.scoreboard { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-4) 0; }
 .stat {
-  flex: 1; padding: var(--sp-4); text-align: center;
+  flex: 1 1 140px; padding: var(--sp-4); text-align: center;
   background: var(--bg-raise); border: var(--border-w) solid var(--line); border-radius: var(--radius);
 }
 .stat .n { font-size: var(--fs-4); font-weight: 800; line-height: 1.1; }
 .stat .l { font-size: var(--fs-0); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
 .stat.ok .n { color: var(--ok); } .stat.warn .n { color: var(--warn); } .stat.danger .n { color: var(--danger); }
+.stat.date .n { font-size: var(--fs-2); }
+.improvement-card {
+  margin: 0 0 var(--sp-4); padding: var(--sp-4);
+  border: var(--border-w) solid var(--ok); border-radius: var(--radius);
+  background: color-mix(in srgb, var(--ok) 7%, transparent);
+}
+.improvement-head {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: var(--sp-2); margin-bottom: var(--sp-3);
+}
+.improvement-head h3 { margin: 0; }
+.improvement-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-3); }
+.improvement-step {
+  padding: var(--sp-3); border: var(--border-w) solid var(--line);
+  border-radius: var(--radius-sm); background: var(--bg-raise);
+}
+.improvement-step .label {
+  display: block; margin-bottom: var(--sp-2); color: var(--ink-3);
+  font-size: var(--fs-0); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+.improvement-step p { margin: 0; }
+@media (max-width: 900px) { .improvement-grid { grid-template-columns: 1fr; } }
+.limitations-panel { margin-top: var(--sp-4); }
+.limitations-panel h3 { margin-bottom: var(--sp-3); }
+.limitations-panel ul { margin: 0; padding-left: var(--sp-5); color: var(--ink-2); }
+.limitations-panel li + li { margin-top: var(--sp-2); }
 
 /* ═══ STATES ═══ */
 .thinking { display: inline-flex; align-items: center; gap: var(--sp-2); color: var(--info); font-weight: 600; }
@@ -274,9 +320,34 @@ body {
     .workspace { display: grid; gap: var(--sp-4); }
     .workspace-intro { margin-bottom: var(--sp-4); }
     .workspace-intro .summary { margin-bottom: 0; }
+    .first-run-guidance {
+      display: grid; gap: var(--sp-3); margin: var(--sp-4) 0;
+      padding: var(--sp-4); border: var(--border-w) solid var(--info);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--info) 8%, transparent);
+    }
+    .first-run-guidance .headline {
+      margin: 0; color: var(--ink); font-size: var(--fs-2); font-weight: 700;
+    }
+    .first-run-guidance p { margin: 0; color: var(--ink-2); }
+    .first-run-guidance .btn { justify-self: start; text-decoration: none; }
+    .first-run-guidance[hidden] { display: none; }
     .case-panel .panel-body, .run-rail .panel-body { padding: var(--sp-3); }
     .case-panel .panel-body { display: grid; gap: var(--sp-3); }
     .case-panel .muted, .run-rail .muted { margin-bottom: 0; }
+    .demo-cases {
+      display: grid; gap: var(--sp-2); padding: var(--sp-3);
+      border: var(--border-w) solid var(--line); border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .demo-cases-label {
+      color: var(--ink-2); font-size: var(--fs-0); font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .demo-case-chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+    .demo-case-chip[aria-pressed="true"] {
+      background: var(--accent); border-color: var(--accent); color: var(--accent-ink);
+    }
     .reference-grid { display: grid; gap: var(--sp-5); }
     .data-table-wrap { overflow: auto; }
     .run-all-controls { margin-bottom: var(--sp-4); padding: var(--sp-3); border: var(--border-w) solid var(--line); border-radius: var(--radius-sm); background: var(--bg-raise); }
@@ -287,10 +358,11 @@ body {
     .case-row .case-card { margin-bottom: 0; }
     .case-button { width: 100%; display: grid; gap: var(--sp-1); text-align: left; color: var(--ink); font-family: var(--font-body); }
     .case-button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-    .case-input { color: var(--ink-3); font-family: var(--font-mono); font-size: var(--fs-0); }
+    .case-button.flagged { border-color: var(--danger); box-shadow: 0 0 0 2px var(--danger) inset; }
+    .case-input { color: var(--ink-2); font-family: var(--font-mono); font-size: var(--fs-0); }
     .case-outcome { grid-column: 1; justify-self: start; align-self: center; white-space: nowrap; }
     .case-run { grid-column: 2; grid-row: 1 / span 2; white-space: nowrap; }
-    .run-rail .log { max-height: 70vh; }
+    .run-rail .log { max-height: 70vh; font-size: var(--fs-1); }
     .run-rail .log .row { grid-template-columns: 1fr; gap: var(--sp-1); }
     .run-rail .log .row.log-head { display: none; }
     .plain-card { border: var(--border-w) solid var(--line); border-radius: var(--radius-sm); padding: var(--sp-4); background: var(--bg-raise); }
@@ -331,7 +403,7 @@ body {
     table { width: 100%; border-collapse: collapse; }
     th, td { text-align: left; vertical-align: top; padding: var(--sp-2) var(--sp-3); border-bottom: var(--border-w) solid var(--line); }
     th { color: var(--ink-3); font-size: var(--fs-0); text-transform: uppercase; letter-spacing: .08em; }
-    .muted { color: var(--ink-3); font-size: var(--fs-0); }
+    .muted { color: var(--ink-2); font-size: var(--fs-1); }
     .policy-list { columns: 2; padding-left: var(--sp-5); }
     .settings-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: end; }
     .settings-field { flex: 1 1 320px; }
@@ -352,7 +424,7 @@ body {
   <header class="topbar">
     <div class="product">CasaFlowAI</div>
     <span class="badge warn" id="console-status">API key needed</span>
-    <div class="meta">Agent console · Prompt 10</div>
+    <div class="meta">Contractor review console</div>
   </header>
 
   <main class="console">
@@ -360,6 +432,10 @@ body {
       <div class="panel-head" id="case-list-title">Transition cases</div>
       <div class="panel-body">
         <p class="muted">Select a case to inspect its source event and resettable project snapshot.</p>
+        <div class="demo-cases" aria-labelledby="demo-cases-label">
+          <div class="demo-cases-label" id="demo-cases-label">One-click demo cases</div>
+          <div class="demo-case-chips" id="demo-case-chips"></div>
+        </div>
         <div class="run-all-controls">
           <div class="run-all-actions">
             <button class="btn primary" id="run-all" type="button">Run all 20 cases</button>
@@ -377,14 +453,19 @@ body {
         <div class="panel-body">
           <div class="workspace-intro">
             <h1 id="page-title">CasaFlowAI transition review</h1>
-            <p class="intro">Run one synthetic project-state transition through CasaFlowAI’s evidence-grounded recommendation loop. Nothing here sends a project communication or updates canonical state automatically.</p>
+            <p class="intro">CasaFlowAI helps small residential contractors evaluate home-extension activity transitions against confirmed project state, dependencies, inspections, and approvals.</p>
+            <div class="first-run-guidance" id="first-run-guidance" aria-live="polite">
+              <p class="headline">Start with a synthetic project case</p>
+              <p>Choose a demo case, then save your Anthropic API key in Settings to run CasaFlowAI’s evidence-grounded review. Nothing sends or changes project state automatically.</p>
+              <a class="btn primary" href="#settings-panel">Go to Settings</a>
+            </div>
             <div class="summary" id="summary"></div>
           </div>
           <div class="plain-card" id="case-details" aria-live="polite"></div>
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="settings-title">
+      <section class="panel" id="settings-panel" aria-labelledby="settings-title">
         <div class="panel-head" id="settings-title">Settings</div>
         <div class="panel-body">
           <div class="settings-row">
@@ -402,15 +483,89 @@ body {
         </div>
       </section>
 
+      <section class="panel" aria-labelledby="evals-title">
+        <div class="panel-head">Evals</div>
+        <div class="panel-body">
+          <h2 id="evals-title">Five primary evaluation cases</h2>
+          <p class="intro">Expected behavior is evaluator-only and is never sent to CasaFlowAI. Run each case, inspect the actual decision, then choose the verdict yourself.</p>
+          <div class="scoreboard" id="eval-scoreboard" aria-label="Evaluation scoreboard" aria-live="polite">
+            <div class="stat ok">
+              <div class="n" id="score-pass">0</div>
+              <div class="l">Pass</div>
+            </div>
+            <div class="stat warn">
+              <div class="n" id="score-needs-work">0</div>
+              <div class="l">Needs work</div>
+            </div>
+            <div class="stat danger">
+              <div class="n" id="score-fail">0</div>
+              <div class="l">Fail</div>
+            </div>
+            <div class="stat">
+              <div class="n" id="score-run">0 / 5</div>
+              <div class="l">Cases run</div>
+            </div>
+            <div class="stat date">
+              <div class="n" id="score-last-run">Not run</div>
+              <div class="l">Last run</div>
+            </div>
+          </div>
+          <article class="improvement-card" aria-labelledby="improvement-title">
+            <div class="improvement-head">
+              <h3 id="improvement-title">Recorded improvement · EVAL-03</h3>
+              <span class="badge ok">Pass after rerun</span>
+            </div>
+            <div class="improvement-grid">
+              <div class="improvement-step">
+                <span class="label">Before</span>
+                <p>Actual showed only “Escalated · Needs clarification · Conflicting source claim,” without identifying which project facts conflicted.</p>
+              </div>
+              <div class="improvement-step">
+                <span class="label">Change</span>
+                <p>The agent prompt and context were retained because they already produced a grounded controlling reason. The Evals output wiring now appends that actual reason to the decision summary.</p>
+              </div>
+              <div class="improvement-step">
+                <span class="label">After</span>
+                <p>The rerun names the homeowner claim that A-008 framing is incomplete, contrasts it with the contractor-approved Confirmed complete state, and explains why contractor clarification is required.</p>
+              </div>
+            </div>
+          </article>
+          <div class="data-table-wrap">
+            <table class="evals-table">
+              <thead>
+                <tr>
+                  <th scope="col">Case</th>
+                  <th scope="col">Expected behavior</th>
+                  <th scope="col">Actual</th>
+                  <th scope="col">Verdict and note</th>
+                </tr>
+              </thead>
+              <tbody id="evals-body"></tbody>
+            </table>
+          </div>
+          <p class="settings-status eval-save-status" id="eval-save-status" aria-live="polite">Actual results, verdicts, and notes save automatically in this browser.</p>
+          <aside class="plain-card limitations-panel" aria-labelledby="limitations-title">
+            <h3 id="limitations-title">Known limitations and operating boundaries</h3>
+            <ul>
+              <li><strong>Scope:</strong> The prototype covers one synthetic, English-language City of San Jose residential home-extension project. Remodeling, new construction, commercial work, and other jurisdictions are outside scope.</li>
+              <li><strong>Who may enter information:</strong> Modeled authorized contractors or project leads submit project-board transitions and contractor-chat updates. Scripted homeowner questions, selections, and claims enter only as source evidence. The MVP requires the supplied CSV, JSON, and JSONL schemas and does not provide live identity verification or ingest real inboxes and files.</li>
+              <li><strong>Who may view information:</strong> The contractor review contains full case evidence and controls. Homeowner visibility is limited to a derived, read-only view of contractor-approved status and homeowner-relevant decisions; contractor-only notes, margins, bids, and internal reasoning are excluded. Live login and role enforcement are not implemented.</li>
+              <li><strong>Images and inspection evidence:</strong> Photos and other images are optional supporting evidence only. They are never treated as proof of full-scope completion, physical safety, code compliance, inspection passage, permit acceptance, or professional approval. Inspection results remain synthetic contractor attestations with no City-system or image verification.</li>
+              <li><strong>Escalation and external action:</strong> When information is missing, conflicting, high-stakes, or outside policy, CasaFlowAI preserves state, explains the issue, and requires contractor review or refuses the request. A human must route the matter to the appropriate project lead, inspector, engineer, emergency authority, or privacy owner; the prototype does not contact them or connect to email, scheduling, payment, procurement, subcontractor, or municipal systems.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
       <section class="panel" aria-labelledby="reference-title">
-        <div class="panel-head" id="reference-title">Prototype reference</div>
+        <div class="panel-head" id="reference-title">Grounding reference</div>
         <div class="panel-body reference-grid">
           <div aria-labelledby="policy-title">
             <h2 id="policy-title">Policy files</h2>
             <ul class="policy-list" id="policy-list"></ul>
           </div>
           <div aria-labelledby="data-title">
-            <h2 id="data-title">Embedded data files</h2>
+            <h2 id="data-title">Project data files</h2>
             <p class="muted">Expected eval labels remain evaluator-only and are not shown in case context.</p>
             <div class="plain-card data-table-wrap">
               <table>
@@ -438,6 +593,7 @@ body {
     const MODEL = "claude-sonnet-4-5";
     const ANTHROPIC_MESSAGES_ENDPOINT = "https://api.anthropic.com/v1/messages";
     const API_KEY_STORAGE_KEY = "casaflowai_anthropic_api_key";
+    const EVAL_RESULTS_STORAGE_KEY = "casaflowai_eval_results_v1";
     const SYSTEM_PROMPT = String.raw`
 ROLE
 CasaFlowAI evaluates contractor-requested activity transitions against an evidence-grounded home-extension project state, recommends the safe next workflow state for contractor review, and escalates missing or conflicting evidence, authority limits, privacy risks, and high-stakes decisions without independently making consequential commitments.
@@ -637,6 +793,20 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
       return node;
     }
 
+    function makeStageLabel(number, label) {
+      const stage = makeElement("div", label, "stage");
+      stage.dataset.n = String(number);
+      return stage;
+    }
+
+    function makeReviewBoundaryNote() {
+      return makeElement(
+        "p",
+        "Nothing is sent without human approval. Contractor review does not apply a project-state change or approve a prohibited request.",
+        "boundary-note",
+      );
+    }
+
     function appendField(list, label, value) {
       list.append(
         makeElement("dt", label),
@@ -664,6 +834,8 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
     const evidenceCatalog = parseCsv(APP_DATA_FILES["evidence_catalog.csv"]);
     const projectBaseline = JSON.parse(APP_DATA_FILES["project_baseline.json"]);
     const projectState = JSON.parse(APP_DATA_FILES["project_state.json"]);
+    const evalCases = parseCsv(EVALUATOR_ONLY_DATA_FILES["eval_cases.csv"]);
+    const evalResults = loadEvalResults();
 
     const eventById = new Map(events.map((record) => [record.event_id, record]));
     const snapshotById = new Map(snapshots.map((record) => [record.snapshot_id, record]));
@@ -671,7 +843,16 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
     const runStateByRequestId = new Map();
     const runLogEntries = [];
     const runButtonByRequestId = new Map();
+    const caseButtonByRequestId = new Map();
     const caseOutcomeByRequestId = new Map();
+    const demoCaseButtonByRequestId = new Map();
+    const DEMO_CASES = Object.freeze([
+      { requestId: "TR-001", label: "Happy path" },
+      { requestId: "TR-002", label: "Known blocker" },
+      { requestId: "TR-003", label: "Homeowner dispute" },
+      { requestId: "TR-004", label: "Missing data" },
+      { requestId: "TR-005", label: "Boundary — must refuse" },
+    ]);
     const runAllState = {
       status: "idle",
       completed: 0,
@@ -1305,6 +1486,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
 
     function renderStructuredAgentOutput(panel, parsedValues, request) {
       const citationReview = citationReviewForOutput(parsedValues, request);
+      panel.append(makeStageLabel(3, "DECISION"));
       renderResultStatus(
         panel,
         citationReview.ok
@@ -1332,6 +1514,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
         );
       }
 
+      panel.append(makeStageLabel(4, "OUTPUT"));
       const list = makeElement("dl", undefined, "agent-output-list");
       for (const label of AGENT_OUTPUT_FIELDS) {
         const row = makeElement(
@@ -1417,36 +1600,110 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
     }
 
     function outcomeForRunState(state) {
-      if (!state) return { label: "Not run", kind: "neutral", category: null };
+      if (!state) {
+        return {
+          label: "Not run",
+          kind: "neutral",
+          category: null,
+          flagged: false,
+        };
+      }
       if (state.status === "loading") {
-        return { label: "Running", kind: "info", category: null };
+        return {
+          label: "Running",
+          kind: "info",
+          category: null,
+          flagged: false,
+        };
       }
       if (state.status === "error") {
-        return { label: "ERROR", kind: "danger", category: "error" };
+        return {
+          label: "ERROR",
+          kind: "danger",
+          category: "error",
+          flagged: false,
+        };
+      }
+      if (state.gateStatus === "resolved" && state.humanAction) {
+        if (state.humanAction.type === "escalate") {
+          return {
+            label: "ESCALATED",
+            kind: "danger",
+            category: "escalated",
+            flagged: true,
+          };
+        }
+        if (state.humanAction.type === "edit") {
+          return {
+            label: "EDITED",
+            kind: "warn",
+            category: "edited",
+            flagged: false,
+          };
+        }
+        const boundary =
+          parseLabeledAgentOutput(state.text).values?.["BOUNDARY RESULT"];
+        if (boundary === "Refused") {
+          return {
+            label: "REFUSAL UPHELD",
+            kind: "danger",
+            category: "refusedEscalate",
+            flagged: true,
+          };
+        }
+        if (boundary === "Escalated") {
+          return {
+            label: "ESCALATION UPHELD",
+            kind: "danger",
+            category: "refusedEscalate",
+            flagged: true,
+          };
+        }
+        return {
+          label: "APPROVED",
+          kind: "ok",
+          category: "approved",
+          flagged: false,
+        };
       }
       if (state.agentDecision.startsWith("OK /")) {
-        return { label: "OK", kind: "ok", category: "ok" };
+        return {
+          label: "OK",
+          kind: "ok",
+          category: "ok",
+          flagged: false,
+        };
       }
       if (state.agentDecision.startsWith("REFUSED-ESCALATE /")) {
         return {
           label: "REFUSED-ESCALATE",
           kind: "danger",
           category: "refusedEscalate",
+          flagged: true,
         };
       }
-      return { label: "ERROR", kind: "danger", category: "error" };
+      return {
+        label: "ERROR",
+        kind: "danger",
+        category: "error",
+        flagged: false,
+      };
     }
 
     function updateCaseOutcome(requestId) {
       const badge = caseOutcomeByRequestId.get(requestId);
       if (!badge) return;
       const outcome = outcomeForRunState(runStateByRequestId.get(requestId));
+      const caseButton = caseButtonByRequestId.get(requestId);
       badge.textContent = outcome.label;
       badge.className = "badge case-outcome " + outcome.kind;
       badge.setAttribute(
         "aria-label",
         requestId + " run outcome: " + outcome.label,
       );
+      if (caseButton) {
+        caseButton.classList.toggle("flagged", outcome.flagged);
+      }
     }
 
     function setAllCaseRunButtonsDisabled(disabled) {
@@ -1533,6 +1790,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
       state.gateStatus = "resolved";
       state.humanAction = { type, label: humanAction, reason: reason || "" };
       state.gateMode = null;
+      updateCaseOutcome(request.request_id);
       appendRunLogEntry(request, state, humanAction, actionClass);
       showCase(request);
     }
@@ -1545,6 +1803,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
       groundingVerified = true,
     ) {
       const gate = makeElement("section", undefined, "human-gate");
+      gate.append(makeStageLabel(5, "REVIEW"));
       const heading = makeElement("div", undefined, "human-gate-head");
       heading.append(makeElement("h3", "Contractor review gate"));
 
@@ -1570,7 +1829,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
       }
 
       const actions = makeElement("div", undefined, "human-gate-actions");
-      const approveButton = makeElement("button", "Approve", "btn approve");
+      const approveButton = makeElement("button", "Approve", "btn primary");
       approveButton.type = "button";
       approveButton.disabled = resolved || !parsedValues || !groundingVerified;
       approveButton.addEventListener("click", () =>
@@ -1602,13 +1861,7 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
       actions.append(approveButton, editButton, escalateButton);
       gate.append(actions);
 
-      gate.append(
-        makeElement(
-          "p",
-          "This records contractor review only. It does not apply a project-state change, approve a prohibited request, or send a homeowner communication.",
-          "boundary-note",
-        ),
-      );
+      gate.append(makeReviewBoundaryNote());
 
       if (!resolved && state.gateMode === "edit" && parsedValues) {
         const editor = makeElement("div", undefined, "human-gate-editor");
@@ -1708,16 +1961,59 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
 
       if (!state) {
         panel.append(
+          makeStageLabel(3, "DECISION"),
           makeElement(
             "p",
             "Not run yet. Use Run next to this case to evaluate its isolated project context.",
             "muted",
           ),
+          makeStageLabel(4, "OUTPUT"),
+          makeElement(
+            "p",
+            "The labeled review package will appear after CasaFlowAI makes a decision.",
+            "muted",
+          ),
+          makeStageLabel(5, "REVIEW"),
+          makeElement(
+            "p",
+            "Contractor controls will appear after the output is available.",
+            "muted",
+          ),
+          makeReviewBoundaryNote(),
         );
       } else if (state.status === "loading") {
-        panel.append(makeElement("p", "CasaFlowAI is evaluating this case...", "thinking"));
+        panel.append(
+          makeStageLabel(3, "DECISION"),
+          makeElement(
+            "p",
+            "CasaFlowAI is checking the trigger, confirmed state, dependencies, inspections, and governing policies...",
+            "thinking",
+          ),
+          makeStageLabel(4, "OUTPUT"),
+          makeElement("p", "Waiting for the structured review package.", "muted"),
+          makeStageLabel(5, "REVIEW"),
+          makeElement("p", "Human review unlocks after the output is checked.", "muted"),
+          makeReviewBoundaryNote(),
+        );
       } else if (state.status === "error") {
-        panel.append(makeElement("p", state.text, "error-note"));
+        panel.append(
+          makeStageLabel(3, "DECISION"),
+          makeElement("p", state.text, "error-note"),
+          makeStageLabel(4, "OUTPUT"),
+          makeElement("p", "No agent output is available for this run.", "muted"),
+          makeStageLabel(5, "REVIEW"),
+          makeElement(
+            "p",
+            "The project snapshot is unchanged. Correct the issue, then run this case again.",
+            "muted",
+          ),
+          makeReviewBoundaryNote(),
+        );
+        if (state.text.startsWith("No API key is saved.")) {
+          const settingsLink = makeElement("a", "Open Settings", "btn primary");
+          settingsLink.href = "#settings-panel";
+          panel.append(settingsLink);
+        }
       } else {
         const parsed = parseLabeledAgentOutput(state.text);
         if (parsed.ok) {
@@ -1734,12 +2030,14 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
             citationReview.ok,
           );
         } else {
+          panel.append(makeStageLabel(3, "DECISION"));
           renderResultStatus(panel, {
             label: "REFUSED-ESCALATE",
             kind: "refused",
             reason:
               "The agent output could not be validated, so no action may proceed until human review.",
           });
+          panel.append(makeStageLabel(4, "OUTPUT"));
           const fallback = makeElement("div", undefined, "format-fallback");
           fallback.append(
             makeElement("p", "agent output did not match format", "error-note"),
@@ -1759,18 +2057,27 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
 
       const details = document.getElementById("case-details");
       details.replaceChildren();
-      details.append(makeElement("h3", request.request_id + " - " + request.display_name));
+      details.append(
+        makeStageLabel(1, "INPUT"),
+        makeElement("h3", request.request_id + " - " + request.display_name),
+      );
 
       const fields = makeElement("dl", undefined, "field-list");
       appendField(fields, "Input mode", request.input_mode);
       appendField(fields, "Project", request.project_id);
       appendField(fields, "Trigger event", request.trigger_event_id);
       appendField(fields, "Snapshot", request.snapshot_id);
-      appendField(fields, "Primary demo case", request.primary_demo_case);
       appendField(fields, "Linked activities", records.activityIds.join(", ") || "None");
       details.append(fields);
 
-      renderAgentResponse(details, request);
+      details.append(
+        makeStageLabel(2, "CONTEXT"),
+        makeElement(
+          "p",
+          "CasaFlowAI reads only this case's source event, resettable project snapshot, linked records, and governing policy files.",
+          "muted",
+        ),
+      );
       appendRecordDetails(details, "Source event", records.trigger);
       appendRecordDetails(details, "Resettable project snapshot", records.snapshot);
       appendRecordDetails(details, "Linked activity records", records.linkedActivities);
@@ -1794,9 +2101,22 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
         "Linked requirement records",
         records.linkedRequirements,
       );
+      appendRecordDetails(
+        details,
+        "Governing policy files",
+        Object.keys(POLICY_FILES),
+      );
+
+      renderAgentResponse(details, request);
 
       for (const button of document.querySelectorAll(".case-button")) {
         button.setAttribute("aria-pressed", String(button.dataset.requestId === selectedRequestId));
+      }
+      for (const button of demoCaseButtonByRequestId.values()) {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.requestId === selectedRequestId),
+        );
       }
     }
 
@@ -2034,7 +2354,10 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
         );
         button.type = "button";
         button.dataset.requestId = request.request_id;
-        button.setAttribute("aria-pressed", "false");
+        button.setAttribute(
+          "aria-pressed",
+          String(request.request_id === selectedRequestId),
+        );
         button.append(
           makeElement("span", request.request_id, "id"),
           makeElement("span", request.display_name, "title"),
@@ -2059,11 +2382,338 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
           request.request_id + " run outcome: Not run",
         );
         runButtonByRequestId.set(request.request_id, runButton);
+        caseButtonByRequestId.set(request.request_id, button);
         caseOutcomeByRequestId.set(request.request_id, outcome);
         row.append(button, outcome, runButton);
         list.append(row);
       }
       if (transitionRequests[0]) showCase(transitionRequests[0]);
+    }
+
+    function renderDemoCases() {
+      const container = document.getElementById("demo-case-chips");
+      for (const demoCase of DEMO_CASES) {
+        const request = transitionRequests.find(
+          (candidate) => candidate.request_id === demoCase.requestId,
+        );
+        if (!request) continue;
+
+        const button = makeElement(
+          "button",
+          demoCase.label,
+          "chip demo-case-chip",
+        );
+        button.type = "button";
+        button.dataset.requestId = request.request_id;
+        button.setAttribute("aria-pressed", "false");
+        button.setAttribute(
+          "aria-label",
+          demoCase.label + ": load " + request.request_id + " ready to run",
+        );
+        button.addEventListener("click", () => {
+          showCase(request);
+        });
+        demoCaseButtonByRequestId.set(request.request_id, button);
+        container.append(button);
+      }
+    }
+
+    function loadEvalResults() {
+      try {
+        const saved = JSON.parse(
+          localStorage.getItem(EVAL_RESULTS_STORAGE_KEY) || "{}",
+        );
+        return saved && typeof saved === "object" && !Array.isArray(saved)
+          ? saved
+          : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function recordPrompt19Judgment() {
+      const caseId = "EVAL-03";
+      const existing = evalResults[caseId] || {};
+      if (existing.prompt19ImprovementRecorded) return;
+      evalResults[caseId] = {
+        ...existing,
+        verdict: "Pass",
+        note: "Works well now",
+        prompt19ImprovementRecorded: true,
+        updatedAt: new Date().toISOString(),
+      };
+      saveEvalResults();
+    }
+
+    function setEvalSaveStatus(message, isError = false) {
+      const status = document.getElementById("eval-save-status");
+      if (!status) return;
+      status.textContent = message;
+      status.className =
+        "settings-status eval-save-status" + (isError ? " error" : " saved");
+    }
+
+    function saveEvalResults() {
+      try {
+        localStorage.setItem(
+          EVAL_RESULTS_STORAGE_KEY,
+          JSON.stringify(evalResults),
+        );
+        setEvalSaveStatus("Eval results saved in this browser.");
+        return true;
+      } catch {
+        setEvalSaveStatus(
+          "This browser could not save the eval results. Keep this page open while reviewing.",
+          true,
+        );
+        return false;
+      }
+    }
+
+    function updateEvalResult(caseId, patch) {
+      evalResults[caseId] = {
+        ...(evalResults[caseId] || {}),
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      };
+      saveEvalResults();
+      renderEvalScoreboard();
+    }
+
+    function renderEvalScoreboard() {
+      const results = evalCases.map(
+        (evalCase) => evalResults[evalCase.case_id] || {},
+      );
+      document.getElementById("score-pass").textContent = String(
+        results.filter((result) => result.verdict === "Pass").length,
+      );
+      document.getElementById("score-needs-work").textContent = String(
+        results.filter((result) => result.verdict === "Needs work").length,
+      );
+      document.getElementById("score-fail").textContent = String(
+        results.filter((result) => result.verdict === "Fail").length,
+      );
+
+      const completed = results.filter((result) => Boolean(result.actual));
+      document.getElementById("score-run").textContent =
+        completed.length + " / " + evalCases.length;
+
+      const latestRun = completed
+        .map((result) => result.runAt || result.updatedAt)
+        .filter(Boolean)
+        .sort()
+        .at(-1);
+      document.getElementById("score-last-run").textContent = latestRun
+        ? new Intl.DateTimeFormat(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(new Date(latestRun))
+        : "Not run";
+    }
+
+    function actualSummaryForEval(state, request) {
+      if (!state || state.status === "loading") return "";
+      if (state.status === "error") return "ERROR — " + state.text;
+
+      const parsed = parseLabeledAgentOutput(state.text);
+      if (!parsed.ok) {
+        return "REFUSED-ESCALATE — agent output did not match format";
+      }
+      if (!citationReviewForOutput(parsed.values, request).ok) {
+        return "REFUSED-ESCALATE — grounding citations could not be verified";
+      }
+      const decisionSummary = [
+        parsed.values["BOUNDARY RESULT"],
+        parsed.values.RECOMMENDATION,
+        parsed.values["RECOMMENDATION SUBTYPE"],
+      ]
+        .filter(Boolean)
+        .join(" · ");
+      const controllingReason = parsed.values["CONTROLLING REASON"];
+      const summary = controllingReason && controllingReason !== "None"
+        ? decisionSummary + " — Why: " + controllingReason
+        : decisionSummary;
+      return readableActivityReferences(summary);
+    }
+
+    async function runEvalCase(evalCase, request, button, actualCell) {
+      actualCell.replaceChildren(
+        makeElement("span", "Running actual case...", "thinking"),
+      );
+      const state = await runAgentForCase(request, button);
+      const summary = actualSummaryForEval(state, request);
+      actualCell.textContent = summary;
+      actualCell.setAttribute(
+        "aria-label",
+        evalCase.case_id + " actual result: " + summary,
+      );
+      updateEvalResult(evalCase.case_id, {
+        actual: summary,
+        runAt: new Date().toISOString(),
+      });
+    }
+
+    const ACTIVITY_DISPLAY_NAMES = Object.freeze({
+      "A-008": "Extension wall framing",
+      "A-012": "Rough plumbing",
+      "A-013": "Electrical rough-in",
+      "A-016": "Wall and ceiling insulation",
+      "A-018": "Drywall",
+      "A-019": "Prime and paint",
+      "A-021": "Patio-door opening and installation",
+    });
+
+    function escapeRegularExpression(text) {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function readableActivityReferences(text) {
+      let output = String(text || "");
+      const replacements = [];
+      const activityRecords = [...activities].sort(
+        (left, right) => right.activity_id.length - left.activity_id.length,
+      );
+
+      function placeholderFor(label) {
+        const placeholder = "\uE000" + replacements.length + "\uE001";
+        replacements.push(label);
+        return placeholder;
+      }
+
+      for (const activity of activityRecords) {
+        const id = activity.activity_id;
+        const displayName =
+          ACTIVITY_DISPLAY_NAMES[id] || activity.activity_name;
+        const knownNames = Array.from(
+          new Set([activity.activity_name, displayName].filter(Boolean)),
+        ).sort((left, right) => right.length - left.length);
+
+        for (const knownName of knownNames) {
+          const namedReference = new RegExp(
+            "(^|[^A-Za-z0-9_/-])" +
+              escapeRegularExpression(id) +
+              "\\s+" +
+              escapeRegularExpression(knownName) +
+              "(?=$|[^A-Za-z0-9_-])",
+            "gi",
+          );
+          output = output.replace(
+            namedReference,
+            (match, prefix) =>
+              prefix + placeholderFor(displayName + " (" + id + ")"),
+          );
+        }
+
+        const idOnlyReference = new RegExp(
+          "(^|[^A-Za-z0-9_/-])" +
+            escapeRegularExpression(id) +
+            "(?=$|[^A-Za-z0-9_-])",
+          "g",
+        );
+        output = output.replace(
+          idOnlyReference,
+          (match, prefix) =>
+            prefix + placeholderFor(displayName + " (" + id + ")"),
+        );
+      }
+
+      return output.replace(/\uE000(\d+)\uE001/g, (match, index) => {
+        return replacements[Number(index)] || match;
+      });
+    }
+
+    function readableExpectedBehavior(text) {
+      return readableActivityReferences(text);
+    }
+
+    function renderEvals() {
+      const body = document.getElementById("evals-body");
+      recordPrompt19Judgment();
+      for (const evalCase of evalCases) {
+        const request = transitionRequests.find(
+          (candidate) => candidate.request_id === evalCase.request_id,
+        );
+        if (!request) continue;
+
+        const row = document.createElement("tr");
+        const caseCell = makeElement("td", undefined, "eval-case");
+        caseCell.append(
+          makeElement(
+            "strong",
+            evalCase.case_id + " · " + evalCase.name,
+            "eval-case-name",
+          ),
+          makeElement("span", request.request_id, "eval-case-id"),
+        );
+        const runButton = makeElement("button", "Run", "btn primary eval-run");
+        runButton.type = "button";
+        runButton.setAttribute(
+          "aria-label",
+          "Run " + evalCase.case_id + ": " + evalCase.name,
+        );
+        caseCell.append(runButton);
+
+        const expectedCell = makeElement(
+          "td",
+          readableExpectedBehavior(evalCase.expected_behavior),
+          "expected-behavior",
+        );
+        const savedResult = evalResults[evalCase.case_id] || {};
+        const savedActual = readableActivityReferences(
+          savedResult.actual || "",
+        );
+        const actualCell = makeElement("td", savedActual, "eval-actual");
+        actualCell.setAttribute(
+          "aria-label",
+          savedActual
+            ? evalCase.case_id + " actual result: " + savedActual
+            : evalCase.case_id + " actual result; not run",
+        );
+
+        const verdictCell = document.createElement("td");
+        const judgment = makeElement("div", undefined, "eval-judgment");
+        const verdict = makeElement("select", undefined, "eval-verdict");
+        verdict.setAttribute("aria-label", "Verdict for " + evalCase.case_id);
+        for (const [value, label] of [
+          ["", "Select verdict"],
+          ["Pass", "Pass"],
+          ["Needs work", "Needs work"],
+          ["Fail", "Fail"],
+        ]) {
+          const option = makeElement("option", label);
+          option.value = value;
+          verdict.append(option);
+        }
+        verdict.value = savedResult.verdict || "";
+
+        const note = makeElement("input", undefined, "eval-note");
+        note.type = "text";
+        note.maxLength = 180;
+        note.placeholder = "One-line evaluator note";
+        note.value = savedResult.note || "";
+        note.setAttribute(
+          "aria-label",
+          "One-line evaluator note for " + evalCase.case_id,
+        );
+        judgment.append(verdict, note);
+        verdictCell.append(judgment);
+
+        runButton.addEventListener("click", () =>
+          runEvalCase(evalCase, request, runButton, actualCell),
+        );
+        verdict.addEventListener("change", () => {
+          updateEvalResult(evalCase.case_id, { verdict: verdict.value });
+        });
+        note.addEventListener("input", () => {
+          updateEvalResult(evalCase.case_id, { note: note.value });
+        });
+        row.append(caseCell, expectedCell, actualCell, verdictCell);
+        body.append(row);
+      }
+      if (Object.keys(evalResults).length > 0) {
+        setEvalSaveStatus("Saved eval results restored from this browser.");
+      }
+      renderEvalScoreboard();
     }
 
     function recordCount(name, content) {
@@ -2119,11 +2769,13 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
     function updateKeyStatus() {
       const status = document.getElementById("key-status");
       const consoleStatus = document.getElementById("console-status");
+      const firstRunGuidance = document.getElementById("first-run-guidance");
       const hasKey = Boolean(localStorage.getItem(API_KEY_STORAGE_KEY));
       status.textContent = hasKey ? "Key saved." : "No key saved.";
       status.classList.toggle("saved", hasKey);
       consoleStatus.textContent = hasKey ? "Agent ready" : "API key needed";
       consoleStatus.className = "badge " + (hasKey ? "ok" : "warn");
+      firstRunGuidance.hidden = hasKey;
       document.getElementById("api-key").placeholder = hasKey
         ? "Key already saved; paste a new key to replace it"
         : "Paste key here";
@@ -2289,6 +2941,8 @@ Deterministic gates override confidence. Preserve state, cite evidence and polic
     initializeSettings();
     renderSummary();
     renderCases();
+    renderDemoCases();
+    renderEvals();
     document.getElementById("run-all").addEventListener("click", runAllCases);
     renderRunAllStatus();
     renderRunLog();
