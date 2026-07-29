@@ -105,7 +105,7 @@ body {
 .topbar .meta { color: var(--ink-2); font-size: var(--fs-0); margin-left: auto; }
 
 .console {
-  display: grid; grid-template-columns: 300px 1fr 320px;
+  display: grid; grid-template-columns: 300px minmax(0, 1fr) 320px;
   gap: var(--sp-4); padding: var(--sp-4); align-items: start;
   min-height: calc(100vh - 58px);
 }
@@ -346,7 +346,7 @@ body {
     .summary .chip { cursor: default; }
     .console section { margin-bottom: 0; }
     .console > *, .workspace { min-width: 0; }
-    .workspace { display: grid; gap: var(--sp-4); }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-4); }
     .workspace-intro { margin-bottom: var(--sp-4); }
     .workspace-intro .summary { margin-bottom: 0; }
     .first-run-guidance {
@@ -382,7 +382,7 @@ body {
     .run-all-controls { margin-bottom: var(--sp-4); padding: var(--sp-3); border: var(--border-w) solid var(--line); border-radius: var(--radius-sm); background: var(--bg-raise); }
     .run-all-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
     .run-all-summary { margin: var(--sp-2) 0 0; }
-    .case-list { display: grid; gap: var(--sp-2); max-height: 68vh; overflow: auto; padding-right: var(--sp-1); }
+    .case-list { display: grid; gap: var(--sp-2); max-height: none; overflow: visible; padding-right: 0; }
     .case-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--sp-2); align-items: stretch; }
     .case-row .case-card { margin-bottom: 0; }
     .case-button { width: 100%; display: grid; gap: var(--sp-1); text-align: left; color: var(--ink); font-family: var(--font-body); }
