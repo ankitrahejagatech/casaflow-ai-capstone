@@ -104,10 +104,32 @@ body {
 .topbar .product { font-size: var(--fs-2); font-weight: 700; letter-spacing: .01em; }
 .topbar .meta { color: var(--ink-2); font-size: var(--fs-0); margin-left: auto; }
 
+.app-tabs {
+  display: flex; gap: var(--sp-2); padding: 0 var(--sp-4);
+  overflow-x: auto; background: var(--bg-raise);
+  border-bottom: var(--border-w) solid var(--line);
+}
+.app-tab {
+  min-height: 48px; padding: 0 var(--sp-4); border: 0;
+  border-bottom: 3px solid transparent; background: transparent;
+  color: var(--ink-2); font: inherit; font-weight: 700; white-space: nowrap;
+  cursor: pointer;
+}
+.app-tab:hover { color: var(--ink); }
+.app-tab[aria-selected="true"] {
+  color: var(--accent); border-bottom-color: var(--accent);
+}
+.app-tab:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: -4px;
+}
+
 .console {
   display: grid; grid-template-columns: 300px minmax(0, 1fr) 320px;
   gap: var(--sp-4); padding: var(--sp-4); align-items: start;
   min-height: calc(100vh - 58px);
+}
+.console:not([data-active-tab="operations"]) {
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (max-width: 1100px) { .console { grid-template-columns: 1fr; } }
 .panel {
@@ -463,8 +485,15 @@ body {
     <div class="meta">Contractor review console</div>
   </header>
 
-  <main class="console">
-    <aside class="panel case-panel" aria-labelledby="case-list-title">
+  <nav class="app-tabs" aria-label="CasaFlowAI views" role="tablist">
+    <button class="app-tab" id="tab-operations" type="button" role="tab" aria-selected="true" aria-controls="operations-panel" tabindex="0" data-app-tab="operations">Operations</button>
+    <button class="app-tab" id="tab-evals" type="button" role="tab" aria-selected="false" aria-controls="evals-panel" tabindex="-1" data-app-tab="evals">Evals</button>
+    <button class="app-tab" id="tab-grounding" type="button" role="tab" aria-selected="false" aria-controls="grounding-panel" tabindex="-1" data-app-tab="grounding">Grounding Reference</button>
+    <button class="app-tab" id="tab-settings" type="button" role="tab" aria-selected="false" aria-controls="settings-panel" tabindex="-1" data-app-tab="settings">Settings</button>
+  </nav>
+
+  <main class="console" id="app-console" data-active-tab="operations">
+    <aside class="panel case-panel" aria-labelledby="case-list-title" data-operations-rail>
       <div class="panel-head" id="case-list-title">Transition cases</div>
       <div class="panel-body">
         <p class="muted">Select a case to inspect its source event and resettable project snapshot.</p>
@@ -484,7 +513,7 @@ body {
     </aside>
 
     <div class="workspace">
-      <section class="panel" aria-labelledby="page-title">
+      <section class="panel" id="operations-panel" role="tabpanel" aria-labelledby="tab-operations" data-app-panel="operations">
         <div class="panel-head">Selected case</div>
         <div class="panel-body">
           <div class="workspace-intro">
@@ -493,7 +522,7 @@ body {
             <div class="first-run-guidance" id="first-run-guidance" aria-live="polite">
               <p class="headline">Start with a synthetic project case</p>
               <p>Choose a demo case, then save your Anthropic API key in Settings to run CasaFlowAI’s evidence-grounded review. Nothing sends or changes project state automatically.</p>
-              <a class="btn primary" href="#settings-panel">Go to Settings</a>
+              <a class="btn primary" href="#settings" data-open-tab="settings">Go to Settings</a>
             </div>
             <div class="summary" id="summary"></div>
           </div>
@@ -501,7 +530,7 @@ body {
         </div>
       </section>
 
-      <section class="panel" id="settings-panel" aria-labelledby="settings-title">
+      <section class="panel" id="settings-panel" role="tabpanel" aria-labelledby="tab-settings" data-app-panel="settings" hidden>
         <div class="panel-head" id="settings-title">Settings</div>
         <div class="panel-body">
           <div class="settings-row">
@@ -519,7 +548,7 @@ body {
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="evals-title">
+      <section class="panel" id="evals-panel" role="tabpanel" aria-labelledby="tab-evals" data-app-panel="evals" hidden>
         <div class="panel-head">Evals</div>
         <div class="panel-body">
           <article class="transition-eval-panel" aria-labelledby="transition-eval-title">
@@ -645,7 +674,7 @@ body {
         </div>
       </section>
 
-      <section class="panel" aria-labelledby="reference-title">
+      <section class="panel" id="grounding-panel" role="tabpanel" aria-labelledby="tab-grounding" data-app-panel="grounding" hidden>
         <div class="panel-head" id="reference-title">Grounding reference</div>
         <div class="panel-body reference-grid">
           <div aria-labelledby="policy-title">
@@ -666,7 +695,7 @@ body {
       </section>
     </div>
 
-    <aside class="panel run-rail" aria-labelledby="run-log-title">
+    <aside class="panel run-rail" aria-labelledby="run-log-title" data-operations-rail>
       <div class="panel-head" id="run-log-title">Session run log</div>
       <div class="panel-body">
         <p class="muted">Agent runs and human review actions for this browser session.</p>
@@ -2810,7 +2839,8 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one line 
         );
         if (state.text.startsWith("No API key is saved.")) {
           const settingsLink = makeElement("a", "Open Settings", "btn primary");
-          settingsLink.href = "#settings-panel";
+          settingsLink.href = "#settings";
+          settingsLink.dataset.openTab = "settings";
           panel.append(settingsLink);
         }
       } else {
@@ -3853,6 +3883,120 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one line 
       updateKeyStatus();
     }
 
+    const APP_TAB_NAMES = Object.freeze([
+      "operations",
+      "evals",
+      "grounding",
+      "settings",
+    ]);
+
+    function appTabFromHash(hash = window.location.hash) {
+      const value = hash.replace(/^#/, "");
+      const aliases = {
+        "operations-panel": "operations",
+        "evals-panel": "evals",
+        "grounding-panel": "grounding",
+        "settings-panel": "settings",
+      };
+      const normalized = aliases[value] || value;
+      return APP_TAB_NAMES.includes(normalized) ? normalized : "operations";
+    }
+
+    function setActiveAppTab(
+      tabName,
+      { updateHash = false, moveFocus = false, scrollTop = false } = {},
+    ) {
+      const activeTab = APP_TAB_NAMES.includes(tabName)
+        ? tabName
+        : "operations";
+      const consoleElement = document.getElementById("app-console");
+      const tabs = [...document.querySelectorAll("[data-app-tab]")];
+      const panels = [...document.querySelectorAll("[data-app-panel]")];
+      const operationsRails = [
+        ...document.querySelectorAll("[data-operations-rail]"),
+      ];
+      const labels = {
+        operations: "Contractor review console",
+        evals: "Evaluation evidence",
+        grounding: "Grounding reference",
+        settings: "Local API settings",
+      };
+
+      consoleElement.dataset.activeTab = activeTab;
+      for (const tab of tabs) {
+        const isActive = tab.dataset.appTab === activeTab;
+        tab.setAttribute("aria-selected", String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+        if (isActive && moveFocus) tab.focus();
+      }
+      for (const panel of panels) {
+        panel.hidden = panel.dataset.appPanel !== activeTab;
+      }
+      for (const rail of operationsRails) {
+        rail.hidden = activeTab !== "operations";
+      }
+
+      const meta = document.querySelector(".topbar .meta");
+      if (meta) meta.textContent = labels[activeTab];
+      document.title =
+        "CasaFlowAI · " +
+        activeTab.charAt(0).toUpperCase() +
+        activeTab.slice(1);
+
+      if (updateHash && window.location.hash !== "#" + activeTab) {
+        window.history.replaceState(null, "", "#" + activeTab);
+      }
+      if (scrollTop) window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function initializeAppTabs() {
+      const tabs = [...document.querySelectorAll("[data-app-tab]")];
+      for (const [index, tab] of tabs.entries()) {
+        tab.addEventListener("click", () => {
+          setActiveAppTab(tab.dataset.appTab, {
+            updateHash: true,
+            scrollTop: true,
+          });
+        });
+        tab.addEventListener("keydown", (event) => {
+          let targetIndex = null;
+          if (event.key === "ArrowRight") {
+            targetIndex = (index + 1) % tabs.length;
+          } else if (event.key === "ArrowLeft") {
+            targetIndex = (index - 1 + tabs.length) % tabs.length;
+          } else if (event.key === "Home") {
+            targetIndex = 0;
+          } else if (event.key === "End") {
+            targetIndex = tabs.length - 1;
+          }
+          if (targetIndex === null) return;
+          event.preventDefault();
+          setActiveAppTab(tabs[targetIndex].dataset.appTab, {
+            updateHash: true,
+            moveFocus: true,
+            scrollTop: true,
+          });
+        });
+      }
+
+      document.addEventListener("click", (event) => {
+        const trigger = event.target.closest("[data-open-tab]");
+        if (!trigger) return;
+        event.preventDefault();
+        setActiveAppTab(trigger.dataset.openTab, {
+          updateHash: true,
+          moveFocus: true,
+          scrollTop: true,
+        });
+      });
+      window.addEventListener("hashchange", () => {
+        setActiveAppTab(appTabFromHash());
+      });
+
+      setActiveAppTab(appTabFromHash());
+      document.documentElement.dataset.appTabsReady = "true";
+    }
+
     function serializeAgentOutputForSelfTest(values) {
       return AGENT_OUTPUT_FIELDS.map(
         (label) => label + ":\n" + values[label],
@@ -4127,6 +4271,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one line 
       );
     }
 
+    initializeAppTabs();
     initializeSettings();
     renderSummary();
     renderCases();
