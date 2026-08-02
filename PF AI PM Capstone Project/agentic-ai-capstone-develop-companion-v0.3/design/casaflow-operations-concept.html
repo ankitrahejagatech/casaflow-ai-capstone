@@ -1,0 +1,2475 @@
+<!doctype html>
+<html lang="en" data-skin="studio">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CasaFlowAI — Field Operations Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,1,0" rel="stylesheet">
+  <style>
+    :root {
+      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      --fs-0: 13px;
+      --fs-1: 14px;
+      --fs-2: 16px;
+      --fs-3: 20px;
+      --fs-4: 28px;
+      --lh: 1.5;
+      --sp-1: 4px;
+      --sp-2: 8px;
+      --sp-3: 12px;
+      --sp-4: 16px;
+      --sp-5: 24px;
+      --sp-6: 32px;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --border-w: 1px;
+      --ok: #1FA971;
+      --warn: #D98E04;
+      --danger: #D64545;
+      --info: #3B82F6;
+      --bg: #0F1420;
+      --bg-raise: #171E2E;
+      --bg-inset: #0B0F18;
+      --line: #263049;
+      --ink: #E8EDF7;
+      --ink-2: #9AA6BF;
+      --ink-3: #5E6A85;
+      --accent: #6C8CFF;
+      --accent-ink: #FFFFFF;
+      --chip: #1E2740;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.55);
+    }
+    [data-skin="studio"] {
+      --bg: #F6F7FB;
+      --bg-raise: #FFFFFF;
+      --bg-inset: #EEF0F6;
+      --line: #E1E5EF;
+      --ink: #131A2A;
+      --ink-2: #4C5670;
+      --ink-3: #8B93A9;
+      --accent: #4056C9;
+      --accent-ink: #FFFFFF;
+      --chip: #EDF0FA;
+      --shadow: 0 1px 2px rgba(19,26,42,.06), 0 12px 28px -14px rgba(19,26,42,.18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      font-size: var(--fs-1);
+      line-height: var(--lh);
+    }
+    button, textarea, input { font: inherit; }
+    button { cursor: pointer; }
+    .material-symbols-rounded {
+      font-family: "Material Symbols Rounded";
+      font-weight: normal;
+      font-style: normal;
+      font-size: 21px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: "liga";
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: "liga";
+    }
+    button:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .app-shell { min-height: 100vh; }
+    .topbar {
+      min-height: 66px;
+      padding: 0 var(--sp-5);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-5);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-raise);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      min-width: max-content;
+      font-size: var(--fs-2);
+      font-weight: 800;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+    .main-nav {
+      display: flex;
+      align-self: stretch;
+      gap: var(--sp-1);
+      overflow-x: auto;
+    }
+    .persona-label {
+      align-self: center;
+      color: var(--ink-3);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .nav-item {
+      border: 0;
+      border-bottom: 3px solid transparent;
+      padding: 0 var(--sp-4);
+      color: var(--ink-2);
+      background: transparent;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .nav-item.active {
+      border-bottom-color: var(--accent);
+      color: var(--ink);
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-left: auto;
+      min-width: max-content;
+    }
+    .project-switcher {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      color: var(--ink);
+      background: var(--bg-inset);
+      font-weight: 700;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--accent-ink);
+      background: var(--ok);
+      font-weight: 800;
+    }
+
+    .page {
+      width: min(1680px, 100%);
+      min-width: 0;
+      margin: 0 auto;
+      padding: var(--sp-5);
+    }
+    .project-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-5);
+      margin-bottom: var(--sp-5);
+    }
+    .eyebrow {
+      color: var(--accent);
+      font-size: var(--fs-0);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: var(--sp-1);
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -.025em;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: var(--fs-2);
+    }
+    .status-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: var(--sp-2);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: var(--fs-0);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .badge.ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 15%, transparent); }
+    .badge.warn { color: var(--warn); background: color-mix(in srgb, var(--warn) 15%, transparent); }
+    .badge.info { color: var(--info); background: color-mix(in srgb, var(--info) 15%, transparent); }
+    .badge.danger { color: var(--danger); background: color-mix(in srgb, var(--danger) 15%, transparent); }
+    .badge.neutral { color: var(--ink-2); background: var(--chip); }
+
+    .update-entry {
+      margin-bottom: var(--sp-5);
+      overflow: hidden;
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+    }
+    .update-entry-grid {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      align-items: stretch;
+    }
+    .update-intro {
+      padding: var(--sp-4) var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--line);
+      background: color-mix(in srgb, var(--accent) 7%, var(--bg-raise));
+    }
+    .update-intro h2 {
+      margin: var(--sp-1) 0;
+      font-size: var(--fs-3);
+    }
+    .update-intro p {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: var(--fs-0);
+    }
+    .top-composer {
+      padding: var(--sp-3) var(--sp-4);
+    }
+    .top-composer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--sp-3);
+      align-items: stretch;
+    }
+    .top-composer textarea {
+      width: 100%;
+      min-height: 62px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--sp-3);
+      color: var(--ink);
+      background: var(--bg-inset);
+    }
+    .top-composer textarea::placeholder { color: var(--ink-3); }
+    .top-composer-actions {
+      display: flex;
+      align-items: stretch;
+      gap: var(--sp-2);
+    }
+    .top-composer-actions .mic-btn {
+      width: auto;
+      height: auto;
+      min-height: 48px;
+      align-self: stretch;
+    }
+    .top-composer-actions .send-btn {
+      min-width: 132px;
+      margin-left: 0;
+    }
+    .top-composer-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      margin-top: var(--sp-2);
+    }
+    .top-composer-foot .quick-actions { padding: 0; }
+
+    .phase-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap: 1px;
+      margin-bottom: var(--sp-5);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+      box-shadow: var(--shadow);
+    }
+    .phase {
+      min-height: 86px;
+      padding: var(--sp-3) var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--sp-1);
+      background: var(--bg-raise);
+      position: relative;
+    }
+    .phase::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: var(--line);
+    }
+    .phase.done::after { background: var(--ok); }
+    .phase.active::after { background: var(--accent); }
+    .phase-number {
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .phase-name { font-weight: 800; }
+    .phase-state { color: var(--ink-2); font-size: var(--fs-0); }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: var(--sp-4);
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-raise);
+      box-shadow: var(--shadow);
+    }
+    .panel-head {
+      min-height: 58px;
+      padding: 0 var(--sp-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-head h2, .panel-head h3 {
+      margin: 0;
+      font-size: var(--fs-2);
+    }
+    .panel-subtitle {
+      margin: var(--sp-1) 0 0;
+      color: var(--ink-2);
+      font-size: var(--fs-0);
+    }
+    .panel-body { padding: var(--sp-4); }
+
+    .board-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-4);
+    }
+    .view-tabs {
+      display: flex;
+      gap: var(--sp-1);
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .view-tab {
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      color: var(--ink-2);
+      background: transparent;
+      font-weight: 700;
+    }
+    .view-tab.active { color: var(--ink); background: var(--chip); }
+    .board-note { color: var(--ink-2); font-size: var(--fs-0); }
+    .mobile-board-hint { display: none; color: var(--ink-2); font-size: var(--fs-0); }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(205px, 1fr));
+      gap: var(--sp-3);
+      overflow-x: auto;
+      padding-bottom: var(--sp-2);
+    }
+    .board-column {
+      min-width: 205px;
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-inset);
+      transition: border-color .18s ease, background .18s ease;
+    }
+    .board-column.drag-over {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, var(--bg-inset));
+    }
+    .column-head {
+      padding: var(--sp-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      font-weight: 800;
+    }
+    .count {
+      min-width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      color: var(--ink-2);
+      background: var(--chip);
+      font-size: var(--fs-0);
+    }
+    .card-stack { padding: var(--sp-2); }
+    .work-card {
+      padding: var(--sp-3);
+      margin-bottom: var(--sp-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-raise);
+      box-shadow: 0 4px 14px -10px rgba(0,0,0,.9);
+      cursor: grab;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .work-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .work-card:active { cursor: grabbing; }
+    .work-card.dragging { opacity: .5; }
+    .work-card.blocked { border-left: 3px solid var(--warn); }
+    .work-card.progress { border-left: 3px solid var(--info); }
+    .work-card.done { border-left: 3px solid var(--ok); }
+    .work-card.review { border-left: 3px solid var(--accent); }
+    .work-card .mobile-transition-btn { display: none; }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-2);
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      font-size: var(--fs-0);
+    }
+    .card-title {
+      margin-bottom: var(--sp-2);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      color: var(--ink-2);
+      font-size: var(--fs-0);
+    }
+    .mini-progress {
+      height: 5px;
+      margin-top: var(--sp-3);
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--line);
+    }
+    .mini-progress span { display: block; height: 100%; background: var(--info); }
+
+    .assistant-panel {
+      position: sticky;
+      top: 82px;
+      overflow: hidden;
+    }
+    .assistant-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+    }
+    .agent-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-weight: 900;
+    }
+    .conversation {
+      min-height: 250px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding: var(--sp-4);
+      background: var(--bg-inset);
+    }
+    .message {
+      width: fit-content;
+      max-width: 92%;
+      margin-bottom: var(--sp-3);
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink-2);
+      background: var(--bg-raise);
+    }
+    .message.agent { border-top-left-radius: 2px; }
+    .message.user {
+      margin-left: auto;
+      border-color: var(--accent);
+      border-top-right-radius: 2px;
+      color: var(--ink);
+      background: color-mix(in srgb, var(--accent) 10%, var(--bg-raise));
+    }
+    .message-label {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--ink-3);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      padding: var(--sp-3) var(--sp-4) 0;
+    }
+    .quick-action {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--ink-2);
+      background: var(--chip);
+      font-size: var(--fs-0);
+      font-weight: 700;
+    }
+    .quick-action:hover { color: var(--ink); border-color: var(--accent); }
+    .composer {
+      padding: var(--sp-3) var(--sp-4) var(--sp-4);
+    }
+    .composer textarea {
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--sp-3);
+      color: var(--ink);
+      background: var(--bg-inset);
+    }
+    .composer textarea::placeholder { color: var(--ink-3); }
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-top: var(--sp-2);
+    }
+    .btn {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 7px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      color: var(--ink);
+      background: var(--bg-raise);
+      font-weight: 800;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn.primary {
+      border-color: var(--accent);
+      color: var(--accent-ink);
+      background: var(--accent);
+    }
+    .btn.approve {
+      border-color: var(--ok);
+      color: var(--accent-ink);
+      background: var(--ok);
+    }
+    .btn.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: transparent;
+    }
+    .btn.warn {
+      border-color: var(--warn);
+      color: var(--warn);
+      background: color-mix(in srgb, var(--warn) 7%, transparent);
+    }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .send-btn { margin-left: auto; }
+    .mic-btn {
+      min-width: 98px;
+      height: 42px;
+      border-color: color-mix(in srgb, var(--accent) 38%, var(--line));
+      border-radius: var(--radius-sm);
+      padding: 0 var(--sp-3);
+      gap: var(--sp-2);
+      position: relative;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 7%, var(--bg-raise));
+    }
+    .mic-btn .material-symbols-rounded { font-size: 22px; }
+    .mic-label { font-size: var(--fs-0); font-weight: 800; }
+    .mic-btn.listening {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: color-mix(in srgb, var(--danger) 12%, var(--bg-raise));
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--danger) 12%, transparent); }
+    }
+    .input-hint {
+      margin-top: var(--sp-2);
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+    }
+
+    .attention-list {
+      display: grid;
+      gap: var(--sp-2);
+      margin-top: var(--sp-4);
+    }
+    .attention-item {
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .attention-item strong { display: block; margin-bottom: 2px; }
+    .attention-item span { color: var(--ink-2); font-size: var(--fs-0); }
+
+    .library-groups {
+      display: grid;
+      gap: var(--sp-3);
+    }
+    .library-group {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .library-group summary {
+      padding: var(--sp-3);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      cursor: pointer;
+      font-weight: 800;
+      list-style: none;
+    }
+    .library-group summary::-webkit-details-marker { display: none; }
+    .library-group summary::after {
+      content: "expand_more";
+      margin-left: auto;
+      color: var(--ink-3);
+      font-family: "Material Symbols Rounded";
+      font-size: 21px;
+      font-feature-settings: "liga";
+    }
+    .library-group[open] summary::after { content: "expand_less"; }
+    .library-group summary .material-symbols-rounded { color: var(--accent); }
+    .library-list {
+      margin: 0;
+      padding: 0 var(--sp-3) var(--sp-3);
+      display: grid;
+      gap: var(--sp-2);
+      list-style: none;
+    }
+    .library-list li {
+      padding: var(--sp-2) 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--sp-2);
+      border-top: 1px solid var(--line);
+    }
+    .library-list strong { display: block; }
+    .library-list span {
+      color: var(--ink-3);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .library-note {
+      margin: var(--sp-3) 0 0;
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+    }
+
+    .view-page[hidden] { display: none; }
+
+    .creator-view .project-heading { align-items: center; }
+    .creator-summary {
+      margin-bottom: var(--sp-5);
+    }
+    .creator-hero {
+      padding: var(--sp-5);
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--accent) 6%, var(--bg-raise));
+      box-shadow: var(--shadow);
+    }
+    .creator-hero h2 {
+      margin: var(--sp-2) 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+    .creator-hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--ink-2);
+      font-size: var(--fs-2);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--sp-3);
+    }
+    .metric-card {
+      min-height: 150px;
+      padding: var(--sp-4);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .metric-card strong {
+      display: block;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1;
+      letter-spacing: -.03em;
+    }
+    .metric-card span { color: var(--ink-2); }
+    .metric-card small { color: var(--ink-3); font-size: var(--fs-0); }
+    .creator-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sp-4);
+      align-items: start;
+    }
+    .creator-list {
+      display: grid;
+      gap: var(--sp-2);
+    }
+    .creator-row {
+      padding: var(--sp-3);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--sp-3);
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .creator-row strong { display: block; }
+    .creator-row p { margin: 2px 0 0; color: var(--ink-2); font-size: var(--fs-0); }
+    .creator-only-note {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-top: var(--sp-3);
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+    }
+
+    .homeowner-view {
+      --home-accent: var(--ok);
+    }
+    .homeowner-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, .65fr);
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-5);
+    }
+    .home-status-card {
+      min-height: 245px;
+      padding: var(--sp-5);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 140px;
+      gap: var(--sp-5);
+      align-items: center;
+      border: 1px solid color-mix(in srgb, var(--home-accent) 48%, var(--line));
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--home-accent) 7%, var(--bg-raise));
+      box-shadow: var(--shadow);
+    }
+    .home-status-card h2 {
+      margin: var(--sp-1) 0 var(--sp-2);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+    .home-status-card p { margin-bottom: var(--sp-4); color: var(--ink-2); font-size: var(--fs-2); }
+    .home-status-detail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+    .progress-ring {
+      width: 128px;
+      height: 128px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--home-accent) 0 58%, var(--line) 58% 100%);
+      position: relative;
+    }
+    .progress-ring::before {
+      content: "";
+      position: absolute;
+      inset: 11px;
+      border-radius: 50%;
+      background: var(--bg-raise);
+    }
+    .progress-value {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: var(--fs-4);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .progress-value small {
+      margin-top: 7px;
+      color: var(--ink-3);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .approved-update {
+      min-height: 245px;
+      padding: var(--sp-5);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-raise);
+      box-shadow: var(--shadow);
+    }
+    .approved-update h2 { margin: var(--sp-2) 0; font-size: var(--fs-3); }
+    .approved-update p { color: var(--ink-2); }
+    .approved-update .homeowner-preview { margin-top: var(--sp-4); }
+
+    .homeowner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(310px, .6fr);
+      gap: var(--sp-4);
+      align-items: start;
+    }
+    .home-section { margin-bottom: var(--sp-4); }
+    .home-work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--sp-3);
+    }
+    .home-work-card {
+      min-height: 155px;
+      padding: var(--sp-4);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .home-work-card.progress { border-top: 3px solid var(--info); }
+    .home-work-card.ready { border-top: 3px solid var(--ok); }
+    .home-work-card.waiting { border-top: 3px solid var(--warn); }
+    .home-work-card h3 { margin: var(--sp-2) 0 var(--sp-1); font-size: var(--fs-2); }
+    .home-work-card p { margin: 0; color: var(--ink-2); font-size: var(--fs-0); }
+    .home-work-card .mini-progress { margin-top: var(--sp-4); }
+    .plain-language-blocker {
+      margin-top: var(--sp-3);
+      padding: var(--sp-4);
+      border: 1px solid color-mix(in srgb, var(--warn) 42%, var(--line));
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--warn) 7%, var(--bg-inset));
+    }
+    .plain-language-blocker strong { display: block; margin-bottom: var(--sp-1); }
+    .plain-language-blocker p { margin: 0; color: var(--ink-2); }
+
+    .next-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: next-step;
+    }
+    .next-list li {
+      counter-increment: next-step;
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: var(--sp-3);
+      padding: var(--sp-3) 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .next-list li:last-child { border-bottom: 0; }
+    .next-list li::before {
+      content: counter(next-step);
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--accent-ink);
+      background: var(--accent);
+      font-weight: 900;
+    }
+    .next-list strong { display: block; }
+    .next-list span { color: var(--ink-2); font-size: var(--fs-0); }
+
+    .record-list { display: grid; gap: var(--sp-2); }
+    .record-row {
+      padding: var(--sp-3);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--sp-3);
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .record-row strong { display: block; margin-bottom: 2px; }
+    .record-row p { margin: 0; color: var(--ink-2); font-size: var(--fs-0); }
+    .money {
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .change-warning {
+      margin-bottom: var(--sp-3);
+      padding: var(--sp-3);
+      border-left: 3px solid var(--warn);
+      color: var(--ink-2);
+      background: var(--bg-inset);
+    }
+    .timeline-feed { display: grid; }
+    .timeline-event {
+      position: relative;
+      padding: 0 0 var(--sp-4) 28px;
+      color: var(--ink-2);
+    }
+    .timeline-event:last-child { padding-bottom: 0; }
+    .timeline-event::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 7px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--ok);
+    }
+    .timeline-event::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 19px;
+      bottom: 0;
+      width: 1px;
+      background: var(--line);
+    }
+    .timeline-event:last-child::after { display: none; }
+    .timeline-event time {
+      display: block;
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+      font-weight: 800;
+    }
+    .timeline-event strong { color: var(--ink); }
+    .read-only-note {
+      margin-top: var(--sp-4);
+      padding: var(--sp-3) var(--sp-4);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink-2);
+      background: var(--bg-inset);
+    }
+    .read-only-mark {
+      min-width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--accent-ink);
+      background: var(--accent);
+      font-weight: 900;
+    }
+    .pending-concern {
+      margin-top: var(--sp-3);
+      padding: var(--sp-3);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--warn) 7%, var(--bg-inset));
+    }
+    .pending-concern[hidden] { display: none; }
+    .pending-concern strong { display: block; margin-bottom: 2px; }
+    .pending-concern p { margin: 0; color: var(--ink-2); font-size: var(--fs-0); }
+
+    .concern-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      place-items: center;
+      padding: var(--sp-4);
+      background: rgba(0,0,0,.62);
+    }
+    .concern-backdrop.visible { display: grid; }
+    .concern-modal {
+      width: min(620px, 100%);
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-raise);
+      box-shadow: var(--shadow);
+    }
+    .concern-modal-head {
+      padding: var(--sp-4) var(--sp-5);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .concern-modal-head h2 { margin: var(--sp-1) 0 0; font-size: var(--fs-3); }
+    .concern-modal-body { padding: var(--sp-5); }
+    .concern-category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--sp-2);
+      margin: var(--sp-2) 0 var(--sp-4);
+    }
+    .concern-category {
+      min-height: 54px;
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--ink-2);
+      background: var(--bg-inset);
+      text-align: left;
+      font-weight: 800;
+    }
+    .concern-category:hover,
+    .concern-category[aria-pressed="true"] {
+      border-color: var(--warn);
+      color: var(--ink);
+      background: color-mix(in srgb, var(--warn) 7%, var(--bg-inset));
+    }
+    .concern-modal textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: var(--sp-3);
+      color: var(--ink);
+      background: var(--bg-inset);
+    }
+    .concern-modal textarea::placeholder { color: var(--ink-3); }
+    .concern-boundary {
+      margin-top: var(--sp-3);
+      padding: var(--sp-3);
+      border-left: 3px solid var(--accent);
+      color: var(--ink-2);
+      background: var(--bg-inset);
+      font-size: var(--fs-0);
+    }
+    .concern-modal-actions {
+      padding: var(--sp-4) var(--sp-5);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--sp-2);
+      border-top: 1px solid var(--line);
+    }
+
+    .review-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      justify-content: flex-end;
+      background: rgba(0,0,0,.58);
+    }
+    .review-backdrop.visible { display: flex; }
+    .review-drawer {
+      width: min(680px, 100%);
+      height: 100%;
+      overflow-y: auto;
+      border-left: 1px solid var(--line);
+      background: var(--bg);
+      box-shadow: -18px 0 40px -20px rgba(0,0,0,.9);
+      animation: slide-in .22s ease-out;
+    }
+    @keyframes slide-in {
+      from { transform: translateX(35px); opacity: .65; }
+    }
+    .drawer-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: var(--sp-4) var(--sp-5);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-raise);
+    }
+    .drawer-head h2 { margin: 0; font-size: var(--fs-3); }
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .drawer-content { padding: var(--sp-5); }
+    .source-card {
+      margin-bottom: var(--sp-4);
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-inset);
+    }
+    .source-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-2);
+    }
+    .source-label {
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .source-quote { margin: 0; color: var(--ink-2); }
+    .recommendation {
+      padding: var(--sp-4);
+      border: 1px solid var(--warn);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--warn) 8%, var(--bg-raise));
+    }
+    .recommendation-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+    }
+    .recommendation h3 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .recommendation p { margin: var(--sp-2) 0 0; color: var(--ink-2); }
+    .reason-box {
+      margin-top: var(--sp-3);
+      padding-top: var(--sp-3);
+      border-top: 1px solid color-mix(in srgb, var(--warn) 35%, var(--line));
+    }
+    .reason-box strong { color: var(--ink); }
+
+    .state-comparison {
+      display: grid;
+      grid-template-columns: 1fr 34px 1fr;
+      gap: var(--sp-2);
+      align-items: stretch;
+      margin: var(--sp-4) 0;
+    }
+    .state-card {
+      padding: var(--sp-3);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-raise);
+    }
+    .state-card.blocked { border-color: var(--warn); }
+    .state-label {
+      display: block;
+      margin-bottom: var(--sp-2);
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .state-name { display: block; margin-bottom: var(--sp-1); font-weight: 800; }
+    .state-detail { color: var(--ink-2); font-size: var(--fs-0); }
+    .state-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--ink-3);
+      font-size: var(--fs-3);
+    }
+    .review-section {
+      margin-top: var(--sp-4);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-raise);
+    }
+    .review-section-head {
+      padding: var(--sp-3) var(--sp-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .review-section-head h3 { margin: 0; font-size: var(--fs-2); }
+    .review-section-body { padding: var(--sp-4); }
+    .evidence-list {
+      display: grid;
+      gap: var(--sp-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .evidence-list li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: var(--sp-2);
+      color: var(--ink-2);
+    }
+    .evidence-check {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--accent-ink);
+      background: var(--ok);
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .parallel-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+    .parallel-chip {
+      border: 1px solid var(--ok);
+      border-radius: 999px;
+      padding: 5px 10px;
+      color: var(--ok);
+      background: color-mix(in srgb, var(--ok) 8%, transparent);
+      font-size: var(--fs-0);
+      font-weight: 800;
+    }
+    .homeowner-preview {
+      margin: 0;
+      padding: var(--sp-3);
+      border-left: 3px solid var(--accent);
+      color: var(--ink-2);
+      background: var(--bg-inset);
+    }
+    details {
+      margin-top: var(--sp-4);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--bg-raise);
+    }
+    summary {
+      padding: var(--sp-3) var(--sp-4);
+      color: var(--ink-2);
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .details-body {
+      padding: 0 var(--sp-4) var(--sp-4);
+      color: var(--ink-2);
+      font-family: var(--font-mono);
+      font-size: var(--fs-0);
+    }
+    .drawer-actions {
+      position: sticky;
+      bottom: 0;
+      padding: var(--sp-4) var(--sp-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      border-top: 1px solid var(--line);
+      background: var(--bg-raise);
+    }
+    .gate-note {
+      width: 100%;
+      margin: 0;
+      color: var(--ink-3);
+      font-size: var(--fs-0);
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 80;
+      min-width: min(420px, calc(100vw - 32px));
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--ink);
+      background: var(--bg-raise);
+      box-shadow: var(--shadow);
+      transform: translate(-50%, 130px);
+      opacity: 0;
+      transition: transform .22s ease, opacity .22s ease;
+    }
+    .toast.visible { transform: translate(-50%, 0); opacity: 1; }
+    .mobile-update-cta { display: none; }
+
+    @media (max-width: 1180px) {
+      .overview-grid { grid-template-columns: 1fr; }
+      .assistant-panel { position: static; }
+      .phase-strip { grid-template-columns: repeat(5, 210px); overflow-x: auto; }
+      .homeowner-hero, .homeowner-grid { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      body { padding-bottom: 74px; }
+      .topbar {
+        padding: var(--sp-2) var(--sp-3) 0;
+        gap: var(--sp-3);
+        flex-wrap: wrap;
+      }
+      .main-nav {
+        order: 3;
+        width: calc(100% + (var(--sp-3) * 2));
+        margin: 0 calc(var(--sp-3) * -1);
+        padding: 0 var(--sp-3);
+        border-top: 1px solid var(--line);
+      }
+      .main-nav .nav-item { flex: 0 0 auto; min-height: 44px; padding: 0 var(--sp-3); font-size: var(--fs-0); }
+      .persona-label { display: none; }
+      .project-switcher { display: none; }
+      .page { padding: var(--sp-3); }
+      .project-heading { flex-direction: column; }
+      .status-cluster { justify-content: flex-start; }
+      .status-cluster .btn { min-height: 44px; }
+      .update-entry-grid { grid-template-columns: 1fr; }
+      .update-intro {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .top-composer-row { grid-template-columns: 1fr; }
+      .top-composer-actions .mic-btn { width: auto; min-width: 96px; min-height: 42px; }
+      .top-composer-actions .send-btn { flex: 1; }
+      .top-composer-foot { align-items: flex-start; flex-direction: column; }
+      .phase-strip {
+        grid-template-columns: repeat(5, minmax(235px, 82vw));
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-inline: contain;
+      }
+      .phase { scroll-snap-align: start; }
+      .board-toolbar { align-items: flex-start; flex-direction: column; }
+      .board-note { display: none; }
+      .mobile-board-hint { display: block; }
+      .board {
+        grid-template-columns: repeat(4, minmax(272px, 86vw));
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-inline: contain;
+        padding-bottom: var(--sp-3);
+      }
+      .board-column {
+        min-width: 0;
+        min-height: 330px;
+        scroll-snap-align: start;
+      }
+      .work-card {
+        cursor: default;
+        padding: var(--sp-4);
+      }
+      .work-card .mobile-transition-btn {
+        width: 100%;
+        min-height: 44px;
+        margin-top: var(--sp-3);
+        display: inline-flex;
+      }
+      .home-status-card { grid-template-columns: 1fr; }
+      .progress-ring { width: 108px; height: 108px; }
+      .home-work-grid { grid-template-columns: 1fr; }
+      .creator-grid, .metric-grid { grid-template-columns: 1fr; }
+      .record-row { grid-template-columns: 1fr; }
+      .concern-category-grid { grid-template-columns: 1fr; }
+      .state-comparison { grid-template-columns: 1fr; }
+      .state-arrow { transform: rotate(90deg); }
+      .review-drawer { width: 100%; }
+      .drawer-head {
+        padding: var(--sp-3) var(--sp-4);
+      }
+      .drawer-content { padding: var(--sp-4); }
+      .recommendation-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .drawer-actions {
+        padding: var(--sp-3) var(--sp-4) calc(var(--sp-3) + env(safe-area-inset-bottom));
+      }
+      .drawer-actions .btn { flex: 1; min-height: 44px; }
+      .gate-note { flex-basis: 100%; }
+      .concern-backdrop {
+        place-items: end center;
+        padding: 0;
+      }
+      .concern-modal {
+        width: 100%;
+        max-height: 92vh;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .concern-modal-head,
+      .concern-modal-body,
+      .concern-modal-actions { padding-left: var(--sp-4); padding-right: var(--sp-4); }
+      .concern-modal-actions {
+        padding-bottom: calc(var(--sp-4) + env(safe-area-inset-bottom));
+      }
+      .concern-modal-actions .btn { flex: 1; min-height: 44px; }
+      .mobile-update-cta {
+        position: fixed;
+        right: var(--sp-3);
+        bottom: calc(var(--sp-3) + env(safe-area-inset-bottom));
+        z-index: 40;
+        min-height: 48px;
+        display: inline-flex;
+        border-color: var(--accent);
+        color: var(--accent-ink);
+        background: var(--accent);
+        box-shadow: var(--shadow);
+        transition: opacity .18s ease, transform .18s ease;
+      }
+      .mobile-update-cta.is-hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px);
+      }
+      .toast {
+        bottom: calc(78px + env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">CF</span>
+        <span>CasaFlowAI</span>
+      </div>
+      <span class="persona-label">Preview as</span>
+      <nav class="main-nav" aria-label="Persona preview">
+        <button class="nav-item active" type="button" data-view="operationsView" aria-pressed="true">Field operations</button>
+        <button class="nav-item" type="button" data-view="homeownerView" aria-pressed="false">Homeowner</button>
+        <button class="nav-item" type="button" data-view="creatorView" aria-pressed="false">SiteOps</button>
+      </nav>
+      <div class="top-actions">
+        <button class="project-switcher" id="projectSwitcher" type="button">Willow Glen Extension</button>
+        <span class="avatar" id="personaAvatar" aria-label="Contractor AR">AR</span>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="view-page" id="operationsView" aria-label="Field operations view">
+      <section class="project-heading" aria-labelledby="project-title">
+        <div>
+          <div class="eyebrow">City of San Jose · Project CF-DEMO-001</div>
+          <h1 id="project-title">Willow Glen home extension</h1>
+          <p class="subtitle">Systems rough-in · Last contractor update today at 8:42 AM</p>
+        </div>
+        <div class="status-cluster" aria-label="Project status">
+          <span class="badge info">On plan</span>
+          <span class="badge warn">1 activity blocked</span>
+          <span class="badge neutral">Permit active</span>
+        </div>
+      </section>
+
+      <section class="panel update-entry" aria-labelledby="field-update-title">
+        <div class="update-entry-grid">
+          <div class="update-intro">
+            <div class="eyebrow">Contractor input</div>
+            <h2 id="field-update-title">What changed on site?</h2>
+            <p>Type, speak, or drag an activity card to a new status. CasaFlowAI will identify the affected activity and check the project before proposing any change.</p>
+          </div>
+          <div class="top-composer">
+            <label class="source-label" for="updateInput">Add a field update</label>
+            <div class="top-composer-row">
+              <textarea id="updateInput" placeholder="For example: Move insulation to Ready. The crew is available tomorrow."></textarea>
+              <div class="top-composer-actions">
+                <button class="btn mic-btn" id="micButton" type="button" aria-label="Simulate voice update" title="Simulate voice update">
+                  <span class="material-symbols-rounded" aria-hidden="true">mic</span>
+                  <span class="mic-label">Speak</span>
+                </button>
+                <button class="btn primary send-btn" id="sendButton" type="button">Review update</button>
+              </div>
+            </div>
+            <div class="top-composer-foot">
+              <div class="quick-actions">
+                <button class="quick-action" type="button" data-prompt="Move insulation to Ready. The crew is available tomorrow.">Move insulation</button>
+                <button class="quick-action" type="button" data-prompt="Framing is complete and the plumbing crew is ready.">Log field update</button>
+                <button class="quick-action" type="button" data-prompt="What can continue in parallel today?">Check parallel work</button>
+              </div>
+            </div>
+            <div class="input-hint">Voice creates an editable transcript, and card moves create proposed transitions. No project state changes until contractor review.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="phase-strip" aria-label="Project phases">
+        <article class="phase done">
+          <span class="phase-number">Phase 1</span>
+          <span class="phase-name">Foundation</span>
+          <span class="phase-state">Confirmed complete</span>
+        </article>
+        <article class="phase done">
+          <span class="phase-number">Phase 2</span>
+          <span class="phase-name">Framing &amp; envelope</span>
+          <span class="phase-state">Confirmed complete</span>
+        </article>
+        <article class="phase active">
+          <span class="phase-number">Phase 3</span>
+          <span class="phase-name">Systems rough-in</span>
+          <span class="phase-state">3 parallel workstreams</span>
+        </article>
+        <article class="phase">
+          <span class="phase-number">Phase 4</span>
+          <span class="phase-name">Finishes</span>
+          <span class="phase-state">Waiting on rough-ins</span>
+        </article>
+        <article class="phase">
+          <span class="phase-number">Closeout</span>
+          <span class="phase-name">Final inspection</span>
+          <span class="phase-state">Not started</span>
+        </article>
+      </section>
+
+      <div class="overview-grid">
+        <section class="panel" aria-labelledby="board-title">
+          <header class="panel-head">
+            <div>
+              <h2 id="board-title">Activity board</h2>
+              <p class="panel-subtitle">Move a card, type an update, or speak naturally. CasaFlowAI checks every proposed transition.</p>
+            </div>
+            <span class="badge info">Live project state</span>
+          </header>
+          <div class="panel-body">
+            <div class="board-toolbar">
+              <div class="view-tabs" role="tablist" aria-label="Activity views">
+                <button class="view-tab active" role="tab" aria-selected="true" type="button">Board</button>
+                <button class="view-tab" role="tab" aria-selected="false" type="button">Timeline</button>
+                <button class="view-tab" role="tab" aria-selected="false" type="button">Decisions</button>
+              </div>
+              <span class="board-note">Drag Insulation to Ready to preview the review flow</span>
+              <span class="mobile-board-hint">Swipe across status columns. Tap Review move on a card to propose a transition.</span>
+            </div>
+
+            <div class="board" id="activityBoard">
+              <section class="board-column" data-column="ready" aria-label="Ready">
+                <header class="column-head"><span>Ready</span><span class="count">1</span></header>
+                <div class="card-stack">
+                  <article class="work-card review" draggable="true" data-activity="A-012">
+                    <div class="card-meta"><span>A-012</span><span>Plumbing</span></div>
+                    <div class="card-title">Rough plumbing</div>
+                    <div class="card-foot"><span>Prerequisites satisfied</span><span class="badge ok">Ready</span></div>
+                  </article>
+                </div>
+              </section>
+
+              <section class="board-column" data-column="progress" aria-label="In progress">
+                <header class="column-head"><span>In progress</span><span class="count">2</span></header>
+                <div class="card-stack">
+                  <article class="work-card progress" draggable="true" data-activity="A-013">
+                    <div class="card-meta"><span>A-013</span><span>Electrical</span></div>
+                    <div class="card-title">Electrical rough-in</div>
+                    <div class="card-foot"><span>Contractor update</span><span>65%</span></div>
+                    <div class="mini-progress" aria-label="65 percent complete"><span style="width:65%"></span></div>
+                  </article>
+                  <article class="work-card progress" draggable="true" data-activity="A-014">
+                    <div class="card-meta"><span>A-014</span><span>HVAC</span></div>
+                    <div class="card-title">HVAC rough-in</div>
+                    <div class="card-foot"><span>Parallel work</span><span>40%</span></div>
+                    <div class="mini-progress" aria-label="40 percent complete"><span style="width:40%"></span></div>
+                  </article>
+                </div>
+              </section>
+
+              <section class="board-column" data-column="blocked" aria-label="Blocked">
+                <header class="column-head"><span>Blocked</span><span class="count">1</span></header>
+                <div class="card-stack">
+                  <article class="work-card blocked" id="insulationCard" draggable="true" data-activity="A-016">
+                    <div class="card-meta"><span>A-016</span><span>Finishes</span></div>
+                    <div class="card-title">Wall &amp; ceiling insulation</div>
+                    <div class="card-foot"><span>Electrical incomplete</span><span class="badge warn">Paused</span></div>
+                    <button class="btn warn mobile-transition-btn" id="mobileInsulationButton" type="button">Review move to Ready</button>
+                  </article>
+                </div>
+              </section>
+
+              <section class="board-column" data-column="done" aria-label="Complete">
+                <header class="column-head"><span>Complete</span><span class="count">3</span></header>
+                <div class="card-stack">
+                  <article class="work-card done" draggable="true" data-activity="A-008">
+                    <div class="card-meta"><span>A-008</span><span>Framing</span></div>
+                    <div class="card-title">Extension wall framing</div>
+                    <div class="card-foot"><span>Contractor confirmed</span><span class="badge ok">Done</span></div>
+                  </article>
+                  <article class="work-card done" draggable="true" data-activity="A-009">
+                    <div class="card-meta"><span>A-009</span><span>Framing</span></div>
+                    <div class="card-title">Roof framing</div>
+                    <div class="card-foot"><span>Contractor confirmed</span><span class="badge ok">Done</span></div>
+                  </article>
+                  <article class="work-card done" draggable="true" data-activity="A-009A">
+                    <div class="card-meta"><span>A-009A</span><span>Envelope</span></div>
+                    <div class="card-title">Wall &amp; roof sheathing</div>
+                    <div class="card-foot"><span>Contractor confirmed</span><span class="badge ok">Done</span></div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <aside>
+          <section class="panel assistant-panel" aria-labelledby="assistant-title">
+            <header class="panel-head">
+              <div class="assistant-brand">
+                <span class="agent-mark">AI</span>
+                <div>
+                  <h2 id="assistant-title">Project coordinator</h2>
+                  <p class="panel-subtitle">Grounded in approved project state</p>
+                </div>
+              </div>
+              <span class="badge ok">Ready</span>
+            </header>
+
+            <div class="conversation" id="conversation" aria-live="polite">
+              <div class="message agent">
+                <span class="message-label">CasaFlowAI</span>
+                What changed on site? I’ll check the project state, dependencies, inspections, and open decisions before proposing an update.
+              </div>
+              <div class="message agent">
+                <span class="message-label">Today’s attention</span>
+                Electrical rough-in is still in progress. Insulation cannot move to Ready yet, but rough plumbing and HVAC may continue in parallel.
+              </div>
+            </div>
+
+          </section>
+
+          <section class="panel" style="margin-top:16px" aria-labelledby="attention-title">
+            <header class="panel-head">
+              <h2 id="attention-title">Needs attention</h2>
+              <span class="count" id="attentionCount">2</span>
+            </header>
+            <div class="panel-body">
+              <div class="attention-list">
+                <div class="attention-item" id="contractorConcernItem" hidden>
+                  <strong>Homeowner concern · Status disagreement</strong>
+                  <span id="contractorConcernText">The homeowner asked the contractor to review the published project status.</span>
+                </div>
+                <div class="attention-item">
+                  <strong>Electrical rough-in</strong>
+                  <span>Completion confirmation required before insulation.</span>
+                </div>
+                <div class="attention-item">
+                  <strong>Rough systems inspections</strong>
+                  <span>Upcoming after plumbing, electrical, and HVAC rough-ins.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top:16px" aria-labelledby="library-title">
+            <header class="panel-head">
+              <div>
+                <h2 id="library-title">Project library</h2>
+                <p class="panel-subtitle">Documents and rules authorized for this project.</p>
+              </div>
+              <span class="badge neutral">14 items</span>
+            </header>
+            <div class="panel-body">
+              <div class="library-groups">
+                <details class="library-group" open>
+                  <summary><span class="material-symbols-rounded" aria-hidden="true">folder_open</span>Project documents <span class="badge neutral">7</span></summary>
+                  <ul class="library-list">
+                    <li><strong>City of San Jose permit</strong><span>Active</span></li>
+                    <li><strong>Approved plan set</strong><span>REV-C-DEMO</span></li>
+                    <li><strong>Inspection history</strong><span>10 records</span></li>
+                    <li><strong>Contract &amp; approved change orders</strong><span>3 records</span></li>
+                    <li><strong>Schedule &amp; milestone plan</strong><span>Current</span></li>
+                    <li><strong>Decisions &amp; selections</strong><span>7 records</span></li>
+                    <li><strong>Site updates &amp; source evidence</strong><span>96 events</span></li>
+                  </ul>
+                </details>
+                <details class="library-group">
+                  <summary><span class="material-symbols-rounded" aria-hidden="true">policy</span>Project operating rules <span class="badge neutral">7</span></summary>
+                  <ul class="library-list">
+                    <li><strong>Project lifecycle</strong><span>View</span></li>
+                    <li><strong>State updates &amp; contractor approval</strong><span>View</span></li>
+                    <li><strong>Activity dependencies &amp; exceptions</strong><span>View</span></li>
+                    <li><strong>Inspection status handling</strong><span>View</span></li>
+                    <li><strong>Authority &amp; escalation</strong><span>View</span></li>
+                    <li><strong>Communication &amp; privacy</strong><span>View</span></li>
+                    <li><strong>Evidence and photo use</strong><span>View</span></li>
+                  </ul>
+                </details>
+              </div>
+              <p class="library-note">Field Operations sees only project-authorized records. Evaluation labels, model controls, and cross-project information remain private to CasaFlowAI SiteOps.</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+      <button class="btn mobile-update-cta" id="mobileUpdateCta" type="button">Add field update</button>
+      </section>
+
+      <section class="view-page homeowner-view" id="homeownerView" aria-label="Homeowner update preview" hidden>
+        <section class="project-heading" aria-labelledby="home-project-title">
+          <div>
+            <div class="eyebrow">Homeowner preview · Contractor-approved information</div>
+            <h1 id="home-project-title">Your Willow Glen home extension</h1>
+            <p class="subtitle">A clear view of what is complete, what is happening now, and what comes next.</p>
+          </div>
+          <div class="status-cluster" aria-label="Homeowner view status">
+            <span class="badge ok">Updated today</span>
+            <span class="badge neutral">Read-only preview</span>
+            <button class="btn warn" id="raiseConcernButton" type="button">Raise a concern</button>
+          </div>
+        </section>
+
+        <section class="homeowner-hero">
+          <article class="home-status-card">
+            <div>
+              <div class="eyebrow">Current project status</div>
+              <h2>Systems rough-in is underway</h2>
+              <p>Plumbing, electrical, and HVAC work are moving forward in parallel. Insulation is waiting for electrical rough-in to finish.</p>
+              <div class="home-status-detail">
+                <span class="badge info">3 active workstreams</span>
+                <span class="badge warn">1 activity waiting</span>
+                <span class="badge neutral">No action needed today</span>
+              </div>
+            </div>
+            <div class="progress-ring" aria-label="Project is 58 percent through planned activities">
+              <span class="progress-value">58%<small>Project progress</small></span>
+            </div>
+          </article>
+
+          <article class="approved-update">
+            <span class="badge ok">Contractor approved</span>
+            <h2>Latest update</h2>
+            <p class="panel-subtitle">Today at 9:05 AM · Systems rough-in</p>
+            <blockquote class="homeowner-preview">Electrical rough-in is still in progress, so insulation will remain on hold. Rough plumbing and HVAC may continue in parallel. No homeowner action is required right now.</blockquote>
+          </article>
+        </section>
+
+        <section class="phase-strip" aria-label="Homeowner project phases">
+          <article class="phase done">
+            <span class="phase-number">Phase 1</span>
+            <span class="phase-name">Foundation</span>
+            <span class="phase-state">Complete</span>
+          </article>
+          <article class="phase done">
+            <span class="phase-number">Phase 2</span>
+            <span class="phase-name">Framing &amp; envelope</span>
+            <span class="phase-state">Complete</span>
+          </article>
+          <article class="phase active">
+            <span class="phase-number">Phase 3</span>
+            <span class="phase-name">Systems rough-in</span>
+            <span class="phase-state">In progress</span>
+          </article>
+          <article class="phase">
+            <span class="phase-number">Phase 4</span>
+            <span class="phase-name">Finishes</span>
+            <span class="phase-state">Up next</span>
+          </article>
+          <article class="phase">
+            <span class="phase-number">Closeout</span>
+            <span class="phase-name">Final inspection</span>
+            <span class="phase-state">Later</span>
+          </article>
+        </section>
+
+        <div class="homeowner-grid">
+          <div>
+            <section class="panel home-section" aria-labelledby="happening-title">
+              <header class="panel-head">
+                <div>
+                  <h2 id="happening-title">What is happening now</h2>
+                  <p class="panel-subtitle">Only contractor-approved project status appears here.</p>
+                </div>
+              </header>
+              <div class="panel-body">
+                <div class="home-work-grid">
+                  <article class="home-work-card ready">
+                    <span class="badge ok">Ready</span>
+                    <h3>Rough plumbing</h3>
+                    <p>All recorded prerequisites are satisfied. The plumbing crew may begin.</p>
+                  </article>
+                  <article class="home-work-card progress">
+                    <span class="badge info">In progress</span>
+                    <h3>Electrical rough-in</h3>
+                    <p>The contractor reports that wiring and electrical boxes are approximately 65% complete.</p>
+                    <div class="mini-progress" aria-label="Electrical rough-in 65 percent complete"><span style="width:65%"></span></div>
+                  </article>
+                  <article class="home-work-card progress">
+                    <span class="badge info">In progress</span>
+                    <h3>HVAC rough-in</h3>
+                    <p>Ductwork and system lines may continue while electrical work is underway.</p>
+                    <div class="mini-progress" aria-label="HVAC rough-in 40 percent complete"><span style="width:40%"></span></div>
+                  </article>
+                </div>
+                <div class="plain-language-blocker">
+                  <strong>Why is insulation waiting?</strong>
+                  <p>Insulation covers the open wall and ceiling cavities. Electrical rough-in must be finished and the applicable rough-system checks must be resolved before those cavities are closed. This pause applies to insulation—not the entire project.</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel home-section" aria-labelledby="decisions-title">
+              <header class="panel-head">
+                <div>
+                  <h2 id="decisions-title">Your decisions and selections</h2>
+                  <p class="panel-subtitle">What is settled, what is upcoming, and what is not yet a formal request.</p>
+                </div>
+                <span class="badge warn">2 upcoming</span>
+              </header>
+              <div class="panel-body">
+                <div class="record-list">
+                  <article class="record-row">
+                    <div>
+                      <strong>White-oak engineered flooring</strong>
+                      <p>Selected and contractor feasibility confirmed. Delivery is not yet required.</p>
+                    </div>
+                    <span class="badge ok">Confirmed</span>
+                  </article>
+                  <article class="record-row">
+                    <div>
+                      <strong>Warm-white interior paint palette</strong>
+                      <p>Your selection will be needed before prime and paint begins. It is not blocking today’s work.</p>
+                    </div>
+                    <span class="badge warn">Upcoming</span>
+                  </article>
+                  <article class="record-row">
+                    <div>
+                      <strong>Revised patio-door opening</strong>
+                      <p>Design, cost, and professional requirements are still under review. No construction change is approved.</p>
+                    </div>
+                    <span class="badge warn">Under review</span>
+                  </article>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel home-section" aria-labelledby="updates-title">
+              <header class="panel-head">
+                <div>
+                  <h2 id="updates-title">Recent approved updates</h2>
+                  <p class="panel-subtitle">A simple project record without contractor-only notes.</p>
+                </div>
+              </header>
+              <div class="panel-body">
+                <div class="timeline-feed">
+                  <article class="timeline-event">
+                    <time>Today · 9:05 AM</time>
+                    <strong>Insulation remains on hold</strong>
+                    <div>Electrical rough-in must be confirmed complete first. Plumbing and HVAC may continue.</div>
+                  </article>
+                  <article class="timeline-event">
+                    <time>Yesterday · 4:20 PM</time>
+                    <strong>Roof and wall sheathing confirmed complete</strong>
+                    <div>The extension’s framing and sheathing prerequisites are recorded as complete.</div>
+                  </article>
+                  <article class="timeline-event">
+                    <time>Monday · 2:15 PM</time>
+                    <strong>Graphite-gray exterior siding approved</strong>
+                    <div>The $1,800 material upgrade was approved with no recorded schedule impact.</div>
+                  </article>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside>
+            <section class="panel home-section" aria-labelledby="next-title">
+              <header class="panel-head">
+                <h2 id="next-title">What happens next</h2>
+              </header>
+              <div class="panel-body">
+                <ol class="next-list">
+                  <li><div><strong>Complete electrical rough-in</strong><span>The contractor confirms the remaining electrical work.</span></div></li>
+                  <li><div><strong>Resolve rough-system checks</strong><span>The contractor records the applicable inspection status.</span></div></li>
+                  <li><div><strong>Move insulation to Ready</strong><span>CasaFlowAI checks the prerequisites and the contractor approves the transition.</span></div></li>
+                </ol>
+              </div>
+            </section>
+
+            <section class="panel home-section" aria-labelledby="budget-title">
+              <header class="panel-head">
+                <div>
+                  <h2 id="budget-title">Changes and budget</h2>
+                  <p class="panel-subtitle">Approved costs are separated from proposals.</p>
+                </div>
+              </header>
+              <div class="panel-body">
+                <div class="change-warning">Proposed amounts are not approvals. Your contractor must send a separate formal request before any commitment is made.</div>
+                <div class="record-list">
+                  <article class="record-row">
+                    <div>
+                      <strong>Exterior siding upgrade</strong>
+                      <p>Approved · No schedule impact recorded</p>
+                    </div>
+                    <span class="money">+$1,800</span>
+                  </article>
+                  <article class="record-row">
+                    <div>
+                      <strong>Revised patio-door opening</strong>
+                      <p>Proposed · Structural detail and approvals pending</p>
+                    </div>
+                    <span class="money">Est. $8,000</span>
+                  </article>
+                  <article class="record-row">
+                    <div>
+                      <strong>Added exterior lighting outlets</strong>
+                      <p>Proposed · Electrical plan review may be required</p>
+                    </div>
+                    <span class="money">Est. $2,400</span>
+                  </article>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel home-section" aria-labelledby="questions-title">
+              <header class="panel-head">
+                <h2 id="questions-title">Questions for your contractor</h2>
+              </header>
+              <div class="panel-body">
+                <p style="color:var(--ink-2)">Suggested questions based on the approved project record:</p>
+                <div class="record-list">
+                  <article class="attention-item">
+                    <strong>When do you expect electrical rough-in to finish?</strong>
+                    <span>Schedule estimates remain the contractor’s decision.</span>
+                  </article>
+                  <article class="attention-item">
+                    <strong>When will you need my paint selection?</strong>
+                    <span>The choice is upcoming but is not blocking current work.</span>
+                  </article>
+                </div>
+                <div class="read-only-note">
+                  <span class="read-only-mark">i</span>
+                  <span>The approved project state is read-only. Raising a concern records a homeowner source claim for contractor review; it does not overwrite project status or create a live agent conversation.</span>
+                </div>
+                <div class="pending-concern" id="pendingConcernHome" hidden>
+                  <span class="badge warn">Awaiting contractor review</span>
+                  <strong id="pendingConcernTitle" style="margin-top:8px">Status disagreement</strong>
+                  <p id="pendingConcernText">Your concern was preserved and added to the contractor’s Needs attention queue.</p>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view-page creator-view" id="creatorView" aria-label="CasaFlowAI SiteOps Control Center" hidden>
+        <section class="project-heading" aria-labelledby="creator-title">
+          <div>
+            <div class="eyebrow">CasaFlowAI SiteOps Team</div>
+            <h1 id="creator-title">SiteOps Control Center</h1>
+            <p class="subtitle">Private operational oversight for decision quality, safety boundaries, and pilot learning.</p>
+          </div>
+          <div class="status-cluster" aria-label="SiteOps Control Center status">
+            <span class="badge ok">Pilot ready</span>
+            <span class="badge neutral">Private · SiteOps Team</span>
+          </div>
+        </section>
+
+        <section class="creator-summary">
+          <article class="creator-hero">
+            <div class="eyebrow">Pilot health</div>
+            <h2>CasaFlowAI catches the blockers that matter</h2>
+            <p>The latest twenty-case synthetic evaluation meets the Discovery targets: blocker recall is above the safety threshold and safe work is not being paused unnecessarily. Exact-label differences remain visible for product improvement.</p>
+          </article>
+        </section>
+
+        <section class="panel home-section" aria-labelledby="quality-title">
+          <header class="panel-head">
+            <div>
+              <div class="eyebrow">Decision quality</div>
+              <h2 id="quality-title">How reliably is the agent deciding?</h2>
+              <p class="panel-subtitle">This is the creator-friendly version of evals. Technical case detail remains available only when you inspect a result.</p>
+            </div>
+            <span class="badge ok">Discovery targets met</span>
+          </header>
+          <div class="panel-body">
+            <div class="metric-grid">
+              <article class="metric-card">
+                <div><strong style="color:var(--ok)">100%</strong><span>Blockers caught</span></div>
+                <small>10 of 10 blocker cases · target at least 90%</small>
+              </article>
+              <article class="metric-card">
+                <div><strong style="color:var(--ok)">0%</strong><span>Safe work paused</span></div>
+                <small>0 of 10 safe cases · target no more than 10%</small>
+              </article>
+              <article class="metric-card">
+                <div><strong>20/20</strong><span>Grounded outputs</span></div>
+                <small>Every result cited valid case evidence</small>
+              </article>
+              <article class="metric-card">
+                <div><strong>65%</strong><span>Exact decision match</span></div>
+                <small>Used to improve labels and explanations—not a launch gate</small>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <div class="creator-grid">
+          <section class="panel home-section" aria-labelledby="cases-title">
+            <header class="panel-head">
+              <div>
+                <div class="eyebrow">Scenarios to watch</div>
+                <h2 id="cases-title">Decision review</h2>
+                <p class="panel-subtitle">Readable summaries first; case IDs and technical output appear only on inspection.</p>
+              </div>
+            </header>
+            <div class="panel-body creator-list">
+              <article class="creator-row">
+                <div><strong>Known incomplete prerequisite</strong><p>Insulation waits because electrical rough-in is still in progress.</p></div>
+                <span class="badge ok">Correct</span>
+              </article>
+              <article class="creator-row">
+                <div><strong>Homeowner disputes published status</strong><p>The dispute is preserved without overwriting the contractor-approved state.</p></div>
+                <span class="badge ok">Correct</span>
+              </article>
+              <article class="creator-row">
+                <div><strong>Fabricated homeowner approval</strong><p>The request is refused; money, scope, and professional-review gates remain open.</p></div>
+                <span class="badge ok">Refused</span>
+              </article>
+              <button class="btn" type="button" data-creator-action="cases">Inspect all 20 scenarios</button>
+            </div>
+          </section>
+
+          <section class="panel home-section" aria-labelledby="trust-title">
+            <header class="panel-head">
+              <div>
+                <div class="eyebrow">Trust &amp; audit</div>
+                <h2 id="trust-title">Why can this decision be trusted?</h2>
+                <p class="panel-subtitle">This replaces “Grounding” with plain-language safety and evidence controls.</p>
+              </div>
+            </header>
+            <div class="panel-body creator-list">
+              <article class="creator-row">
+                <div><strong>Project evidence</strong><p>Approved project state, activity dependencies, inspections, decisions, and source events.</p></div>
+                <span class="badge info">Traceable</span>
+              </article>
+              <article class="creator-row">
+                <div><strong>Policy controls</strong><p>Authority, state updates, inspections, privacy, communication, and exceptions.</p></div>
+                <span class="badge info">7 active</span>
+              </article>
+              <article class="creator-row">
+                <div><strong>Independent review agent</strong><p>A second agent checks the recommendation before human review.</p></div>
+                <span class="badge ok">Enabled</span>
+              </article>
+              <article class="creator-row">
+                <div><strong>Photo boundary</strong><p>Images may provide context, but they never prove completion, safety, compliance, or inspection approval.</p></div>
+                <span class="badge warn">Guardrail</span>
+              </article>
+              <button class="btn" type="button" data-creator-action="audit">Open audit details</button>
+            </div>
+          </section>
+        </div>
+        <p class="creator-only-note"><span class="material-symbols-rounded" aria-hidden="true">lock</span> SiteOps Control Center is private to the CasaFlowAI SiteOps Team. Contractors and homeowners never see evaluation labels, model settings, or cross-project data.</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="concern-backdrop" id="concernBackdrop" role="dialog" aria-modal="true" aria-labelledby="concernTitle">
+    <section class="concern-modal">
+      <header class="concern-modal-head">
+        <div>
+          <div class="eyebrow">Homeowner escalation</div>
+          <h2 id="concernTitle">Raise a concern for contractor review</h2>
+        </div>
+        <button class="btn close-btn" id="closeConcern" type="button" aria-label="Close concern form">×</button>
+      </header>
+      <div class="concern-modal-body">
+        <label class="source-label">What is your concern about?</label>
+        <div class="concern-category-grid" role="group" aria-label="Concern type">
+          <button class="concern-category" type="button" aria-pressed="true" data-concern="Status disagreement">Project status disagreement</button>
+          <button class="concern-category" type="button" aria-pressed="false" data-concern="Cost or scope concern">Cost or scope concern</button>
+          <button class="concern-category" type="button" aria-pressed="false" data-concern="Schedule or decision concern">Schedule or decision confusion</button>
+          <button class="concern-category" type="button" aria-pressed="false" data-concern="Inspection, permit, or safety concern">Inspection, permit, or safety concern</button>
+          <button class="concern-category" type="button" aria-pressed="false" data-concern="Privacy or access concern">Privacy or unauthorized-access concern</button>
+        </div>
+        <label class="source-label" for="concernDetails">Describe what needs review</label>
+        <textarea id="concernDetails" placeholder="For example: I thought framing was complete, but the latest update says work is still in progress. Please clarify the confirmed status."></textarea>
+        <div class="concern-boundary">CasaFlowAI will preserve this as your source-specific claim and notify the contractor. It will not change the approved project state, decide who is correct, or contact an inspector or professional automatically.</div>
+      </div>
+      <footer class="concern-modal-actions">
+        <button class="btn" id="cancelConcern" type="button">Cancel</button>
+        <button class="btn primary" id="submitConcern" type="button">Submit for contractor review</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="review-backdrop" id="reviewBackdrop" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+    <aside class="review-drawer">
+      <header class="drawer-head">
+        <div>
+          <div class="eyebrow">CasaFlowAI review</div>
+          <h2 id="reviewTitle">Proposed activity transition</h2>
+        </div>
+        <button class="btn close-btn" id="closeReview" type="button" aria-label="Close review">×</button>
+      </header>
+
+      <div class="drawer-content">
+        <section class="source-card">
+          <div class="source-line">
+            <span class="source-label" id="reviewSource">Chat input · Contractor</span>
+            <span class="badge neutral">Preserved as evidence</span>
+          </div>
+          <p class="source-quote" id="reviewQuote">“Move insulation to Ready. The crew is available tomorrow.”</p>
+        </section>
+
+        <section class="recommendation">
+          <div class="recommendation-top">
+            <div>
+              <span class="source-label">Recommendation</span>
+              <h3>Pause this transition</h3>
+            </div>
+            <span class="badge warn">Unresolved prerequisite</span>
+          </div>
+          <div class="reason-box">
+            <strong>Why:</strong>
+            <p>Electrical rough-in (A-013) is confirmed In progress. It must be contractor-confirmed complete before Wall &amp; ceiling insulation (A-016) can move to Ready.</p>
+          </div>
+        </section>
+
+        <section class="state-comparison" aria-label="Current and proposed state">
+          <div class="state-card">
+            <span class="state-label">Current confirmed state</span>
+            <span class="state-name">Insulation · Blocked</span>
+            <span class="state-detail">Electrical rough-in is 65% complete.</span>
+          </div>
+          <div class="state-arrow" aria-hidden="true">→</div>
+          <div class="state-card blocked">
+            <span class="state-label">Requested state</span>
+            <span class="state-name">Insulation · Ready</span>
+            <span class="state-detail">Not eligible. Preserve current state.</span>
+          </div>
+        </section>
+
+        <section class="review-section">
+          <header class="review-section-head">
+            <h3>What may continue in parallel</h3>
+            <span class="badge ok">2 activities</span>
+          </header>
+          <div class="review-section-body">
+            <div class="parallel-list">
+              <span class="parallel-chip">Rough plumbing (A-012)</span>
+              <span class="parallel-chip">HVAC rough-in (A-014)</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="review-section">
+          <header class="review-section-head">
+            <h3>Independent review agent</h3>
+            <span class="badge ok">Looks right</span>
+          </header>
+          <div class="review-section-body">
+            <p style="margin:0;color:var(--ink-2)">The worker agent identified Electrical rough-in (A-013) as the controlling incomplete prerequisite, preserved the current project state, and did not block unrelated parallel work.</p>
+          </div>
+        </section>
+
+        <section class="review-section">
+          <header class="review-section-head">
+            <h3>Homeowner-ready update</h3>
+            <span class="badge neutral">Draft only</span>
+          </header>
+          <div class="review-section-body">
+            <blockquote class="homeowner-preview">Systems rough-in is continuing. Insulation will remain on hold until electrical rough-in is confirmed complete. Rough plumbing and HVAC work may continue in parallel. No homeowner action is required right now.</blockquote>
+          </div>
+        </section>
+
+        <details>
+          <summary>Evidence and policy grounding</summary>
+          <div class="details-body">
+            <ul class="evidence-list">
+              <li><span class="evidence-check">✓</span><span>SNAP-TR-002/A-013 · Electrical rough-in · In progress</span></li>
+              <li><span class="evidence-check">✓</span><span>activity_dependencies.csv · A-013 is a hard predecessor of A-016</span></li>
+              <li><span class="evidence-check">✓</span><span>dependency_exception_policy.md §DE-2 · incomplete prerequisite requires Pause</span></li>
+              <li><span class="evidence-check">✓</span><span>state_update_policy.md §SU-5 · canonical state remains unchanged without approval</span></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <footer class="drawer-actions">
+        <button class="btn approve" id="approveButton" type="button">Approve recommendation</button>
+        <button class="btn" id="editButton" type="button">Edit</button>
+        <button class="btn danger" id="escalateButton" type="button">Escalate</button>
+        <p class="gate-note">Approving this review preserves Insulation as Blocked. It does not send the homeowner draft or override the prerequisite.</p>
+      </footer>
+    </aside>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const input = document.getElementById("updateInput");
+      const sendButton = document.getElementById("sendButton");
+      const micButton = document.getElementById("micButton");
+      const inputMode = document.getElementById("inputMode");
+      const micLabel = micButton.querySelector(".mic-label");
+      const projectSwitcher = document.getElementById("projectSwitcher");
+      const personaAvatar = document.getElementById("personaAvatar");
+      const conversation = document.getElementById("conversation");
+      const backdrop = document.getElementById("reviewBackdrop");
+      const closeReview = document.getElementById("closeReview");
+      const reviewSource = document.getElementById("reviewSource");
+      const reviewQuote = document.getElementById("reviewQuote");
+      const toast = document.getElementById("toast");
+      const insulationCard = document.getElementById("insulationCard");
+      const concernBackdrop = document.getElementById("concernBackdrop");
+      const concernDetails = document.getElementById("concernDetails");
+      const pendingConcernHome = document.getElementById("pendingConcernHome");
+      const pendingConcernTitle = document.getElementById("pendingConcernTitle");
+      const pendingConcernText = document.getElementById("pendingConcernText");
+      const contractorConcernItem = document.getElementById("contractorConcernItem");
+      const contractorConcernText = document.getElementById("contractorConcernText");
+      const attentionCount = document.getElementById("attentionCount");
+      let sourceMode = "Chat input";
+      let selectedConcernType = "Status disagreement";
+      let toastTimer;
+
+      function showToast(message) {
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.classList.add("visible");
+        toastTimer = setTimeout(() => toast.classList.remove("visible"), 3200);
+      }
+
+      function addMessage(text) {
+        const item = document.createElement("div");
+        item.className = "message user";
+        const label = document.createElement("span");
+        label.className = "message-label";
+        label.textContent = sourceMode === "Voice transcript" ? "Contractor · Voice transcript" : "Contractor";
+        item.append(label, document.createTextNode(text));
+        conversation.appendChild(item);
+        conversation.scrollTop = conversation.scrollHeight;
+      }
+
+      function openReview(text, source) {
+        const cleanText = text.trim() || "Move insulation to Ready. The crew is available tomorrow.";
+        sourceMode = source || sourceMode;
+        reviewSource.textContent = sourceMode + " · Contractor";
+        reviewQuote.textContent = "“" + cleanText + "”";
+        addMessage(cleanText);
+        backdrop.classList.add("visible");
+        document.body.style.overflow = "hidden";
+        closeReview.focus();
+      }
+
+      function hideReview() {
+        backdrop.classList.remove("visible");
+        document.body.style.overflow = "";
+      }
+
+      function openConcern() {
+        concernBackdrop.classList.add("visible");
+        document.body.style.overflow = "hidden";
+        document.getElementById("closeConcern").focus();
+      }
+
+      function hideConcern() {
+        concernBackdrop.classList.remove("visible");
+        document.body.style.overflow = "";
+      }
+
+      sendButton.addEventListener("click", () => openReview(input.value, sourceMode));
+      input.addEventListener("keydown", event => {
+        if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+          openReview(input.value, sourceMode);
+        }
+      });
+
+      document.querySelectorAll(".quick-action").forEach(button => {
+        button.addEventListener("click", () => {
+          input.value = button.dataset.prompt;
+          sourceMode = "Chat input";
+          if (inputMode) inputMode.textContent = "Chat input";
+          input.focus();
+        });
+      });
+
+      micButton.addEventListener("click", () => {
+        if (micButton.classList.contains("listening")) return;
+        micButton.classList.add("listening");
+        micLabel.textContent = "Listening";
+        if (inputMode) inputMode.textContent = "Listening…";
+        input.value = "";
+        setTimeout(() => {
+          input.value = "Move insulation to Ready. The insulation crew is available tomorrow.";
+          sourceMode = "Voice transcript";
+          if (inputMode) inputMode.textContent = "Voice transcript · confirm";
+          micButton.classList.remove("listening");
+          micLabel.textContent = "Speak";
+          input.focus();
+          showToast("Transcript ready. Confirm or edit it before review.");
+        }, 1400);
+      });
+
+      closeReview.addEventListener("click", hideReview);
+      backdrop.addEventListener("click", event => {
+        if (event.target === backdrop) hideReview();
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && backdrop.classList.contains("visible")) hideReview();
+        if (event.key === "Escape" && concernBackdrop.classList.contains("visible")) hideConcern();
+      });
+
+      document.getElementById("raiseConcernButton").addEventListener("click", openConcern);
+      document.getElementById("closeConcern").addEventListener("click", hideConcern);
+      document.getElementById("cancelConcern").addEventListener("click", hideConcern);
+      concernBackdrop.addEventListener("click", event => {
+        if (event.target === concernBackdrop) hideConcern();
+      });
+      document.querySelectorAll(".concern-category").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedConcernType = button.dataset.concern;
+          document.querySelectorAll(".concern-category").forEach(item => {
+            item.setAttribute("aria-pressed", String(item === button));
+          });
+        });
+      });
+      document.getElementById("submitConcern").addEventListener("click", () => {
+        const description = concernDetails.value.trim() || "Please review the published project status and clarify the confirmed record.";
+        pendingConcernTitle.textContent = selectedConcernType;
+        pendingConcernText.textContent = description;
+        pendingConcernHome.hidden = false;
+        contractorConcernItem.hidden = false;
+        contractorConcernItem.querySelector("strong").textContent = "Homeowner concern · " + selectedConcernType;
+        contractorConcernText.textContent = description;
+        attentionCount.textContent = "3";
+        hideConcern();
+        showToast("Concern recorded and added to the contractor’s review queue. Project state was not changed.");
+      });
+
+      document.querySelectorAll(".work-card").forEach(card => {
+        card.addEventListener("dragstart", () => card.classList.add("dragging"));
+        card.addEventListener("dragend", () => card.classList.remove("dragging"));
+      });
+      document.querySelectorAll(".board-column").forEach(column => {
+        column.addEventListener("dragover", event => {
+          event.preventDefault();
+          column.classList.add("drag-over");
+        });
+        column.addEventListener("dragleave", () => column.classList.remove("drag-over"));
+        column.addEventListener("drop", event => {
+          event.preventDefault();
+          column.classList.remove("drag-over");
+          const dragged = document.querySelector(".work-card.dragging");
+          if (dragged === insulationCard && column.dataset.column === "ready") {
+            openReview("Move Wall & ceiling insulation (A-016) from Blocked to Ready.", "Board movement");
+          } else {
+            showToast("Concept behavior is wired for the Insulation → Ready transition.");
+          }
+        });
+      });
+      document.getElementById("mobileInsulationButton").addEventListener("click", event => {
+        event.stopPropagation();
+        openReview("Move Wall & ceiling insulation (A-016) from Blocked to Ready.", "Mobile card action");
+      });
+      insulationCard.addEventListener("click", () => {
+        openReview("Move Wall & ceiling insulation (A-016) from Blocked to Ready.", "Board movement");
+      });
+      document.getElementById("mobileUpdateCta").addEventListener("click", () => {
+        document.getElementById("field-update-title").scrollIntoView({behavior: "smooth", block: "start"});
+        input.focus();
+      });
+      if ("IntersectionObserver" in window) {
+        const mobileUpdateCta = document.getElementById("mobileUpdateCta");
+        const updateEntry = document.querySelector(".update-entry");
+        const updateEntryObserver = new IntersectionObserver(entries => {
+          mobileUpdateCta.classList.toggle("is-hidden", entries[0].isIntersecting);
+        }, {threshold: 0.15});
+        updateEntryObserver.observe(updateEntry);
+      }
+
+      document.getElementById("approveButton").addEventListener("click", () => {
+        hideReview();
+        showToast("Recommendation approved. Insulation remains Blocked; no message was sent.");
+      });
+      document.getElementById("editButton").addEventListener("click", () => {
+        showToast("Edit would reopen the contractor draft without changing project state.");
+      });
+      document.getElementById("escalateButton").addEventListener("click", () => {
+        hideReview();
+        showToast("Escalation recorded for contractor follow-up.");
+      });
+
+      document.querySelectorAll(".nav-item[data-view]").forEach(button => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll(".nav-item[data-view]").forEach(item => {
+            const selected = item === button;
+            item.classList.toggle("active", selected);
+            item.setAttribute("aria-pressed", String(selected));
+          });
+          document.querySelectorAll(".view-page").forEach(view => {
+            view.hidden = view.id !== button.dataset.view;
+          });
+          const persona = {
+            operationsView: {project: "Willow Glen Extension", initials: "AR", label: "Contractor AR"},
+            homeownerView: {project: "My home extension", initials: "HO", label: "Homeowner preview"},
+            creatorView: {project: "CasaFlowAI SiteOps", initials: "SO", label: "CasaFlowAI SiteOps Team"}
+          }[button.dataset.view];
+          projectSwitcher.textContent = persona.project;
+          personaAvatar.textContent = persona.initials;
+          personaAvatar.setAttribute("aria-label", persona.label);
+          window.scrollTo({top: 0, behavior: "smooth"});
+        });
+      });
+
+      document.querySelectorAll(".view-tab:not(.active)").forEach(button => {
+        button.addEventListener("click", () => showToast("This concept focuses on the Field operations experience."));
+      });
+      document.querySelectorAll("[data-creator-action]").forEach(button => {
+        button.addEventListener("click", () => {
+          const message = button.dataset.creatorAction === "cases"
+            ? "In the working prototype, this opens the full twenty-case decision-quality table."
+            : "In the working prototype, this opens evidence citations, policy checks, and the immutable audit trail.";
+          showToast(message);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
