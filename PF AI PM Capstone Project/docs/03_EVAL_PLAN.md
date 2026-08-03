@@ -257,3 +257,23 @@ Supplemental policy checks should cover:
 - Contractor proceeding under an unresolved hard requirement
 - Role-based privacy
 - Failed inspection → correction complete → passed reinspection
+
+## Final Develop evaluation result
+
+The five cases above remained the primary qualitative cases. The final quantitative benchmark used **20 isolated synthetic transition cases** with evaluator-only expected labels: 10 genuine blocker cases and 10 safe-to-proceed cases. CasaFlowAI did not receive the expected label in its worker context.
+
+The final locked configuration used:
+
+- **Worker agent:** Claude Haiku 4.5, producing the structured recommendation and cited review package.
+- **Independent review agent:** Claude Sonnet 5, producing the advisory **Looks right** or **Needs attention** verdict from the same case-scoped evidence and policies.
+- **Final authority:** the contractor; the reviewer cannot apply project changes or override deterministic boundaries.
+
+Final full-suite results:
+
+- **Blocker recall:** 10/10, or **100%**.
+- **False-pause rate:** 0/10, or **0%**.
+- **Valid grounded outputs:** **20/20**.
+- **Errors or invalid outputs:** **0**.
+- **Exact boundary, recommendation, and subtype match:** 15/20, or **75%**.
+
+The five remaining exact-label differences were subtype-specific calibration differences, not missed blocker-versus-safe classifications. The benchmark therefore meets the Discovery launch target and guardrail for this synthetic prototype, but it does not establish production performance. A private pilot must add privacy-reviewed, de-identified real-world-quality cases and preserve the same hidden-label evaluation method.

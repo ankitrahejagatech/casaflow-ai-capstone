@@ -4,21 +4,34 @@
 
 CasaFlowAI proves one end-to-end loop for a synthetic City of San Jose residential home-extension activity transition:
 
-> Contractor input → case-scoped project context → evidence-grounded decision → structured review package → contractor review
+> Contractor input → project-scoped context → evidence-grounded worker decision → independent advisory review → contractor approval, correction, or escalation → approved board and homeowner-view update
 
-The contractor selects a project-board transition or submits a chat update. CasaFlowAI loads the contractor-approved snapshot, dependencies, inspections, decisions, change orders, requirements, evidence, and policies. It then recommends **Proceed**, **Pause**, **Needs clarification**, or **Needs inspection, permit, or professional review**; explains the controlling reason and blocker scope; and presents current versus proposed state. An authorized contractor then approves, edits, or escalates the review package. Nothing changes canonical state or sends communication automatically.
+The contractor can drag or select an activity card, type a field update, choose a quick-update example, or speak an update that becomes editable text. CasaFlowAI loads the contractor-approved snapshot, dependencies, inspections, decisions, change orders, requirements, evidence, and policies. Claude Haiku 4.5 produces **Proceed**, **Pause**, **Needs clarification**, or **Needs inspection, permit, or professional review** with a controlling reason, citations, blocker scope, and proposed state. Claude Sonnet 5 independently reviews the package. The contractor remains the decision-maker: only an approved operational change updates the board and derived homeowner view, and no external communication is sent automatically.
+
+The prototype contains three role-appropriate surfaces:
+
+- **General Contractor View:** project phases, responsive activity board, text/voice/quick/drag input, inspection details, evidence-grounded review, and contractor controls.
+- **Homeowner View:** contractor-approved progress, phase status, current and upcoming work, latest approved update, and a message-to-contractor form that cannot change project state.
+- **CasaFlowAI SiteOps:** five primary cases, the 20-case scoreboard, worker/reviewer quality visibility, policy and record references, and local API-key settings.
 
 ## 2. User interaction
 
-The contractor selects one of five primary demo cases or any of twenty synthetic transition cases, reviews its input and isolated project context, and clicks **Run**. CasaFlowAI displays the recommendation, subtype, controlling reason, blocker scope, activities that may continue, cited evidence, current and proposed state, recommended next action, and any proposed homeowner-visible update.
+The operational demo provides four equivalent contractor input paths: card drag/select, typed update, quick update, and editable speech transcript. Every submitted move triggers CasaFlowAI automatically; the contractor never needs to ask the agent to check. A progress indicator shows context loading, dependency checks, and recommendation preparation.
+
+Two locked operational examples demonstrate the loop:
+
+1. **Proceed:** Start from the Proceed setup and submit the rough-plumbing start update by voice or quick update. CasaFlowAI verifies the prerequisites, recommends Proceed, receives an independent reviewer verdict, and waits for contractor approval. Approval moves Rough plumbing to In progress and updates the contractor-approved Homeowner View.
+2. **Pause:** Start from the Pause setup and drag Wall and ceiling insulation toward Ready while Electrical rough-in is incomplete. CasaFlowAI identifies the exact prerequisite, recommends Pause, preserves the board, leaves official inspection records unchanged, and gives the contractor edit or escalation choices appropriate to the review.
+
+CasaFlowAI SiteOps also lets the creator run any of the five primary cases or all twenty isolated transition cases. It displays the recommendation, subtype, controlling reason, blocker scope, activities that may continue, cited evidence, current and proposed state, recommended next action, and reviewer verdict.
 
 The contractor then chooses one of three review actions:
 
-- **Approve** records acceptance of the review package only.
-- **Edit** allows the proposed content to be revised before the review is recorded.
+- **Approve** applies only the displayed, allowed operational state change after the final deterministic checks; in the evaluation harness it records the evaluator's review rather than changing a project snapshot.
+- **Edit** allows proposed content or a state value to be corrected before a new review.
 - **Escalate** requires a human-provided reason and records the case for further handling.
 
-None of these buttons sends communication or automatically applies a canonical project-state change.
+No control sends external communication. A refusal or failed grounding check disables unsafe approval paths.
 
 ## 3. Synthetic data used
 
@@ -71,9 +84,9 @@ CasaFlowAI was then run against the complete evaluator-only set of **20 transiti
 - **False-pause rate: 0/10, or 0%** — better than the Discovery guardrail of no more than 10%.
 - **Valid grounded outputs: 20/20**.
 - **Errors or invalid outputs: 0**.
-- **Exact boundary, recommendation, and subtype match: 13/20, or 65%**.
+- **Exact boundary, recommendation, and subtype match: 15/20, or 75%**.
 
-The core safety and usability targets were therefore met on the complete synthetic benchmark. Exact-label accuracy remains a separate calibration metric: CasaFlowAI always classified the blocker versus safe-to-proceed decision correctly in the final run, but seven cases used a different valid workflow boundary, recommendation, or subtype than the evaluator’s exact expected label.
+The core safety and usability targets were therefore met on the complete synthetic benchmark. Exact-label accuracy remains a separate calibration metric: CasaFlowAI always classified the blocker versus safe-to-proceed decision correctly in the final run, but five cases used a less-specific valid subtype than the evaluator’s exact expected label.
 
 ## 6. Improvement made
 
@@ -85,18 +98,21 @@ The core safety and usability targets were therefore met on the complete synthet
 
 The complete 20-case run exposed a second reliability issue. TR-019 produced the correct final-inspection escalation, but its **WHY** field omitted an exact record citation and failed deterministic grounding validation. CasaFlowAI’s Check stage was improved to allow one constrained self-correction only when a response already contains verified case evidence and valid policies but places no exact record citation in a required field. The repair cannot run for fabricated or cross-case citations; those still produce **REFUSED-ESCALATE** and disable Approve and Edit. After this change, the complete suite improved from 19/20 to **20/20 valid grounded outputs**, blocker recall increased from 90% to **100%**, and false-pause remained **0%**.
 
+The final reliability pass added deterministic source-claim checks for conflicting approved-plan revisions and tentative partial-scope completion language, corrected activity-intent matching for weatherproofing, and constrained parallel-work claims to case-visible allowlists. The final full run retained 100% blocker recall and 0% false-pause while increasing exact-label accuracy from 65% to **75%**.
+
 ## 7. Known limitations
 
 - The MVP covers one synthetic, English-language City of San Jose residential home-extension project. It does not cover remodeling, new construction, commercial work, or other jurisdictions.
-- Only an authorized contractor or project lead can submit project-board transitions or contractor-chat updates. Homeowner questions, selections, and disputes are scripted source events in the MVP. Live identity verification and secure role enforcement are not implemented.
-- The contractor can view the complete review package. The homeowner view is a read-only rendering of contractor-approved information and excludes contractor-only notes, margins, bids, and internal reasoning.
+- The public prototype models three personas but does not implement authentication or secure role enforcement. A real pilot must add verified identity, authorization, and project isolation.
+- The contractor can submit board moves, typed updates, quick updates, and editable speech transcripts. Browser speech recognition is a demo input convenience; raw audio is not retained by CasaFlowAI, and a real-data pilot requires speech-provider and privacy review before enabling it.
+- The contractor can view the complete review package. The homeowner project-status view renders only contractor-approved information and excludes contractor-only notes, margins, bids, and internal reasoning. Its message form sends a question to the modeled contractor queue but does not query the agent or change status.
 - Photos are optional supporting context and are never treated as proof of completion, safety, code compliance, inspection approval, permit acceptance, or professional approval.
 - Inspection results are contractor-attested synthetic records. CasaFlowAI does not verify them against City systems or independently declare an inspection passed.
 - Escalations preserve the current state and identify the appropriate contractor, inspector, engineer, emergency authority, or privacy reviewer. The prototype records this routing but does not automatically contact anyone.
-- Email sending, scheduling, payments, purchasing, municipal integrations, and automatic canonical-state updates remain outside the MVP.
+- Email sending, scheduling, payments, purchasing, production authentication, municipal integrations, and autonomous canonical-state updates remain outside the MVP.
 - The complete 20-case synthetic benchmark measured 100% blocker recall and 0% false-pause, but it does not establish production performance. The set models one project, one jurisdiction, and authored synthetic evidence; a larger and more diverse real-world-quality labeled set is required.
-- Exact boundary, recommendation, and subtype accuracy was 65% even though blocker classification was correct in all 20 final cases. The recommendation taxonomy and subtype calibration therefore require further evaluation before production use.
-- The independent reviewer is advisory, doubles model calls and latency, and may share blind spots with the worker because both use the same model; the contractor remains the final decision-maker.
+- Exact boundary, recommendation, and subtype accuracy was 75% even though blocker classification was correct in all 20 final cases. The remaining five differences were subtype-specific calibration differences and still require further evaluation before production use.
+- The independent reviewer is advisory and doubles model calls and latency. The worker uses Claude Haiku 4.5 and the reviewer uses Claude Sonnet 5 with separate prompts, but model diversity does not eliminate shared provider or context blind spots; the contractor remains the final decision-maker.
 
 ## 8. Prototype evidence
 
@@ -112,17 +128,17 @@ For contractors, one missed dependency can mean an unusable crew day, subcontrac
 
 CasaFlowAI maintains an evidence-grounded project state and checks every proposed activity transition automatically. It tells the contractor what can proceed, what is blocked, why, and what needs attention before the issue becomes a homeowner surprise.
 
-**30–50 seconds — Demonstrate the blocker**
+**30–50 seconds — Demonstrate an approved Proceed transition**
 
-Select EVAL-02. The contractor attempts to move Wall and ceiling insulation to Ready because the crew is available. CasaFlowAI checks the project state without requiring the contractor to ask. It recommends **Pause** because Electrical rough-in remains In progress and must be Confirmed complete first.
+In General Contractor View, load the Proceed setup and use **Speak** or **Start rough plumbing**. The editable field update is submitted, CasaFlowAI shows its review progress, verifies the prerequisites, and recommends **Proceed**. The contractor approves, the board moves Rough plumbing to In progress, and Homeowner View reflects the approved update.
 
-**50–65 seconds — Show useful explainability**
+**50–65 seconds — Demonstrate the scoped Pause**
 
-CasaFlowAI names the exact prerequisite, scopes the pause to insulation, identifies other work that may continue, preserves the current state, and prepares a clear homeowner-visible explanation. The contractor no longer has to reconstruct and explain the issue from memory, while the homeowner receives a more understandable account of what is happening.
+Load the Pause setup and drag Wall and ceiling insulation toward Ready. CasaFlowAI names incomplete Electrical rough-in as the controlling prerequisite, scopes the pause to insulation, preserves the current state, and leaves official inspection records unchanged.
 
 **65–75 seconds — Show human control**
 
-The contractor reviews the recommendation, evidence, current versus proposed state, and next action. **Approve**, **Edit**, and **Escalate** record the contractor's review but do not automatically change canonical state or send communication. The session log records the run and human review action.
+The contractor reviews the recommendation, evidence, current versus proposed state, reviewer verdict, and next action. **Approve**, **Edit**, and **Escalate** remain subject to deterministic policy checks. No external message is sent automatically.
 
 Before the contractor gate unlocks, an independently prompted reviewer checks the worker package against the same case-scoped evidence and policies and displays **Looks right** or **Needs attention** with a one-line reason.
 
@@ -132,4 +148,4 @@ Run EVAL-05. CasaFlowAI refuses a request to fabricate homeowner approval, appro
 
 **85–90 seconds — Show evidence of quality**
 
-End on the complete 20-case scoreboard: **100% blocker recall, 0% false-pause, 20/20 valid grounded outputs, and zero errors**. Explain that the expected labels remained evaluator-only and that the first full run exposed a TR-019 citation-placement failure, which drove the constrained Check-stage self-correction. State transparently that exact-label accuracy is 65% and remains a calibration opportunity.
+End on the complete 20-case scoreboard: **100% blocker recall, 0% false-pause, 20/20 valid grounded outputs, 75% exact-label accuracy, and zero errors**. Explain that expected labels remained evaluator-only and that failures drove constrained grounding, source-claim, and format corrections. State transparently that this is a small synthetic benchmark rather than production evidence.

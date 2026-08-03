@@ -1,143 +1,218 @@
-# CasaFlowAI — Deploy PRD
+# CasaFlowAI Deploy PRD
 
-## 1. Go / no-go view
+## Product
 
-**Verdict: Conditional Go.** CasaFlowAI is ready to launch as a public, synthetic-data demonstration. It is not yet approved for a real-project-data pilot.
+**CasaFlowAI** is an evidence-grounded project-state coordinator for small residential general contractors managing permitted home-extension projects in the City of San Jose.
 
-The public-demo decision is supported by the following:
+The locked prototype has three role-appropriate surfaces:
 
-- The full 20-case evaluation produced 100% blocker recall, a 0% false-pause rate, 20 of 20 valid grounded outputs, and 65% exact-label accuracy. The two Discovery safety targets—at least 90% blocker recall and at most 10% false-pause—were met. Exact-label accuracy remains an improvement opportunity and is not being represented as production readiness.
-- The product enforces its boundaries on screen. It can recommend and draft, but it cannot independently apply a project-state change, send a homeowner communication, fabricate evidence, or replace an inspector, engineer, architect, licensed trade professional, or contractor.
-- Pilot roles, operating rituals, success thresholds, immediate-pause triggers, and rollback steps are defined.
-- The public application uses synthetic project records only, and no API key is shipped with the application.
+- **General Contractor View:** project phases, activity board, typed updates, quick updates, editable speech transcripts, card drag/select, inspection details, agent review, and contractor approval controls.
+- **Homeowner View:** contractor-approved project progress, completed and upcoming work, latest approved update, and a question-or-feedback form that enters the contractor review queue without changing project state.
+- **CasaFlowAI SiteOps:** five primary evals, the complete 20-case benchmark, worker and reviewer results, policies and records, and local API-key settings.
 
-The real-data pilot remains a no-go until a qualified, independent privacy and security reviewer approves the consent language, authentication and project-isolation controls, data minimization, retention and deletion rules, AI-provider data handling, and incident-response process.
+The core loop is:
+
+> Contractor proposes an update → CasaFlowAI loads approved project context → worker agent recommends and cites evidence → independent review agent checks the package → contractor approves, edits, or escalates → only an approved allowed change updates the board and homeowner view
+
+External communication is never sent automatically.
+
+---
+
+## 1. Go / No-Go decision
+
+### Decision: Conditional Go
+
+CasaFlowAI is a **Go for public launch as a synthetic-data demonstration**. It is a **No-Go for unrestricted real project data or production use** until a private pilot environment passes privacy, security, identity, authorization, project-isolation, retention, and incident-response review.
+
+The public prototype is ready because it demonstrates the complete human-controlled loop, including:
+
+- Four contractor input paths: drag/select, typed update, quick update, and editable speech transcript.
+- Evidence-grounded recommendations: **Proceed**, **Pause**, **Needs clarification**, or **Needs inspection, permit, or professional review**.
+- Deterministic grounding, authority, missing-data, and professional-boundary checks.
+- A Claude Haiku 4.5 worker and separately prompted Claude Sonnet 5 advisory reviewer.
+- Contractor approval before any consequential project-state change.
+- A derived homeowner view that displays only contractor-approved project state.
+- A refusal case for fabricated homeowner approval and unauthorized financial, schedule, and communication commitments.
+
+The final balanced synthetic benchmark contains 10 blocker cases and 10 safe-to-proceed cases. Results were:
+
+- **Blocker recall: 10/10, or 100%** — Discovery target: at least 90%.
+- **False-pause rate: 0/10, or 0%** — Discovery guardrail: at most 10%.
+- **Valid grounded outputs: 20/20**.
+- **Errors or invalid outputs: 0**.
+- **Exact boundary, recommendation, and subtype match: 15/20, or 75%**.
+
+The remaining five exact-label differences were subtype-specific calibration differences, not missed blocker-versus-safe decisions. These results justify a controlled demonstration and a small observed pilot; they do not establish production performance.
+
+The prototype must remain labeled as a capstone demonstration. Every visitor supplies their own Anthropic API key, which is stored only in that browser's local storage or current tab and is not embedded in shipped files.
+
+---
 
 ## 2. Privacy and safety risks
 
-CasaFlowAI may eventually process contractor and homeowner identities, email addresses, project addresses, project scope, schedules, costs, permits, inspections, selections, change orders, disputes, and professional-review requirements. In the proposed real-data pilot, this information would be available only to the authorized contractor for that project, the AI provider as required to process a request, and the product owner to the minimum extent necessary for approved monitoring and incident handling. Homeowners would receive only contractor-approved information and would not see contractor-only notes, pricing, margins, internal reasoning, or information from another project.
+### Public prototype
 
-A leak or cross-project retrieval could expose a homeowner’s address, construction plans, financial information, project disputes, schedule, or security-relevant details about the property. Other material risks include an unauthorized communication, an unsupported state change, treating a photo as proof, fabricating or misreading evidence, and recommending work through an unresolved inspection, permit, safety, or professional requirement.
+The public GitHub Pages prototype is synthetic-data-only. It must never contain real homeowner, contractor, property, permit, inspection, financial, contract, dispute, or professional-review information. The three views model information visibility but do not implement production authentication or role enforcement.
 
-The public GitHub Pages product must remain synthetic-data-only. Real data must never be entered into that public demo. Before a private real-data pilot begins, CasaFlowAI requires:
+The prototype's speech input is a browser convenience that creates an editable transcript. CasaFlowAI does not persist raw audio. Photos are optional context and are never sufficient proof of completion, safety, code compliance, inspection passage, permit acceptance, or professional approval.
+
+### Private pilot
+
+A private pilot may use consented, minimized real data only after readiness review. Potential data includes identities, contact details, project address, scope, approved plans, schedules, costs, selections, change orders, inspections, disputes, and professional-review requirements.
+
+Before real data is entered, the pilot requires:
 
 - Written contractor and homeowner consent.
-- Private, authenticated access with strict project isolation and role-based permissions.
-- Data minimization and an approved retention and deletion policy.
-- Review of the AI provider’s data-handling terms.
-- A named incident owner and immediate-pause process.
+- Private authenticated access, verified roles, and strict project isolation.
+- Least-privilege access for the contractor, homeowner, and CasaFlowAI SiteOps team.
+- A defined purpose for every collected field and removal of non-material fields.
+- Approved AI-provider terms, data handling, retention, deletion, and incident-response procedures.
+- A named incident owner and an immediate-pause process.
 - Independent privacy and security approval.
 
-Identifiable pilot data will be deleted within 30 days after the pilot ends. Only de-identified aggregate metrics and documented product learnings may be retained. Images may provide context but may never independently prove completion, safety, code compliance, inspection approval, permit acceptance, or professional approval. Raw voice or audio data is outside the initial pilot scope.
+The contractor may see the full project review package for an authorized project. The homeowner may see only contractor-approved homeowner-relevant status and may submit a question or concern to the contractor queue. The homeowner cannot view contractor-only notes, margins, bids, internal reasoning, or another project's information. CasaFlowAI SiteOps receives only the minimum data required for approved monitoring and incident handling.
 
-This capstone prototype is synthetic end to end; a real pilot requires a formal privacy and security review first.
+Raw speech and audio remain disabled in the initial real-data pilot until the speech provider, consent language, retention behavior, and privacy controls are approved. The initial pilot uses structured board actions and text updates. Identifiable pilot data is deleted within 30 days after the pilot ends; only de-identified aggregate metrics and documented learnings may be retained.
+
+One privacy breach, cross-project exposure, unauthorized send, unauthorized state change, fabricated evidence event, concealed conflict, or recommendation to proceed through a hard safety, inspection, permit, privacy, or professional boundary immediately pauses the pilot.
+
+---
 
 ## 3. Human operating model
 
-CasaFlowAI uses the following human roles:
+CasaFlowAI uses three accountable pilot roles.
 
-1. **Operator — participating general contractor or owner-operator:** Enters or selects project updates, reviews the evidence and recommendation, corrects inaccurate information, approves field-specific project changes, and separately approves any external communication. A small contractor is not assumed to have a separate project lead.
-2. **Escalation coordinator — CasaFlowAI product owner, Ankit Raheja:** Receives only the minimum necessary escalation category, case identifier, severity, and disposition; preserves the audit trail; and routes the issue back to the contractor. The escalation coordinator does not make a construction, inspection, engineering, regulatory, legal, or safety decision.
-3. **Product decision owner — CasaFlowAI product owner, Ankit Raheja:** Controls prompt, policy, model, agent-logic, tool, access, and pilot-scope changes; approves releases; and may pause or expand the pilot. The contractor remains the decision-maker for the project and determines whether an inspector, engineer, architect, licensed trade professional, emergency authority, or other qualified authority is required.
+### 1. Operator — participating general contractor or owner-operator
 
-The approval gates remain independent:
+The operator is the general contractor responsible for the extension project. A separate project lead is not assumed. The operator enters project updates, reviews the worker recommendation and reviewer verdict, corrects inaccurate values, approves field-specific allowed changes, and decides whether to edit or escalate. No consequential state change or homeowner communication bypasses this role.
 
-- Reviewing a recommendation does not apply a project-state change.
-- A project change requires explicit, field-specific contractor approval.
-- An external communication requires separate contractor approval.
-- Human approval cannot override a privacy, evidence-integrity, safety, regulatory, or professional-authority boundary.
+### 2. Escalation coordinator — CasaFlowAI product owner, Ankit Raheja
 
-After every recommendation, the contractor records approve, edit, reject, or escalate. Each contractor and participating homeowner has a 20-minute weekly feedback interview. The product owner reviews actions, incidents, edits, escalations, and feedback weekly and decides whether a controlled product change is warranted.
+The escalation coordinator receives the minimum necessary case identifier, risk category, severity, evidence pointer, and disposition. The coordinator preserves the audit trail and returns the matter to the contractor. The contractor decides whether an inspector, engineer, architect, licensed trade professional, emergency authority, attorney, or another qualified authority must be involved. The coordinator does not make the underlying construction or professional decision.
+
+### 3. Product decision owner — CasaFlowAI product owner, Ankit Raheja
+
+The product decision owner controls prompt, policy, model, agent-logic, tool-calling, data-schema, permission, access, and release changes. The owner may pause the pilot and decides whether a tested change is released or whether the pilot expands.
+
+The Haiku worker and Sonnet reviewer are automation components, not human authorities. The review agent is advisory: **Looks right** does not approve a change, and **Needs attention** requires the contractor to inspect, edit, or escalate the worker output.
+
+Approval rules remain independent:
+
+- Reviewing a recommendation does not itself update canonical state.
+- Only the explicitly displayed and contractor-approved allowed change may update the project board or register.
+- The homeowner view updates only from approved state.
+- A homeowner message enters the contractor queue but does not change status or obtain an autonomous construction answer.
+- Human approval cannot override privacy, evidence-integrity, safety, regulatory, or licensed-professional boundaries.
+
+---
 
 ## 4. Quality monitoring
 
-CasaFlowAI monitors three metric families.
+### Quality metrics
 
-### Quality
+- Blocker recall must remain at or above **90%**.
+- False-pause rate must remain at or below **10%**.
+- Valid grounding and citation checks must have **zero fabricated, cross-case, or unverifiable citations**.
+- Hard authority and safety boundary failures must remain at **zero**.
+- At least **80%** of pilot recommendations should be accepted with no more than minor contractor edits.
+- Exact-label accuracy is monitored as a calibration metric; the current synthetic baseline is **75%**, while blocker recall and false-pause remain the launch gates.
 
-- Blocker recall must remain at or above 90%.
-- False-pause rate must remain at or below 10%.
-- At least 80% of recommendations must be accepted by contractors with no more than minor edits.
-- Grounding and citation validation must produce zero fabricated, cross-case, or unverifiable citations.
+### Value metrics
 
-### Value
+- **Primary value metric: Cut contractor coordination time per project update by 30%.** Measure from the contractor entering or proposing an update through completing review and preparing the approved homeowner-facing status.
+- At least **3 of 5 contractors** must say they would continue using CasaFlowAI after the pilot.
+- At least **2 of 3 homeowners** must report that approved updates made current status, blockers, and next steps clearer.
 
-- **Primary value metric:** Cut contractor coordination time per project update by 30%. Time is measured from entering a project update through completing review and preparing a homeowner-ready message.
-- At least 3 of 5 contractors must say they would continue using CasaFlowAI after the pilot.
-- At least 2 of 3 participating homeowners must report that contractor-approved updates made project status, blockers, and next steps clearer.
+### Risk metrics
 
-### Risk
+The acceptable count is zero for privacy breaches, cross-project retrieval, unauthorized messages or state changes, fabricated evidence, hidden conflicts, and recommendations to proceed through unresolved hard requirements.
 
-The acceptable count is zero for:
+### Change control
 
-- Privacy breaches or cross-project exposure.
-- Unauthorized sends or canonical-state changes.
-- Fabricated evidence or concealed conflicts.
-- Recommendations to proceed through a hard inspection, permit, safety, or professional-review requirement.
+The model and agent configuration remain frozen during each pilot week. Any change to a prompt, policy, worker or reviewer model, model version, agent logic, tool call, permission, state schema, dependency rule, output parser, or citation validator requires:
 
-One risk event immediately pauses the pilot. Missing a quality or value threshold prevents expansion and triggers diagnosis and improvement.
-
-The model and core agent configuration remain frozen during each pilot week. Approved changes are released in controlled weekly batches unless a safety or privacy defect requires an immediate pause. A prompt, policy, model or model-version, agent-logic, tool-calling or permission, project-state schema, dependency-rule, output-parser, or citation-validation change requires:
-
-1. Recording the change and its reason.
-2. Rerunning all 20 labeled eval cases.
-3. Confirming blocker recall of at least 90%, false-pause of at most 10%, zero grounding errors, and zero hard-boundary failures.
+1. A recorded change and reason.
+2. A complete rerun of all 20 hidden-label eval cases.
+3. Blocker recall of at least 90%, false-pause of at most 10%, 20/20 valid grounded outputs, and zero hard-boundary failures.
 4. Product-owner approval before release.
 
-Purely visual changes require usability and smoke testing. The 20-case suite is also rerun monthly during a stable pilot.
+Purely visual changes require responsive usability and smoke testing. SiteOps is the monitoring surface for the five primary cases, complete 20-case benchmark, policies, records, and model-quality evidence.
+
+---
 
 ## 5. User feedback plan
 
-Feedback comes from three channels:
+Feedback comes from three channels.
 
-1. **Behavioral review data:** CasaFlowAI records every contractor approve, edit, reject, and escalate action. A meaningful edit or rejection includes a short reason so the team can distinguish an incorrect recommendation from unclear wording or missing context.
-2. **Weekly interviews:** Each contractor receives a 20-minute weekly interview focused on two questions: “What saved you time this week?” and “What was wrong, missing, or difficult to trust?” Each participating homeowner receives a 20-minute weekly interview focused on whether the contractor-approved update made status and next steps clearer and what important question remained unanswered.
-3. **Evaluation replay:** Representative pilot problems are converted into privacy-reviewed, de-identified test cases and rerun against the labeled evaluation table. The agent cannot read expected labels during execution.
+### 1. Behavioral evidence
 
-The product owner reviews these three sources weekly, prioritizes issues by safety and frequency, and documents the resulting product decision. Behavioral changes follow the controlled release and 20-case regression process. Homeowners are recruitment and research participants during this pilot, not direct users of the current prototype: they do not log in, enter project state, interact directly with the agent, or access contractor-only data.
+CasaFlowAI records the proposed transition, worker output, reviewer verdict, contractor approval, edit, or escalation, and resulting project-state effect. A meaningful edit or escalation includes a short reason so the product team can distinguish a wrong decision from missing data, unclear wording, bad interaction design, or an overly strict rule.
+
+### 2. Weekly participant interviews
+
+Each participating contractor receives a 20-minute weekly interview focused on:
+
+- What saved time this week?
+- What was wrong, missing, hard to trust, or difficult to use?
+- Did the board, text, quick-update, or speech-transcript path fit field behavior?
+
+Each participating homeowner receives a 20-minute weekly interview focused on:
+
+- Was the contractor-approved status easy to understand?
+- Were the blocker and next step clear?
+- Did the question-or-feedback flow reduce uncertainty?
+- What important information was still missing?
+
+### 3. Evaluation replay
+
+Privacy-reviewed pilot problems are converted into de-identified, labeled transition cases. Expected labels remain evaluator-only and are never included in the worker's case context. The full suite is rerun before a behavioral release.
+
+The product owner reviews behavioral evidence, interviews, incidents, and eval regressions weekly. Safety and privacy issues take priority; recurring product friction is prioritized by frequency and time cost. No pilot anecdote is promoted to a confirmed product rule without evidence and controlled testing.
+
+---
 
 ## 6. Pilot plan
 
-The pilot is small, reversible, and observed.
-
 ### Participants
 
-- Three initial tech-comfortable small residential general contractors or owner-operators with 1–20 employees.
-- Each contractor must serve the City of San Jose, manage permitted residential home-extension work, agree to review every CasaFlowAI result, and attend a weekly feedback interview.
-- Three homeowners who want clearer extension-project coordination will help recruit or encourage participating contractors, review contractor-approved sample updates outside the product, and provide weekly research feedback.
+- Begin with **three tech-comfortable general contractors or owner-operators** at residential firms with approximately 1–20 employees.
+- Participants must manage permitted City of San Jose home-extension projects, agree to review every CasaFlowAI result, and attend weekly feedback interviews.
+- Recruit **three homeowners** who want clearer project coordination. They use an authenticated contractor-approved homeowner view, submit questions to the contractor queue, and provide weekly feedback. They do not access contractor-only information or receive autonomous construction advice.
 
-### Sequence and duration
+### Sequence
 
-1. **Two-week privacy and access readiness period:** Complete consent, private authentication, project isolation, data minimization, retention, provider review, incident response, and independent privacy/security approval.
-2. **Pilot Weeks 1–2:** Run with three contractors.
-3. **Week 2 expansion gate:** Expand only if there have been zero privacy or hard-boundary failures, blocker recall is at least 90%, false-pause is at most 10%, and no serious usability blocker remains.
-4. **Pilot Weeks 3–4:** Add two contractors, for a maximum of five, only if the gate passes.
+1. **Two-week readiness period:** consent, private authentication, role verification, project isolation, data minimization, provider review, retention/deletion, incident response, and independent privacy/security approval.
+2. **Pilot Weeks 1–2:** three contractors and three homeowners, using private real project data only after readiness approval.
+3. **Week 2 gate:** continue only with zero privacy and hard-boundary failures, blocker recall at or above 90%, false-pause at or below 10%, and no serious usability blocker.
+4. **Pilot Weeks 3–4:** expand to a maximum of five contractors only if the gate passes.
 
-### In scope
+### Initial pilot scope
 
-- Consented, minimized real project data in a private pilot environment.
+In scope:
+
 - City of San Jose permitted residential home-extension projects.
-- Contractor-entered text, chat, or structured project-status transition requests.
-- Evidence-grounded transition evaluation, parallel-work identification, proposed state changes, contractor review, and homeowner-ready draft updates.
+- Consented, minimized real project data in a private environment.
+- Structured board actions and typed updates.
+- Evidence-grounded transition evaluation, parallel-work identification, proposed state changes, contractor review, inspection-register visibility, approved homeowner status, and homeowner questions to the contractor queue.
 
-### Explicitly out of scope
+Out of scope:
 
-- Real data in the public GitHub Pages demonstration.
+- Real data in the public GitHub Pages prototype.
+- Raw voice or retained audio until separate privacy approval.
 - Autonomous project-state changes or external sends.
-- Direct homeowner login, live homeowner Q&A, or homeowner access to contractor-only information.
-- Raw voice or audio input.
+- Live autonomous homeowner-agent Q&A.
 - Treating photos as proof.
-- Autonomous purchasing, payments, scheduling, scope commitments, code interpretation, permit approval, inspection passage, structural judgment, or other licensed-professional decisions.
+- Payments, purchasing, scheduling, bids, scope commitments, legal conclusions, code interpretation, permit approval, inspection passage, structural judgment, or replacement of a licensed professional.
 - Jurisdictions outside the City of San Jose.
 
-### Pilot success and expansion
+### Expansion criteria
 
-Expansion after the pilot requires every agreed condition:
+Expansion requires all of the following:
 
 - Blocker recall at or above 90%.
 - False-pause at or below 10%.
 - Zero hard-boundary, grounding, or privacy failures.
-- Contractor coordination time per project update reduced by at least 30%.
+- Contractor coordination time per update reduced by at least 30%.
 - At least 80% of recommendations accepted with no more than minor edits.
 - At least 3 of 5 contractors willing to continue.
 - At least 2 of 3 homeowners reporting clearer status and next steps.
@@ -145,35 +220,46 @@ Expansion after the pilot requires every agreed condition:
 
 ### Rollback
 
-If an immediate-pause condition occurs, CasaFlowAI is paused and contractors return to their existing manual process. The affected case and audit record are preserved, the issue is diagnosed, and all 20 labeled cases are rerun. The pilot may resume with only the original three-contractor group after the fix passes the required thresholds and the product owner approves restart.
+An immediate-pause condition returns contractors to their existing workflow. CasaFlowAI preserves the affected evidence and audit event, diagnoses the failure, reruns all 20 labeled cases, and completes privacy or safety review as applicable. The pilot may restart only after the thresholds pass and the product owner approves it.
+
+---
 
 ## 7. Four-minute video outline
 
-### 0:00–0:30 — Product and outcome
+### 0:00–0:25 — Product and outcome
 
-Introduce CasaFlowAI as an evidence-grounded project-state coordinator for small residential general contractors managing City of San Jose home extensions. State the promise: fragmented field updates become reviewable recommendations and proposed state changes without surrendering contractor control.
+Introduce CasaFlowAI as an evidence-grounded project-state coordinator for small general contractors managing City of San Jose home extensions. State the core promise: convert fragmented field updates into reviewable next-step recommendations without surrendering contractor control.
 
-### 0:30–1:30 — Problem and Discovery
+### 0:25–0:55 — Problem and Discovery
 
-Show why fragmented texts, calls, schedules, and memory cause missed prerequisites, delayed crews, homeowner stress, repetitive contractor coordination, and disputes. Explain the core question: can the requested activity proceed, or is there a blocker? Present the four recommendation states and the Discovery targets of at least 90% blocker recall and at most 10% false-pause.
+Explain the cost of fragmented texts, calls, photos, schedules, and memory: missed dependencies, wasted crew time, homeowner anxiety, repetitive coordination, and disputes. Present the decision question—can the requested activity proceed, or is there a blocker?—and the Discovery targets of at least 90% blocker recall and at most 10% false-pause.
 
-### 1:30–2:30 — Live product demonstration
+### 0:55–1:45 — Demo 1: organic Proceed by voice
 
-Lead with the known-blocker case: the contractor attempts to move insulation forward while electrical rough-in is incomplete. Show CasaFlowAI identifying the exact incomplete prerequisite, limiting the pause to the affected activity, and identifying work that may continue in parallel. Show the worker-agent recommendation, independent review-agent verdict, citations, current-versus-proposed state, and contractor approval controls.
+Open **General Contractor View**, load the Proceed setup, and speak: “Start rough plumbing.” Show the editable transcript, the visible agent-checking progress, the evidence-grounded **Proceed** recommendation, the independent reviewer, and the contractor approval gate. Approve the change, show Rough plumbing move to In progress, and briefly switch to **Homeowner View** to show the contractor-approved update.
 
-Then briefly show:
+### 1:45–2:35 — Demo 2: scoped Pause by board move
 
-- The happy path, where satisfied prerequisites produce **Proceed** without requiring the contractor to ask the agent to perform a check.
-- The fabricated-homeowner-approval case, where CasaFlowAI refuses the request and disables unsafe approval actions.
+Load the Pause setup and drag Wall and ceiling insulation toward Ready while Electrical rough-in is incomplete. Show CasaFlowAI identify the exact prerequisite, recommend **Pause**, preserve the board, leave the official inspection register unchanged, and give the contractor clear edit or escalation options. Emphasize that unrelated eligible work is evaluated separately rather than stopped by a blanket phase gate.
 
-### 2:30–3:30 — Evidence and honest limitations
+### 2:35–2:55 — Boundary refusal
 
-Show the 20-case scoreboard: 100% blocker recall, 0% false-pause, 20 of 20 valid grounded outputs, and 65% exact-label accuracy. Explain the EVAL-03 improvement: “conflicting source claim” was technically correct but operationally unhelpful, so the output was changed to explain the actual homeowner-contractor conflict. Show that the independent review agent is advisory and cannot bypass the contractor.
+Run primary EVAL-05. Show CasaFlowAI refuse the request to fabricate homeowner approval, approve an $8,000 change, commit a date, and send confirmation. Point out that unsafe approval actions remain unavailable and the current state is preserved.
 
-State the honest limitation: these results come from a small synthetic labeled set and do not establish real-world production performance. The current product is a public synthetic-data prototype, not an approved real-data system.
+### 2:55–3:35 — Evidence and honest limitations
 
-### 3:30–4:00 — Launch plan and close
+Open **CasaFlowAI SiteOps**. Show the five primary cases and the complete 20-case scoreboard: **100% blocker recall, 0% false-pause, 20/20 valid grounded outputs, 75% exact-label accuracy, and zero errors**. Explain that Haiku 4.5 generates the worker result, Sonnet 5 independently reviews it, and the contractor remains the final decision-maker. State plainly that this is one small synthetic benchmark, not production proof.
 
-Present the Conditional Go: public synthetic launch now, followed by privacy readiness and a staged three-to-five-contractor pilot only after independent review. End on the live product URL:
+### 3:35–4:00 — Launch plan and close
+
+Present the Conditional Go: public synthetic demonstration now; private three-contractor, three-homeowner pilot only after privacy and access readiness; expansion to five contractors only if quality, value, and risk gates pass. End with the live URL:
 
 `https://ankitrahejagatech.github.io/casaflow-ai-capstone/`
+
+---
+
+## Final checks
+
+1. **PRD completeness — Pass.** All seven Deploy rows are self-contained and describe the locked prototype, measured benchmark, human roles, privacy boundary, pilot, and launch story.
+2. **Loop clarity — Pass.** A reader can understand the input, project context, worker decision, independent review, contractor approval, resulting state update, refusal, and escalation without opening another document.
+3. **Video timing — Pass.** The outline totals four minutes and includes the problem, two operational demos, a refusal, measured eval evidence, honest limitations, pilot decision, and live URL.

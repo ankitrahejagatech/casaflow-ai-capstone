@@ -6,7 +6,7 @@ CasaFlowAI is hired to construct and maintain an evidence-grounded, activity-lev
 
 It uses only authorized project information, makes no financial, contractual, regulatory, safety, or professional commitments, and escalates missing or conflicting evidence, low-confidence conclusions, privacy risks, and high-stakes decisions.
 
-The contractor or project lead is the primary operational user. The homeowner is a secondary user who receives approved visibility and may submit questions, concerns, selections, acknowledgments, and supporting information.
+The owner-operator or general contractor is the primary operational user; the MVP does not assume a separate project lead. The homeowner is a secondary user who receives approved visibility and may submit questions, concerns, selections, acknowledgments, and supporting information.
 
 **Develop role statement:** CasaFlowAI evaluates contractor-requested activity transitions against an evidence-grounded home-extension project state, recommends the safe next workflow state for contractor review, and escalates missing or conflicting evidence, authority limits, privacy risks, and high-stakes decisions without independently making consequential commitments.
 
@@ -18,15 +18,16 @@ The Develop MVP prioritizes:
 2. Activity transition evaluation
 3. Contractor review experience
 4. Project-change approval
-5. Read-only homeowner rendering of approved state
-6. Scripted homeowner questions
-7. At least 20 labeled transition requests
+5. Contractor-approved homeowner rendering plus question-to-contractor messaging
+6. CasaFlowAI SiteOps visibility into evaluation quality, policies, and records
+7. An independent advisory review agent
+8. At least 20 labeled transition requests
 
-Live homeowner Q&A and the simulated email channel remain documented product capabilities but are outside the core four-minute demo.
+Direct homeowner-agent Q&A, real email delivery, authentication, and municipal integration remain documented product capabilities but are outside the core four-minute demo.
 
 The single Develop loop is:
 
-> Authorized contractor attempts a project-board transition or submits a natural chat update → CasaFlowAI automatically preserves the event, extracts claims and intent, loads canonical state, dependencies, inspections, and policies, and evaluates the affected transition → CasaFlowAI produces a review package → contractor approves, corrects, rejects, or escalates → only an explicitly approved state change is applied and audited.
+> Authorized contractor proposes a transition by card, typed update, quick update, or editable speech transcript → CasaFlowAI automatically preserves the event, extracts claims and intent, loads canonical state, dependencies, inspections, and policies, and evaluates the affected transition → CasaFlowAI produces a review package → contractor approves, corrects, declines to approve, or escalates → only an explicitly approved state change is applied and audited.
 
 ## 2. Target workflow
 
@@ -46,11 +47,13 @@ The single Develop loop is:
 
 5. The contractor operates CasaFlowAI through an internal workspace rather than emailing the agent. The contractor may:
 
-   - Select Request Ready, Start Work, Mark Done, Report Blocker, or Correct Status on an activity
-   - Chat with CasaFlowAI
+   - Drag or select an activity card and choose a proposed status
+   - Type a natural-language field update
+   - Select a quick-update example that fills the editable field-update box
+   - Speak naturally and review the editable transcript before submission
    - Upload optional evidence
 
-   Every board action or chat update triggers dependency evaluation automatically; the contractor does not need to ask CasaFlowAI to check.
+   Every submitted board move or field update triggers dependency evaluation automatically; the contractor does not need to ask CasaFlowAI to check. Speech is an input convenience, not a different authority path, and CasaFlowAI does not persist raw audio.
 
 6. Multiple activities may be active simultaneously. The overall project phase is a summary; each activity has its own progress, data-quality, blocker, applicability, exception, and dependency records.
 
@@ -84,11 +87,11 @@ The single Develop loop is:
     - Shared evidence
     - Project messages
 
-11. The homeowner may submit a question, concern, selection, acknowledgment, or optional attachment. For the Develop MVP, these interactions are scripted inputs rather than a live agent surface.
+11. The homeowner can submit a question or feedback message to the contractor review queue. The message is a source-stamped claim, does not change approved project status, and does not receive an autonomous construction answer. Selections, objections, and non-approvals used in eval cases remain scripted source events.
 
 12. Email is an optional external communication channel between contractor and homeowner. CasaFlowAI may draft an email on the contractor’s behalf, but the core Develop demo does not require a simulated email channel.
 
-13. Every workspace action, scripted portal event, chat message, and upload becomes a source-stamped project event. CasaFlowAI automatically stores extracted atomic claims as Unreviewed without changing canonical state.
+13. Every board move, typed or transcribed field update, homeowner message, scripted case event, and upload becomes a source-stamped project event. CasaFlowAI automatically stores extracted atomic claims as Unreviewed without changing canonical state.
 
 14. CasaFlowAI evaluates the requested activity status-including Ready, In Progress, Reported complete, or Confirmed complete-and checks:
 
@@ -114,7 +117,7 @@ The single Develop loop is:
 
 19. CasaFlowAI creates a contractor review package containing the recommendation, evidence, blockers, proposed state changes, available parallel work, next action, and derived homeowner-view preview.
 
-20. The Develop MVP has one interactive Project-Change Gate. The read-only homeowner portal automatically derives predesignated homeowner-visible fields from approved state. External communication is outside the core loop.
+20. The operational prototype has one interactive Project-Change Gate. An approved operational state change updates the activity board and the derived homeowner view. The project-status portion of the homeowner view remains read-only; homeowner messages enter a contractor queue and never apply state. External email delivery is outside the core loop.
 
 21. CasaFlowAI preserves all previous states, evidence, warnings, exceptions, acknowledgments, corrections, approvals, and rejections.
 
@@ -124,8 +127,8 @@ The single Develop loop is:
 
 CasaFlowAI reads:
 
-- Contractor workspace actions and chat messages
-- Scripted homeowner submissions
+- Contractor board actions, typed updates, quick updates, and editable speech transcripts
+- Homeowner messages and scripted homeowner submissions
 - Optional photos and documents
 - Canonical project and activity state
 - Activity dependencies
@@ -172,6 +175,8 @@ CasaFlowAI produces:
 - Proposed homeowner rendering
 - Contractor approval and escalation controls
 
+The worker package is produced by **Claude Haiku 4.5**. An independently prompted **Claude Sonnet 5** reviewer then checks the package against the same case-scoped evidence and policy context and returns **Looks right** or **Needs attention**. This second opinion is advisory and cannot approve work, change state, or bypass the contractor.
+
 ### Check
 
 Before presenting its output, CasaFlowAI validates:
@@ -188,6 +193,7 @@ Before presenting its output, CasaFlowAI validates:
 - Homeowner-view safety
 - Recommendation consistency
 - One-minute contractor readability
+- Independent reviewer availability and verdict
 
 A material validation failure changes the result to the appropriate clarification, review, pause, or refusal state.
 
@@ -253,7 +259,7 @@ All identities, communications, addresses, evidence, and project documents are f
 
 1. **`submit_project_event`**
 
-   Preserves a raw project-board action, contractor chat update, scripted homeowner event, or optional upload as an immutable source event.
+   Preserves a raw project-board action, typed or transcribed field update, homeowner message, scripted homeowner event, or optional upload as an immutable source event.
 
 2. **`append_source_claims`**
 
@@ -271,7 +277,7 @@ All identities, communications, addresses, evidence, and project documents are f
 
    Applies only field-specific, contractor-approved changes to canonical state or project registers.
 
-The read-only homeowner view is derived from approved, predesignated fields rather than published through a separate core tool. Email tools remain future-product capabilities.
+The homeowner project-status view is derived from approved, predesignated fields rather than published through a separate core tool. Its message form creates a contractor-review event but does not query the agent or alter state. Browser speech recognition is an input adapter that fills an editable text field; it is not persistent project memory. Email tools remain future-product capabilities.
 
 Reasoning, intent extraction, state-diff creation, dependency evaluation, and review-package validation remain parts of the agent loop rather than separate tools.
 
@@ -337,7 +343,7 @@ The contractor should understand the card in under one minute. It contains:
 
 Expandable details contain the full decision path, evidence table, dependency graph, policy checks, pending effects, confidence factors, and audit history.
 
-### Read-only homeowner rendering
+### Contractor-approved homeowner rendering
 
 The Develop MVP homeowner view shows:
 
@@ -351,7 +357,7 @@ The Develop MVP homeowner view shows:
 - Approved change-impact summaries
 - Shared evidence
 
-It does not provide live agent Q&A in the core MVP.
+It also provides a question-or-feedback form that sends a message to the contractor review queue. The form does not provide live agent Q&A, does not expose contractor-only reasoning, and does not change project status.
 
 ### Full-product homeowner interaction
 
@@ -409,13 +415,13 @@ CasaFlowAI identifies unaffected work rather than treating the entire project as
 
 ## 9. Human approval point
 
-### Develop MVP Project-Change Gate
+### Operational Project-Change Gate
 
-The contractor selects the exact canonical state or register fields to approve, correct, reject, or mark unknown.
+The contractor selects the exact canonical state or register fields to approve or correct, may leave the proposal unapplied, or may escalate it. The locked interface exposes **Approve**, **Edit**, and **Escalate** rather than a bundled approval action.
 
-It is the only interactive approval gate in the core Develop loop and covers proposed activity, Inspection Register, Decision Register, and Change-Order Register changes.
+It is the only interactive state-change approval gate in the operational loop and covers proposed activity, Inspection Register, Decision Register, and Change-Order Register changes. In the locked demo, contractor approval of an allowed operational transition updates the activity board and the derived homeowner view. A Pause, clarification, professional review, refusal, unapplied proposal, or escalation preserves the approved state.
 
-Immutable event preservation, unreviewed claim extraction, and read-only homeowner-view derivation happen automatically. External email is outside the core loop.
+Immutable event preservation, unreviewed claim extraction, and homeowner-view derivation from approved fields happen automatically. A homeowner message enters the contractor review queue without altering state. External email is outside the core loop.
 
 The full product may later add separate homeowner-publication and external-communication gates.
 
@@ -441,3 +447,12 @@ Evaluation targets:
 - No unsupported claim represented as confirmed fact
 
 The five cases are qualitative design anchors. The Develop set contains 20 isolated, resettable transition cases: 10 project-board and 10 contractor-chat inputs, with 5 safe and 5 blocker cases in each mode. Hidden labels are never provided to the agent.
+
+Final synthetic benchmark result:
+
+- **100% blocker recall (10/10)**
+- **0% false-pause (0/10)**
+- **20/20 valid grounded outputs**
+- **75% exact boundary, recommendation, and subtype match (15/20)**
+
+The five exact-label mismatches preserve the correct safe-versus-blocked classification and differ only in the more-specific workflow subtype. These results support a public synthetic demonstration, not production readiness.
