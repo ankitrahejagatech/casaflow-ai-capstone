@@ -10,7 +10,7 @@ Evidence-grounded activity-transition evaluation for an active residential home-
 
 ## 1. User
 
-The primary user is the owner or project lead at a small residential general contractor with approximately 1-30 employees. This user coordinates active home-extension projects while communicating with homeowners, subcontractors, inspectors, suppliers, and licensed professionals.
+The primary user is the owner-operator or general contractor at a small residential construction company with approximately 1-20 employees. This user coordinates active home-extension projects while communicating with homeowners, subcontractors, inspectors, suppliers, and licensed professionals. A separate project lead is not assumed.
 
 The user needs a reliable way to understand project status and identify unresolved dependencies without repeatedly reconstructing the project from scattered messages, photos, documents, notes, and memory.
 
@@ -33,11 +33,11 @@ It explains its reasoning, cites the evidence it used, identifies affected and u
 
 ## 3. Trigger
 
-For the Develop MVP, the workflow begins whenever an authorized contractor or project lead attempts a project-board status transition or submits a contractor-chat update.
+For the Develop MVP, the workflow begins whenever an authorized contractor proposes an activity transition through one of four input paths: dragging or selecting an activity card, typing a natural-language field update, selecting a quick-update example, or speaking an update that becomes an editable transcript.
 
 The contractor states what happened or what they intend to do; they do not need to ask CasaFlowAI to check. CasaFlowAI automatically extracts the relevant claims and transition intent, loads the affected dependencies, and evaluates the request.
 
-Scripted, source-stamped homeowner questions, objections, selections, or non-approvals may appear as evaluation-case context, but the MVP homeowner portal is read-only and does not independently trigger the agent.
+The homeowner view renders only contractor-approved project state. A homeowner may submit a question or feedback message to the contractor review queue, but that message does not independently change project state or trigger an autonomous construction decision. Scripted, source-stamped homeowner objections, selections, and non-approvals also appear in evaluation-case context.
 
 ## 4. Current process
 
@@ -95,7 +95,7 @@ Synthetic data will include:
 - Fictional contractor and homeowner identities
 - Fictional project address and scope
 - City of San Jose synthetic permit and inspection-applicability profile
-- Organic project-board actions and contractor-chat messages
+- Organic project-board actions, typed field updates, quick updates, and editable voice transcripts
 - Scripted homeowner events
 - Optional synthetic or appropriately licensed photos
 - Immutable source events and atomic source-specific claims
@@ -153,15 +153,24 @@ Additional deterministic targets:
 
 The five primary scenarios are qualitative design anchors. A labeled set of at least 20 transition requests is required before calculating recall and false-pause rates.
 
+### Develop measurement result
+
+On the final balanced synthetic set of 20 transition requests—10 genuine blocker cases and 10 safe-to-proceed cases—CasaFlowAI achieved:
+
+- **100% blocker recall (10/10)**
+- **0% false-pause (0/10)**
+- **20/20 valid grounded outputs**
+- **75% exact boundary, recommendation, and subtype match (15/20)**
+
+The first two figures exceed the Discovery target and guardrail. They remain prototype results from one synthetic project and do not establish production performance.
+
 ## 10. Initial demo idea
 
-The four-minute Develop demo should focus on one contractor surface:
+The locked prototype demo uses two operational examples and three role-appropriate views:
 
-1. Show the confirmed project state and parallel activities.
-2. Submit an organic contractor chat update and show automatic evaluation producing Proceed.
-3. Attempt a project-board status transition and show a scoped Pause while unrelated work remains available.
-4. Demonstrate a conflicting or missing-data case producing Needs clarification.
-5. Briefly show the read-only homeowner view reflecting only approved state.
-6. Show aggregate results from at least 20 labeled transition requests.
+1. In **General Contractor View**, load the Proceed setup, speak or select the rough-plumbing update, and show CasaFlowAI automatically evaluating the transition. The contractor approves the proposed move, after which the board and contractor-approved homeowner status update.
+2. Reset to the Pause setup and drag **Wall and ceiling insulation** toward Ready while **Electrical rough-in** remains incomplete. Show CasaFlowAI pausing only the affected work, explaining the prerequisite, preserving the current state, and leaving official inspection records unchanged.
+3. In **Homeowner View**, show contractor-approved progress, phase details, the latest approved update, and the question-to-contractor flow. The homeowner cannot alter project state.
+4. In **CasaFlowAI SiteOps**, show the five primary cases, the 20-case metrics, policy and record visibility, and the independent review agent. Briefly demonstrate the fabricated-approval refusal.
 
 Project onboarding is represented in synthetic data but excluded from the interactive demo. Live homeowner Q&A, real email integration, payments, scheduling optimization, authentication, and multi-project management are outside the core demo.
