@@ -206,7 +206,7 @@ Any material change to a prompt, policy, model, agent logic, tool call, permissi
 7. 20/20 valid grounded outputs.
 8. Zero hard-boundary, fabricated-citation, cross-project, or privacy failures.
 
-Purely visual changes still require desktop and mobile smoke testing. Do not overwrite either `index.html` file merely to synchronize them without explicit user approval.
+Purely visual changes still require desktop and mobile smoke testing. The repository-root `index.html` is the public GitHub Pages entry point and is intentionally synchronized with the locked Develop prototype after verification. Do not allow the two files to diverge without a documented reason, explicit user approval, and appropriate regression testing.
 
 ## Privacy and deployment status
 
@@ -235,8 +235,8 @@ Purely visual changes still require desktop and mobile smoke testing. Do not ove
 
 ## Important implementation paths
 
-- `index.html` — repository-root GitHub Pages entry point.
-- `PF AI PM Capstone Project/agentic-ai-capstone-develop-companion-v0.3/index.html` — locked Develop prototype used during local verification.
+- `index.html` — repository-root GitHub Pages entry point, synchronized with the verified locked Develop prototype.
+- `PF AI PM Capstone Project/agentic-ai-capstone-develop-companion-v0.3/index.html` — locked Develop prototype and canonical source used during local verification.
 - `PF AI PM Capstone Project/agentic-ai-capstone-develop-companion-v0.3/data/` — synthetic state, registers, evidence, transition cases, snapshots, and evaluator-only labels.
 - `PF AI PM Capstone Project/agentic-ai-capstone-develop-companion-v0.3/policies/` — authority, privacy, dependency, inspection, lifecycle, and state-update rules.
 

@@ -4,7 +4,7 @@
 
 CasaFlowAI helps small general contractors managing permitted home-extension projects determine whether work can move forward, what is blocking it, and what requires human attention. It converts fragmented field updates into a traceable project state while keeping every consequential decision under contractor control.
 
-[Open the live prototype](https://ankitrahejagatech.github.io/casaflow-ai-capstone/) · [Read the Discovery PRD](PF%20AI%20PM%20Capstone%20Project/docs/01_DISCOVERY_PRD.md) · [Read the Design PRD](PF%20AI%20PM%20Capstone%20Project/docs/02_DESIGN_PRD.md) · [Read the Deploy PRD](PF%20AI%20PM%20Capstone%20Project/docs/05_DEPLOY_PRD.md)
+[Open the live prototype](https://ankitrahejagatech.github.io/casaflow-ai-capstone/) · [Read the project context](PROJECT_CONTEXT.md) · [Read the Discovery PRD](PF%20AI%20PM%20Capstone%20Project/docs/01_DISCOVERY_PRD.md) · [Read the Design PRD](PF%20AI%20PM%20Capstone%20Project/docs/02_DESIGN_PRD.md) · [Read the Deploy PRD](PF%20AI%20PM%20Capstone%20Project/docs/05_DEPLOY_PRD.md)
 
 > **Current status:** Deploy-ready synthetic capstone demonstration. CasaFlowAI is not approved for unrestricted real project data or production construction decisions.
 
@@ -195,6 +195,7 @@ Do not enter real homeowner identities, addresses, contracts, plans, permit reco
 | Path | Contents |
 |---|---|
 | [`index.html`](index.html) | Public single-file prototype |
+| [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) | Source of truth for product decisions, implementation constraints, evaluation baselines, and future changes |
 | [`docs/01_DISCOVERY_PRD.md`](PF%20AI%20PM%20Capstone%20Project/docs/01_DISCOVERY_PRD.md) | User, workflow, opportunity, boundaries, and success metrics |
 | [`docs/02_DESIGN_PRD.md`](PF%20AI%20PM%20Capstone%20Project/docs/02_DESIGN_PRD.md) | Agent role, loop, context, tools, memory, approvals, and initial eval design |
 | [`docs/03_EVAL_PLAN.md`](PF%20AI%20PM%20Capstone%20Project/docs/03_EVAL_PLAN.md) | Five primary cases and the 20-case extension |
