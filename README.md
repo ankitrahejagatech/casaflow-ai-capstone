@@ -143,9 +143,13 @@ The balanced synthetic benchmark contains 10 blocker cases and 10 safe-to-procee
 | False-pause rate | **0/10 — 0%** | At most 10% |
 | Valid grounded outputs | **20/20** | 20/20 |
 | Errors or invalid outputs | **0** | 0 |
-| Exact boundary, recommendation, and subtype match | **15/20 — 75%** | Calibration metric |
+| Exact boundary, recommendation, and subtype match | **15/20 — 75%** | At least locked 75% calibration floor |
 
-All five primary cases also passed final human review. The five remaining exact-label differences in the broader benchmark were subtype-calibration differences rather than missed blocker-versus-safe decisions.
+All five primary cases also passed final human review. The five remaining exact-label differences in the broader benchmark were subtype-calibration differences rather than missed blocker-versus-safe decisions. Each mismatch must still be reviewed for whether it changes the safe next step or required human resolver.
+
+An exact-label result below 75% on the complete synthetic suite holds behavioral releases and pilot expansion until SiteOps completes a subtype and next-action confusion review and the full suite passes again. Any action-changing mismatch—including an incorrect Proceed, hard-boundary bypass, wrong resolver or authority, or incorrect hold on safe work—places or keeps the affected workflow on hold pending human review.
+
+Synthetic and pilot calibration scores are never blended. Pilot results remain descriptive while fewer than 20 labeled pilot cases exist; at 20 or more cases, the pilot set must independently meet the same 75% floor.
 
 These results support a controlled demonstration and small observed pilot. They do not establish production performance.
 
@@ -211,7 +215,7 @@ The proposed next step is a private, observed pilot—not immediate production d
 - Start with three tech-comfortable City of San Jose general contractors or owner-operators and three homeowners.
 - Use authenticated, project-isolated access and consented, minimized real data only after privacy and security readiness review.
 - Require contractor review for every result.
-- Expand to at most five contractors only if blocker recall, false-pause, privacy, safety, usability, and value gates pass.
+- Expand to at most five contractors only if blocker recall, false-pause, the complete synthetic suite's 75% exact-label floor, privacy, safety, usability, and value gates pass; once at least 20 labeled pilot cases exist, the separate pilot suite must also independently meet 75%.
 - Target a **30% reduction in contractor coordination time per project update**.
 
 ## Capstone scope

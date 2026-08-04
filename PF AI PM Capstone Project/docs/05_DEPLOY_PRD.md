@@ -115,7 +115,18 @@ Approval rules remain independent:
 - Valid grounding and citation checks must have **zero fabricated, cross-case, or unverifiable citations**.
 - Hard authority and safety boundary failures must remain at **zero**.
 - At least **80%** of pilot recommendations should be accepted with no more than minor contractor edits.
-- Exact-label accuracy is monitored as a calibration metric; the current synthetic baseline is **75%**, while blocker recall and false-pause remain the launch gates.
+- Exact boundary, recommendation, and subtype accuracy on the complete 20-case synthetic suite must remain at or above the locked calibration baseline of **75% (15/20)** before any behavioral release or pilot expansion.
+
+### Calibration check and trigger
+
+SiteOps compares the predicted boundary, base recommendation, and subtype with the evaluator-only label. For every mismatch, SiteOps separately evaluates the proposed human resolver and next action against the case-visible evidence and governing policy. Each mismatch is classified as:
+
+- **Action-equivalent:** the label differs, but the safe next step and required human resolver remain the same.
+- **Action-changing:** the mismatch changes whether work may proceed, who must respond, or whether contractor, homeowner, inspector, permit authority, or qualified-professional review is required.
+
+If exact-label accuracy falls below **75%** on the complete 20-case regression suite, CasaFlowAI holds the behavioral release and any pilot expansion, preserves the last approved configuration, performs a subtype and next-action confusion review, documents the affected cases and root cause, adds or revises labeled regression cases where needed, and reruns the complete suite before product-owner approval.
+
+An action-changing mismatch is a material quality failure even when blocker detection is correct. Any action-changing mismatch—including an incorrect **Proceed**, a hard-boundary bypass, a wrong resolver or authority, or an incorrect hold on safe work—places or keeps the affected workflow on hold pending human review.
 
 ### Value metrics
 
@@ -133,7 +144,7 @@ The model and agent configuration remain frozen during each pilot week. Any chan
 
 1. A recorded change and reason.
 2. A complete rerun of all 20 hidden-label eval cases.
-3. Blocker recall of at least 90%, false-pause of at most 10%, 20/20 valid grounded outputs, and zero hard-boundary failures.
+3. Blocker recall of at least 90%, false-pause of at most 10%, exact-label accuracy of at least 75%, 20/20 valid grounded outputs, and zero hard-boundary failures.
 4. Product-owner approval before release.
 
 Purely visual changes require responsive usability and smoke testing. SiteOps is the monitoring surface for the five primary cases, complete 20-case benchmark, policies, records, and model-quality evidence.
@@ -165,7 +176,7 @@ Each participating homeowner receives a 20-minute weekly interview focused on:
 
 ### 3. Evaluation replay
 
-Privacy-reviewed pilot problems are converted into de-identified, labeled transition cases. Expected labels remain evaluator-only and are never included in the worker's case context. The full suite is rerun before a behavioral release.
+Privacy-reviewed pilot problems are converted into de-identified, labeled transition cases. Expected labels remain evaluator-only and are never included in the worker's case context. Pilot-case calibration is reported separately from the synthetic benchmark and is never blended into it. While the pilot set contains fewer than 20 labeled cases, its exact-label result is descriptive; once it reaches at least 20 cases, it must independently meet the same 75% calibration floor. Every action-changing mismatch receives immediate review. The complete synthetic suite must always remain at or above 75%, and both the synthetic suite and accumulated pilot suite are rerun before a behavioral release.
 
 The product owner reviews behavioral evidence, interviews, incidents, and eval regressions weekly. Safety and privacy issues take priority; recurring product friction is prioritized by frequency and time cost. No pilot anecdote is promoted to a confirmed product rule without evidence and controlled testing.
 
@@ -183,7 +194,7 @@ The product owner reviews behavioral evidence, interviews, incidents, and eval r
 
 1. **Two-week readiness period:** consent, private authentication, role verification, project isolation, data minimization, provider review, retention/deletion, incident response, and independent privacy/security approval.
 2. **Pilot Weeks 1–2:** three contractors and three homeowners, using private real project data only after readiness approval.
-3. **Week 2 gate:** continue only with zero privacy and hard-boundary failures, blocker recall at or above 90%, false-pause at or below 10%, and no serious usability blocker.
+3. **Week 2 gate:** continue only with zero privacy and hard-boundary failures, blocker recall at or above 90%, false-pause at or below 10%, the complete synthetic suite at or above 75% exact-label accuracy, and no serious usability blocker. Pilot exact-label results remain separate and descriptive until at least 20 labeled pilot cases exist; at that point the pilot set must also independently meet 75%.
 4. **Pilot Weeks 3–4:** expand to a maximum of five contractors only if the gate passes.
 
 ### Initial pilot scope
@@ -211,6 +222,7 @@ Expansion requires all of the following:
 
 - Blocker recall at or above 90%.
 - False-pause at or below 10%.
+- The complete synthetic suite at or above the locked 75% exact-label calibration floor; once at least 20 labeled pilot cases exist, the separate pilot suite must also independently meet 75%.
 - Zero hard-boundary, grounding, or privacy failures.
 - Contractor coordination time per update reduced by at least 30%.
 - At least 80% of recommendations accepted with no more than minor edits.
@@ -220,7 +232,7 @@ Expansion requires all of the following:
 
 ### Rollback
 
-An immediate-pause condition returns contractors to their existing workflow. CasaFlowAI preserves the affected evidence and audit event, diagnoses the failure, reruns all 20 labeled cases, and completes privacy or safety review as applicable. The pilot may restart only after the thresholds pass and the product owner approves it.
+An immediate-pause condition returns contractors to their existing workflow. CasaFlowAI preserves the affected evidence and audit event, diagnoses the failure, reruns all 20 labeled cases, and completes privacy or safety review as applicable. A synthetic exact-label result below 75% blocks a behavioral release and pilot expansion until calibration review and a passing rerun are complete. Any action-changing mismatch—including an incorrect Proceed, hard-boundary bypass, wrong resolver or authority, or incorrect hold on safe work—places or keeps the affected workflow on hold pending human review. The pilot may restart only after all applicable quality thresholds pass and the product owner approves it.
 
 ---
 
@@ -248,7 +260,7 @@ Run primary EVAL-05. Show CasaFlowAI refuse the request to fabricate homeowner a
 
 ### 2:55–3:35 — Evidence and honest limitations
 
-Open **CasaFlowAI SiteOps**. Show the five primary cases and the complete 20-case scoreboard: **100% blocker recall, 0% false-pause, 20/20 valid grounded outputs, 75% exact-label accuracy, and zero errors**. Explain that Haiku 4.5 generates the worker result, Sonnet 5 independently reviews it, and the contractor remains the final decision-maker. State plainly that this is one small synthetic benchmark, not production proof.
+Open **CasaFlowAI SiteOps**. Show the five primary cases and the complete 20-case scoreboard: **100% blocker recall, 0% false-pause, 20/20 valid grounded outputs, 75% exact-label accuracy, and zero errors**. Explain that 75% is the locked calibration floor: a lower result holds behavioral releases and pilot expansion, while any action-changing mismatch pauses the affected workflow. Explain that Haiku 4.5 generates the worker result, Sonnet 5 independently reviews it, and the contractor remains the final decision-maker. State plainly that this is one small synthetic benchmark, not production proof.
 
 ### 3:35–4:00 — Launch plan and close
 

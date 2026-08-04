@@ -1534,7 +1534,7 @@ body {
               </div>
               <div class="stat">
                 <div class="n" id="transition-exact-accuracy">—</div>
-                <div class="l">Exact-label accuracy</div>
+                <div class="l">Exact-label calibration · floor ≥75%</div>
               </div>
               <div class="stat">
                 <div class="n" id="transition-valid-coverage">0 / 20</div>
@@ -1545,7 +1545,7 @@ body {
                 <div class="l">Errors or invalid outputs</div>
               </div>
             </div>
-            <p class="metric-definition">Blocker recall = labeled blocker cases correctly given a non-Proceed recommendation ÷ all 10 labeled blocker cases. False-pause = labeled safe cases that do not receive a valid Allowed + Proceed result ÷ all 10 labeled safe cases. Errors and invalid outputs count conservatively against the applicable metric.</p>
+            <p class="metric-definition">Blocker recall = labeled blocker cases correctly given a non-Proceed recommendation ÷ all 10 labeled blocker cases. False-pause = labeled safe cases that do not receive a valid Allowed + Proceed result ÷ all 10 labeled safe cases. Exact-label calibration compares the boundary, recommendation, and subtype; every mismatch requires SiteOps review as action-equivalent or action-changing. Below 75% holds behavioral releases and pilot expansion, while any action-changing mismatch places or keeps the affected workflow on hold pending human review. Errors and invalid outputs count conservatively against the applicable metric.</p>
             <p class="settings-status" id="transition-eval-summary" aria-live="polite">Run all 20 cases to calculate the measured results.</p>
             <details class="transition-eval-details">
               <summary>Per-case expected versus actual results</summary>
@@ -1817,6 +1817,7 @@ body {
 
     const WORKER_MODEL = "claude-haiku-4-5";
     const REVIEWER_MODEL = "claude-sonnet-5";
+    const EXACT_LABEL_CALIBRATION_FLOOR = 0.75;
     const ANTHROPIC_MESSAGES_ENDPOINT = "https://api.anthropic.com/v1/messages";
     const EVAL_RESULTS_STORAGE_KEY = "casaflowai_eval_results_v1";
     const TRANSITION_EVAL_STORAGE_KEY = "casaflowai_transition_eval_v1";
@@ -4264,11 +4265,14 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       const exactAccuracy = transitionLabels.length
         ? exactMatches / transitionLabels.length
         : 0;
+      const calibrationMet =
+        exactAccuracy >= EXACT_LABEL_CALIBRATION_FLOOR;
       const targetMet =
         completed &&
         errors === 0 &&
         blockerRecall >= 0.9 &&
-        falsePauseRate <= 0.1;
+        falsePauseRate <= 0.1 &&
+        calibrationMet;
 
       return {
         completed,
@@ -4282,6 +4286,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         falsePauseRate,
         exactMatches,
         exactAccuracy,
+        calibrationMet,
         validOutputs,
         errors,
         targetMet,
@@ -4340,8 +4345,8 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           " cases evaluated. Metrics remain pending until the full set completes.";
       } else {
         targetStatus.textContent = metrics.targetMet
-          ? "Discovery targets met"
-          : "Discovery targets not met";
+          ? "Synthetic quality gates met"
+          : "Synthetic quality gates not met";
         targetStatus.className =
           "badge " + (metrics.targetMet ? "ok" : "danger");
         const lastRunText = transitionEvaluation?.generatedAt
@@ -4352,6 +4357,9 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             }).format(new Date(transitionEvaluation.generatedAt)) +
             "."
           : "";
+        const calibrationText = metrics.calibrationMet
+          ? " Exact-label calibration floor met."
+          : " Exact-label calibration is below the 75% floor: behavioral releases and pilot expansion are on hold pending subtype and next-action review.";
         summary.textContent =
           "Blocker recall: " +
           metrics.truePositives +
@@ -4374,6 +4382,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           "/" +
           transitionLabels.length +
           "." +
+          calibrationText +
           lastRunText;
       }
 
@@ -4444,7 +4453,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             ? result.valid
               ? result.exactMatch
                 ? "Match"
-                : "Mismatch"
+                : "Mismatch · classify impact"
               : "Error"
             : "Not run",
           result
@@ -4512,13 +4521,22 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           : "Run all " + runAllState.total + " cases";
 
       if (runAllState.status === "complete") {
-        status.textContent = "Complete";
-        status.className = "badge ok";
         const metrics = calculateTransitionMetrics(
           runAllState.evaluationResults,
         );
-        summary.textContent = metrics.completed
-          ? "Full evaluator complete: " +
+        if (metrics.completed) {
+          status.textContent = metrics.targetMet
+            ? "Complete · gates met"
+            : "Complete · review required";
+          status.className =
+            "badge " + (metrics.targetMet ? "ok" : "danger");
+          const gateText = metrics.targetMet
+            ? " All synthetic quality gates met."
+            : metrics.calibrationMet
+              ? " Synthetic quality gates did not all pass; review the failed metrics before release."
+              : " Exact-label calibration is below the 75% floor; behavioral releases and pilot expansion are on hold.";
+          summary.textContent =
+            "Full evaluator complete: " +
             formatMetricPercent(metrics.blockerRecall) +
             " blocker recall (" +
             metrics.truePositives +
@@ -4530,10 +4548,23 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             metrics.falsePauses +
             "/" +
             metrics.safeTotal +
+            "), exact-label calibration " +
+            formatMetricPercent(metrics.exactAccuracy) +
+            " (" +
+            metrics.exactMatches +
+            "/" +
+            transitionLabels.length +
             "), " +
             metrics.errors +
-            " errors. The five primary eval cards were updated from the same runs."
-          : "The sweep finished without a complete evaluator result. Run all cases again.";
+            " errors." +
+            gateText +
+            " The five primary eval cards were updated from the same runs.";
+        } else {
+          status.textContent = "Incomplete";
+          status.className = "badge danger";
+          summary.textContent =
+            "The sweep finished without a complete evaluator result. Run all cases again.";
+        }
       } else if (runAllState.status === "error") {
         status.textContent = "Cannot run";
         status.className = "badge danger";

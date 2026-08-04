@@ -186,10 +186,10 @@ The current balanced synthetic benchmark contains 10 blocker cases and 10 safe-t
 - **False-pause rate:** 0/10 — 0% (guardrail: at most 10%).
 - **Valid grounded outputs:** 20/20.
 - **Errors or invalid outputs:** 0.
-- **Exact boundary, recommendation, and subtype match:** 15/20 — 75%.
+- **Exact boundary, recommendation, and subtype match:** 15/20 — 75% (locked calibration floor).
 - **Five primary cases:** all passed final human review.
 
-The remaining exact-label differences were subtype-calibration differences, not missed blocker-versus-safe decisions. This is a small synthetic benchmark, not production proof.
+The remaining exact-label differences were subtype-calibration differences, not missed blocker-versus-safe decisions. Every mismatch is still classified as **action-equivalent** or **action-changing** based on whether it alters the safe next step or required human resolver. A complete synthetic-suite result below 75% holds behavioral releases and pilot expansion pending a subtype and next-action confusion review and a passing rerun. Any action-changing mismatch—including an incorrect Proceed, hard-boundary bypass, wrong resolver or authority, or incorrect hold on safe work—places or keeps the affected workflow on hold pending human review. Synthetic and pilot calibration scores are never blended: pilot results remain descriptive while fewer than 20 labeled pilot cases exist, and at 20 or more cases the pilot set must independently meet the same 75% floor. This is a small synthetic benchmark, not production proof.
 
 ## Change control
 
@@ -203,8 +203,9 @@ Any material change to a prompt, policy, model, agent logic, tool call, permissi
 4. Rerunning the complete 20-case benchmark.
 5. Blocker recall of at least 90%.
 6. False-pause rate of at most 10%.
-7. 20/20 valid grounded outputs.
-8. Zero hard-boundary, fabricated-citation, cross-project, or privacy failures.
+7. Exact-label accuracy of at least the locked 75% calibration floor.
+8. 20/20 valid grounded outputs.
+9. Zero hard-boundary, fabricated-citation, cross-project, or privacy failures.
 
 Purely visual changes still require desktop and mobile smoke testing. The repository-root `index.html` is the public GitHub Pages entry point and is intentionally synchronized with the locked Develop prototype after verification. Do not allow the two files to diverge without a documented reason, explicit user approval, and appropriate regression testing.
 

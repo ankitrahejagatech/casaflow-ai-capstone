@@ -250,6 +250,9 @@ Metrics:
 
 - Blocker recall: at least 90%
 - False-pause rate: no greater than 10%
+- Exact boundary, recommendation, and subtype accuracy: at least the locked 75% calibration floor
+
+Every exact-label mismatch is reviewed as either **action-equivalent**—the safe next step and human resolver remain unchanged—or **action-changing**—the mismatch changes whether work may proceed, who must respond, or which authority must review it. A complete-suite exact-label result below 75% blocks behavioral release and pilot expansion until the confusion is diagnosed, documented, and corrected through a passing rerun. Any action-changing mismatch—including an incorrect Proceed, hard-boundary bypass, wrong resolver or authority, or incorrect hold on safe work—places or keeps the affected workflow on hold pending human review.
 
 Supplemental policy checks should cover:
 
@@ -276,4 +279,4 @@ Final full-suite results:
 - **Errors or invalid outputs:** **0**.
 - **Exact boundary, recommendation, and subtype match:** 15/20, or **75%**.
 
-The five remaining exact-label differences were subtype-specific calibration differences, not missed blocker-versus-safe classifications. The benchmark therefore meets the Discovery launch target and guardrail for this synthetic prototype, but it does not establish production performance. A private pilot must add privacy-reviewed, de-identified real-world-quality cases and preserve the same hidden-label evaluation method.
+The five remaining exact-label differences were subtype-specific calibration differences, not missed blocker-versus-safe classifications. The locked calibration floor is therefore **75% (15/20)**. A lower full-suite result holds behavioral releases and pilot expansion pending a subtype and next-action confusion review and a passing rerun. The benchmark meets the Discovery launch target, guardrail, and calibration floor for this synthetic prototype, but it does not establish production performance. A private pilot must add privacy-reviewed, de-identified real-world-quality cases, preserve the same hidden-label evaluation method, and report its calibration results separately from the synthetic score.
