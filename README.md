@@ -4,9 +4,19 @@
 
 CasaFlowAI helps small general contractors managing permitted home-extension projects determine whether work can move forward, what is blocking it, and what requires human attention. It converts fragmented field updates into a traceable project state while keeping every consequential decision under contractor control.
 
-[Open the live prototype](https://ankitrahejagatech.github.io/casaflow-ai-capstone/) · [Read the project context](PROJECT_CONTEXT.md) · [Read the Discovery PRD](PF%20AI%20PM%20Capstone%20Project/docs/01_DISCOVERY_PRD.md) · [Read the Design PRD](PF%20AI%20PM%20Capstone%20Project/docs/02_DESIGN_PRD.md) · [Read the Deploy PRD](PF%20AI%20PM%20Capstone%20Project/docs/05_DEPLOY_PRD.md)
+[Open the live prototype](https://illustrious-exploration-production-ec63.up.railway.app/) · [Read the project context](PROJECT_CONTEXT.md) · [Read the Discovery PRD](PF%20AI%20PM%20Capstone%20Project/docs/01_DISCOVERY_PRD.md) · [Read the Design PRD](PF%20AI%20PM%20Capstone%20Project/docs/02_DESIGN_PRD.md) · [Read the Deploy PRD](PF%20AI%20PM%20Capstone%20Project/docs/05_DEPLOY_PRD.md)
 
 > **Current status:** Deploy-ready synthetic capstone demonstration. CasaFlowAI is not approved for unrestricted real project data or production construction decisions.
+
+## Project links
+
+| Service | Link | Access and status |
+|---|---|---|
+| Railway demo | [Open CasaFlowAI](https://illustrious-exploration-production-ec63.up.railway.app/) | Public synthetic demo; share this link with demo viewers. |
+| Railway dashboard | [Manage deployment](https://railway.com/project/db7ea350-99c4-44b3-bf33-870b7688a80b/service/5429c49b-98aa-40e0-8ca3-10660ce389aa?environmentId=c08a5992-c849-4496-b43e-19d8b291ff81) | Requires authorized Railway workspace access. |
+| Braintrust | [CasaFlowAI project](https://www.braintrust.dev/app/Ankit%27s%20Evaluation%20Projects/p/CasaFlowAI) | Requires authorized Braintrust workspace access; intended for observability and evaluations. |
+
+**Integration status — September 19, 2026:** The Braintrust project is created, and `BRAINTRUST_API_KEY` and `BRAINTRUST_PROJECT` are configured in Railway. Live tracing and Braintrust evaluation runs are **not active yet**; application integration is still pending. The benchmark results below are from the existing prototype evaluation, not Braintrust. Railway currently deploys through the CLI and is not connected to this GitHub repository. API-key values must remain in service secrets and must never be committed.
 
 ## The problem
 
@@ -172,7 +182,7 @@ Photos are optional context. They are never sufficient proof of completion, safe
 
 ### Live
 
-Open the [GitHub Pages prototype](https://ankitrahejagatech.github.io/casaflow-ai-capstone/).
+Open the [Railway demo](https://illustrious-exploration-production-ec63.up.railway.app/). The [GitHub Pages prototype](https://ankitrahejagatech.github.io/casaflow-ai-capstone/) is also available.
 
 ### Locally
 
