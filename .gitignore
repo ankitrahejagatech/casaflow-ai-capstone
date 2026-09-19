@@ -3,4 +3,8 @@
 .vscode/
 *.swp
 *.tmp
-
+node_modules/
+.env
+.env.*
+!.env.example
+.railway/
