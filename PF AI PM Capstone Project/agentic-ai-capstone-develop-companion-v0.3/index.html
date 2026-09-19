@@ -599,14 +599,18 @@ body {
     .inspection-record-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
     .inspection-record-source { color: var(--ink-2); }
     .inspection-schedule-note { margin: var(--sp-3) 0 0; color: var(--ink-2); font-size: var(--fs-1); }
+    .settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-3); }
     .settings-row { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: end; }
     .settings-field { flex: 1 1 320px; }
+    .settings-field-wide { grid-column: 1 / -1; }
     .settings-field label { display: block; margin-bottom: var(--sp-2); font-size: var(--fs-0); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
-    .settings-field input { width: 100%; min-height: 42px; padding: 8px 12px; border: var(--border-w) solid var(--line); border-radius: var(--radius-sm); background: var(--bg-inset); color: var(--ink); font: inherit; }
-    .settings-field input:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .settings-field input, .settings-field select { width: 100%; min-height: 42px; padding: 8px 12px; border: var(--border-w) solid var(--line); border-radius: var(--radius-sm); background: var(--bg-inset); color: var(--ink); font: inherit; }
+    .settings-field input:focus, .settings-field select:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
     .settings-actions { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
     .settings-status { margin: var(--sp-3) 0 0; color: var(--ink-3); font-size: var(--fs-1); font-weight: 700; }
     .settings-status.saved { color: var(--ok); }
+    .connection-disclosure { margin: var(--sp-2) 0 0; color: var(--ink-2); font-size: var(--fs-1); }
+    .log .model-route { display: block; margin-top: var(--sp-1); color: var(--ink-3); font-size: var(--fs-0); font-weight: 500; }
     .model-routing { margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: var(--border-w) solid var(--line); }
     .model-routing h2 { margin: 0 0 var(--sp-2); font-size: var(--fs-2); }
     .model-routing > p { margin: 0 0 var(--sp-3); color: var(--ink-2); }
@@ -618,6 +622,7 @@ body {
     .model-routing-card p { margin: var(--sp-2) 0 0; color: var(--ink-2); font-size: var(--fs-1); }
     @media (max-width: 700px) { .agent-output-row { grid-template-columns: 1fr; } }
     @media (max-width: 700px) { .policy-list { columns: 1; } }
+    @media (max-width: 700px) { .settings-grid { grid-template-columns: 1fr; } .settings-field-wide { grid-column: 1; } }
     @media (max-width: 900px) {
       .inspection-schedule-head { flex-direction: column; }
       .inspection-schedule-summary { justify-content: flex-start; }
@@ -1030,7 +1035,7 @@ body {
   <header class="topbar">
     <span class="brand-mark" aria-hidden="true">CF</span>
     <div class="product">CasaFlowAI</div>
-    <span class="badge warn" id="console-status">API key needed</span>
+    <span class="badge warn" id="console-status">Model setup needed</span>
     <div class="meta">Willow Glen Extension</div>
     <span class="persona-avatar" id="persona-avatar" aria-label="Contractor AR">AR</span>
   </header>
@@ -1122,7 +1127,7 @@ body {
 
           <div class="first-run-guidance" id="first-run-guidance" aria-live="polite">
             <p class="headline">Connect the demo agent</p>
-            <p>Save your Anthropic API key in the private SiteOps settings before running a live review. Nothing sends or changes project state automatically.</p>
+            <p id="first-run-guidance-copy">Save your model connection in the private SiteOps settings before running a live review. Anthropic remains the default, and an OpenAI-compatible endpoint can route to an open-weight model. Nothing sends or changes project state automatically.</p>
             <a class="btn primary" href="#settings" data-open-tab="settings">Open SiteOps settings</a>
           </div>
           <div class="summary" id="summary" hidden></div>
@@ -1478,32 +1483,54 @@ body {
       <section class="panel" id="settings-panel" role="tabpanel" aria-labelledby="tab-settings" data-app-panel="settings" hidden>
         <div class="panel-head" id="settings-title">SiteOps settings</div>
         <div class="panel-body">
+          <div class="settings-grid">
+            <div class="settings-field">
+              <label for="model-provider">Model protocol</label>
+              <select id="model-provider" aria-describedby="connection-disclosure">
+                <option value="anthropic">Anthropic</option>
+                <option value="openai-compatible">OpenAI-compatible (open-weight or hosted)</option>
+              </select>
+            </div>
+            <div class="settings-field settings-field-wide" id="model-endpoint-field" hidden>
+              <label for="model-endpoint">Chat Completions endpoint</label>
+              <input id="model-endpoint" type="url" autocomplete="off" spellcheck="false" placeholder="https://your-provider.example/v1/chat/completions">
+            </div>
+            <div class="settings-field">
+              <label for="worker-model">Worker model ID</label>
+              <input id="worker-model" type="text" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="settings-field">
+              <label for="reviewer-model">Reviewer model ID</label>
+              <input id="reviewer-model" type="text" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
           <div class="settings-row">
             <div class="settings-field">
-              <label for="api-key">Anthropic API key</label>
+              <label for="api-key" id="api-key-label">Anthropic API key</label>
               <input id="api-key" type="password" autocomplete="off" spellcheck="false" aria-describedby="key-status key-privacy">
             </div>
             <div class="settings-actions">
-              <button class="btn primary" id="save-key" type="button">Save key</button>
+              <button class="btn primary" id="save-key" type="button">Save connection</button>
               <button class="btn danger" id="remove-key" type="button">Remove saved key</button>
             </div>
           </div>
           <p class="settings-status" id="key-status" aria-live="polite">No key saved.</p>
-          <p class="boundary-note" id="key-privacy">Stored in this browser's localStorage when available. If this browser blocks persistent storage, the key is held only in this open tab. It is never embedded in this file or shown on screen.</p>
+          <p class="connection-disclosure" id="connection-disclosure">Requests go directly from this browser to Anthropic.</p>
+          <p class="boundary-note" id="key-privacy">The selected endpoint receives the synthetic case payload and any key you enter. Settings are stored in this browser's localStorage when available, with a current-tab fallback. Keys are isolated by provider endpoint, never embedded in this file, and never shown on screen. On the Railway demo, synthetic model inputs, outputs, timing, and token usage are also sent to the private Braintrust project through the server. API keys and request headers are excluded. Other hosts require an HTTPS model endpoint that permits browser CORS.</p>
           <section class="model-routing" aria-labelledby="model-routing-title">
             <h2 id="model-routing-title">Agent model routing</h2>
-            <p>Separate model tiers reduce correlated reasoning failures. The reviewer is advisory and must return <strong>Looks right</strong> before CasaFlowAI enables a consequential board change.</p>
+            <p id="model-routing-note">Separate model tiers reduce correlated reasoning failures. The reviewer is advisory and must return <strong>Looks right</strong> before CasaFlowAI enables a consequential board change.</p>
             <div class="model-routing-grid">
               <article class="model-routing-card">
                 <span>CasaFlowAI worker</span>
-                <strong>Claude Haiku 4.5</strong>
-                <code>claude-haiku-4-5</code>
+                <strong id="worker-model-name">Claude Haiku 4.5</strong>
+                <code id="worker-model-id">claude-haiku-4-5</code>
                 <p>Fast first-pass evaluation of a contractor-proposed project transition.</p>
               </article>
               <article class="model-routing-card">
                 <span>Independent review agent</span>
-                <strong>Claude Sonnet 5</strong>
-                <code>claude-sonnet-5</code>
+                <strong id="reviewer-model-name">Claude Sonnet 5</strong>
+                <code id="reviewer-model-id">claude-sonnet-5</code>
                 <p>Stronger review of evidence, policy boundaries, citations, and state integrity.</p>
               </article>
             </div>
@@ -1519,6 +1546,8 @@ body {
             <div class="transition-eval-head">
               <div>
                 <h2 id="transition-eval-title">Twenty-case transition evaluation</h2>
+                <p class="boundary-note" id="braintrust-status" role="status">Checking Braintrust connection…</p>
+                <p><a id="braintrust-experiment" hidden target="_blank" rel="noopener noreferrer">Open latest Braintrust experiment</a></p>
                 <p class="intro">CasaFlowAI runs without access to the expected labels. After each response is complete, the evaluator compares the actual result with the hidden label and calculates the Discovery metrics.</p>
               </div>
               <span class="badge neutral" id="transition-target-status">Not run</span>
@@ -1678,103 +1707,443 @@ body {
     (() => {
       "use strict";
 
-      const storageKey = "casaflowai_anthropic_api_key";
-      let tabOnlyKey = "";
-      let storageMode = "none";
+      const LEGACY_ANTHROPIC_KEY_STORAGE_KEY =
+        "casaflowai_anthropic_api_key";
+      const MODEL_CONFIG_STORAGE_KEY = "casaflowai_model_config_v1";
+      const DEFAULT_MODEL_CONFIG = Object.freeze({
+        provider: "anthropic",
+        endpoint: "https://api.anthropic.com/v1/messages",
+        workerModel: "claude-haiku-4-5",
+        reviewerModel: "claude-sonnet-5",
+      });
+      const EMPTY_OPENAI_COMPATIBLE_CONFIG = Object.freeze({
+        provider: "openai-compatible",
+        endpoint: "",
+        workerModel: "openai/gpt-oss-20b",
+        reviewerModel: "openai/gpt-oss-120b",
+      });
+      const tabOnlyKeys = Object.create(null);
+      let tabOnlyConfig = null;
+      let keyStorageMode = "none";
+      let configStorageMode = "none";
 
-      function read() {
+      function defaultsForProvider(provider) {
+        return provider === "openai-compatible"
+          ? { ...EMPTY_OPENAI_COMPATIBLE_CONFIG }
+          : { ...DEFAULT_MODEL_CONFIG };
+      }
+
+      function normalizeConfig(value) {
+        const provider = value?.provider === "openai-compatible"
+          ? "openai-compatible"
+          : "anthropic";
+        const defaults = defaultsForProvider(provider);
+        return {
+          provider,
+          endpoint: typeof value?.endpoint === "string"
+            ? value.endpoint.trim()
+            : defaults.endpoint,
+          workerModel: typeof value?.workerModel === "string"
+            ? value.workerModel.trim()
+            : defaults.workerModel,
+          reviewerModel: typeof value?.reviewerModel === "string"
+            ? value.reviewerModel.trim()
+            : defaults.reviewerModel,
+        };
+      }
+
+      function hashString(value) {
+        let hash = 2166136261;
+        for (let index = 0; index < value.length; index += 1) {
+          hash ^= value.charCodeAt(index);
+          hash = Math.imul(hash, 16777619);
+        }
+        return (hash >>> 0).toString(36);
+      }
+
+      function readConfig() {
         try {
-          const storedKey = localStorage.getItem(storageKey);
-          if (storedKey) {
-            storageMode = "local";
-            return storedKey;
+          const stored = JSON.parse(
+            localStorage.getItem(MODEL_CONFIG_STORAGE_KEY) || "null",
+          );
+          if (stored && typeof stored === "object") {
+            configStorageMode = "local";
+            return normalizeConfig(stored);
           }
         } catch {
           // Some browsers restrict persistent storage for local files.
         }
 
-        if (tabOnlyKey) {
-          storageMode = "tab";
-          return tabOnlyKey;
+        if (tabOnlyConfig) {
+          configStorageMode = "tab";
+          return normalizeConfig(tabOnlyConfig);
         }
 
-        storageMode = "none";
-        return "";
+        configStorageMode = "default";
+        return { ...DEFAULT_MODEL_CONFIG };
       }
 
-      function save(key) {
+      function saveConfig(value) {
+        const config = normalizeConfig(value);
         try {
-          localStorage.setItem(storageKey, key);
-          if (localStorage.getItem(storageKey) === key) {
-            tabOnlyKey = "";
-            storageMode = "local";
+          localStorage.setItem(
+            MODEL_CONFIG_STORAGE_KEY,
+            JSON.stringify(config),
+          );
+          const stored = JSON.parse(
+            localStorage.getItem(MODEL_CONFIG_STORAGE_KEY) || "null",
+          );
+          if (stored && typeof stored === "object") {
+            tabOnlyConfig = null;
+            configStorageMode = "local";
             return "local";
           }
         } catch {
           // Fall back to memory for this open tab.
         }
 
-        tabOnlyKey = key;
-        storageMode = "tab";
+        tabOnlyConfig = config;
+        configStorageMode = "tab";
         return "tab";
       }
 
-      function remove() {
+      function credentialScope(value = readConfig()) {
+        const config = normalizeConfig(value);
+        if (config.provider === "anthropic") return "anthropic";
+        try {
+          return "openai_" + hashString(new URL(config.endpoint).origin);
+        } catch {
+          return "openai_unconfigured";
+        }
+      }
+
+      function keyStorageKey(value = readConfig()) {
+        const scope = credentialScope(value);
+        return scope === "anthropic"
+          ? LEGACY_ANTHROPIC_KEY_STORAGE_KEY
+          : "casaflowai_api_key_" + scope;
+      }
+
+      function readKey(value = readConfig()) {
+        const storageKey = keyStorageKey(value);
+        try {
+          const storedKey = localStorage.getItem(storageKey);
+          if (storedKey) {
+            keyStorageMode = "local";
+            return storedKey;
+          }
+        } catch {
+          // Some browsers restrict persistent storage for local files.
+        }
+
+        if (tabOnlyKeys[storageKey]) {
+          keyStorageMode = "tab";
+          return tabOnlyKeys[storageKey];
+        }
+
+        keyStorageMode = "none";
+        return "";
+      }
+
+      function saveKey(key, value = readConfig()) {
+        const storageKey = keyStorageKey(value);
+        try {
+          localStorage.setItem(storageKey, key);
+          if (localStorage.getItem(storageKey) === key) {
+            delete tabOnlyKeys[storageKey];
+            keyStorageMode = "local";
+            return "local";
+          }
+        } catch {
+          // Fall back to memory for this open tab.
+        }
+
+        tabOnlyKeys[storageKey] = key;
+        keyStorageMode = "tab";
+        return "tab";
+      }
+
+      function removeKey(value = readConfig()) {
+        const storageKey = keyStorageKey(value);
         try {
           localStorage.removeItem(storageKey);
         } catch {
           // The tab-only key can still be removed when storage is restricted.
         }
-        tabOnlyKey = "";
-        storageMode = "none";
+        delete tabOnlyKeys[storageKey];
+        keyStorageMode = "none";
       }
 
-      function updateUi(message = "") {
+      function validateConfig(value) {
+        const config = normalizeConfig(value);
+        if (!config.workerModel || !config.reviewerModel) {
+          throw new Error("Enter both a worker model ID and a reviewer model ID.");
+        }
+
+        if (config.provider === "anthropic") {
+          return {
+            ...config,
+            endpoint: DEFAULT_MODEL_CONFIG.endpoint,
+          };
+        }
+
+        if (!config.endpoint) {
+          throw new Error("Enter the full OpenAI-compatible Chat Completions endpoint.");
+        }
+
+        let endpoint;
+        try {
+          endpoint = new URL(config.endpoint);
+        } catch {
+          throw new Error("Enter a valid endpoint URL.");
+        }
+
+        const isLoopback = ["localhost", "127.0.0.1", "::1"].includes(
+          endpoint.hostname,
+        );
+        const isAllowedProtocol = endpoint.protocol === "https:" ||
+          (endpoint.protocol === "http:" && isLoopback);
+        if (!isAllowedProtocol) {
+          throw new Error("Use HTTPS, except for an HTTP loopback endpoint during local testing.");
+        }
+        if (window.location.protocol === "https:" && endpoint.protocol !== "https:") {
+          throw new Error("This hosted page requires an HTTPS model endpoint.");
+        }
+        if (!/\/chat\/completions\/?$/.test(endpoint.pathname)) {
+          throw new Error("Use the full endpoint ending in /chat/completions.");
+        }
+
+        return {
+          ...config,
+          endpoint: endpoint.toString(),
+        };
+      }
+
+      function providerLabel(value = readConfig()) {
+        return normalizeConfig(value).provider === "anthropic"
+          ? "Anthropic"
+          : "OpenAI-compatible endpoint";
+      }
+
+      function fingerprint(value = readConfig()) {
+        const config = normalizeConfig(value);
+        return hashString([
+          config.provider,
+          config.endpoint,
+          config.workerModel,
+          config.reviewerModel,
+        ].join("|"));
+      }
+
+      function routeLabel(value = readConfig()) {
+        const config = normalizeConfig(value);
+        return providerLabel(config) + " · " + config.workerModel +
+          " → " + config.reviewerModel;
+      }
+
+      function isReady(value = readConfig()) {
+        let config;
+        try {
+          config = validateConfig(value);
+        } catch {
+          return false;
+        }
+        return config.provider === "anthropic"
+          ? Boolean(readKey(config))
+          : true;
+      }
+
+      function configFromFields() {
+        return normalizeConfig({
+          provider: document.getElementById("model-provider")?.value,
+          endpoint: document.getElementById("model-endpoint")?.value,
+          workerModel: document.getElementById("worker-model")?.value,
+          reviewerModel: document.getElementById("reviewer-model")?.value,
+        });
+      }
+
+      function displayModelName(model, config) {
+        if (model === DEFAULT_MODEL_CONFIG.workerModel) return "Claude Haiku 4.5";
+        if (model === DEFAULT_MODEL_CONFIG.reviewerModel) return "Claude Sonnet 5";
+        if (!model) return "Model not configured";
+        return config.provider === "anthropic"
+          ? "Anthropic model"
+          : "OpenAI-compatible model";
+      }
+
+      function renderConfig(value, { syncFields = false } = {}) {
+        const config = normalizeConfig(value);
+        const provider = document.getElementById("model-provider");
+        const endpoint = document.getElementById("model-endpoint");
+        const endpointField = document.getElementById("model-endpoint-field");
+        const worker = document.getElementById("worker-model");
+        const reviewer = document.getElementById("reviewer-model");
+        const keyLabel = document.getElementById("api-key-label");
+        const disclosure = document.getElementById("connection-disclosure");
+        const workerName = document.getElementById("worker-model-name");
+        const workerId = document.getElementById("worker-model-id");
+        const reviewerName = document.getElementById("reviewer-model-name");
+        const reviewerId = document.getElementById("reviewer-model-id");
+        const routingNote = document.getElementById("model-routing-note");
+        const input = document.getElementById("api-key");
+        if (!provider || !endpoint || !endpointField || !worker || !reviewer ||
+            !keyLabel || !disclosure || !workerName || !workerId ||
+            !reviewerName || !reviewerId || !routingNote || !input) return;
+
+        if (syncFields) {
+          provider.value = config.provider;
+          endpoint.value = config.endpoint;
+          worker.value = config.workerModel;
+          reviewer.value = config.reviewerModel;
+        }
+        endpointField.hidden = config.provider !== "openai-compatible";
+        endpoint.required = config.provider === "openai-compatible";
+        keyLabel.textContent = config.provider === "anthropic"
+          ? "Anthropic API key"
+          : "Provider API key (optional for keyless endpoints)";
+
+        let destination = "Anthropic";
+        if (config.provider === "openai-compatible") {
+          try {
+            destination = new URL(config.endpoint).hostname;
+          } catch {
+            destination = "the endpoint you configure";
+          }
+        }
+        disclosure.textContent =
+          "Requests go directly from this browser to " + destination + ".";
+        workerName.textContent = displayModelName(config.workerModel, config);
+        workerId.textContent = config.workerModel || "Enter a model ID";
+        reviewerName.textContent = displayModelName(config.reviewerModel, config);
+        reviewerId.textContent = config.reviewerModel || "Enter a model ID";
+        routingNote.innerHTML = config.workerModel &&
+          config.workerModel === config.reviewerModel
+          ? "The worker and reviewer use the same model ID. They remain separately prompted, but this route is <strong>not model-diverse</strong>."
+          : "Separate model tiers reduce correlated reasoning failures. The reviewer is advisory and must return <strong>Looks right</strong> before CasaFlowAI enables a consequential board change.";
+        const hasDraftKey = Boolean(readKey(config));
+        input.placeholder = hasDraftKey
+          ? "Key already saved for this endpoint; paste a new key to replace it"
+          : config.provider === "anthropic"
+            ? "Paste key here"
+            : "Paste provider key, or leave blank for a keyless endpoint";
+      }
+
+      function updateUi(message = "", options = {}) {
         const status = document.getElementById("key-status");
         const consoleStatus = document.getElementById("console-status");
-        const firstRunGuidance =
-          document.getElementById("first-run-guidance");
-        const input = document.getElementById("api-key");
-        const hasKey = Boolean(read());
-        if (!status || !consoleStatus || !firstRunGuidance || !input) return;
+        const firstRunGuidance = document.getElementById("first-run-guidance");
+        const firstRunCopy = document.getElementById("first-run-guidance-copy");
+        const savedConfig = readConfig();
+        const displayedConfig = options.config || savedConfig;
+        const ready = isReady(savedConfig);
+        const hasKey = Boolean(readKey(savedConfig));
+        if (!status || !consoleStatus || !firstRunGuidance) return;
 
-        status.textContent = message || (hasKey
-          ? storageMode === "local"
-            ? "Key saved in this browser."
-            : "Key ready for this open tab. Keep the tab open until the evaluation finishes."
-          : "Key control ready — no key saved.");
-        status.classList.toggle("saved", hasKey);
-        consoleStatus.textContent = hasKey ? "Agent ready" : "API key needed";
-        consoleStatus.className = "badge " + (hasKey ? "ok" : "warn");
-        firstRunGuidance.hidden = hasKey;
-        input.placeholder = hasKey
-          ? "Key already saved; paste a new key to replace it"
-          : "Paste key here";
+        renderConfig(displayedConfig, { syncFields: options.syncFields !== false });
+        status.textContent = message || (ready
+          ? savedConfig.provider === "openai-compatible" && !hasKey
+            ? "Connection saved. No key is stored; CasaFlowAI will use the endpoint as keyless."
+            : keyStorageMode === "tab" || configStorageMode === "tab"
+              ? "Connection ready for this open tab. Keep it open until the evaluation finishes."
+              : "Connection saved in this browser."
+          : savedConfig.provider === "anthropic"
+            ? "Anthropic is selected — save an API key to run the agent."
+            : "Complete and save the OpenAI-compatible endpoint and model IDs.");
+        status.classList.toggle("saved", ready);
+        consoleStatus.textContent = ready ? "Agent ready" : "Model setup needed";
+        consoleStatus.className = "badge " + (ready ? "ok" : "warn");
+        firstRunGuidance.hidden = ready;
+        if (firstRunCopy) {
+          firstRunCopy.textContent = savedConfig.provider === "anthropic"
+            ? "Save your Anthropic API key in the private SiteOps settings before running a live review. Nothing sends or changes project state automatically."
+            : "Save the OpenAI-compatible endpoint and model IDs in private SiteOps settings. A provider key is optional only for a keyless endpoint. Nothing sends or changes project state automatically.";
+        }
       }
 
       function initializeKeyControl() {
         const input = document.getElementById("api-key");
         const saveButton = document.getElementById("save-key");
         const removeButton = document.getElementById("remove-key");
-        if (!input || !saveButton || !removeButton) return;
+        const provider = document.getElementById("model-provider");
+        const endpoint = document.getElementById("model-endpoint");
+        const worker = document.getElementById("worker-model");
+        const reviewer = document.getElementById("reviewer-model");
+        if (!input || !saveButton || !removeButton || !provider || !endpoint ||
+            !worker || !reviewer) return;
         if (input.dataset.keyControlReady === "true") return;
 
+        const savedConfig = readConfig();
+        const drafts = {
+          anthropic: savedConfig.provider === "anthropic"
+            ? { ...savedConfig }
+            : defaultsForProvider("anthropic"),
+          "openai-compatible": savedConfig.provider === "openai-compatible"
+            ? { ...savedConfig }
+            : defaultsForProvider("openai-compatible"),
+        };
+        let selectedProvider = savedConfig.provider;
+
+        function captureDraft() {
+          drafts[selectedProvider] = {
+            ...configFromFields(),
+            provider: selectedProvider,
+          };
+        }
+
+        function renderDraft(message = "") {
+          captureDraft();
+          updateUi(message, {
+            config: drafts[selectedProvider],
+            syncFields: false,
+          });
+        }
+
         function saveFromInput() {
-          const key = input.value.trim();
-          if (!key) {
-            updateUi("Paste a key before saving.");
+          captureDraft();
+          let config;
+          try {
+            config = validateConfig(drafts[selectedProvider]);
+          } catch (error) {
+            updateUi(String(error?.message || error), {
+              config: drafts[selectedProvider],
+              syncFields: false,
+            });
             return;
           }
 
-          const savedMode = save(key);
+          const previousFingerprint = fingerprint(readConfig());
+          const configMode = saveConfig(config);
+          const key = input.value.trim();
+          const keyMode = key ? saveKey(key, config) : keyStorageMode;
           input.value = "";
-          updateUi(
-            savedMode === "local"
-              ? "Key saved in this browser."
-              : "Persistent storage is unavailable. The key is ready for this open tab; keep it open until the evaluation finishes.",
-          );
+          drafts[selectedProvider] = config;
+          const routeChanged = previousFingerprint !== fingerprint(config);
+          const persistenceMessage = configMode === "local" && keyMode !== "tab"
+            ? "Connection saved in this browser."
+            : "Connection ready for this open tab. Keep it open until the evaluation finishes.";
+          const resultMessage = routeChanged
+            ? persistenceMessage + " Model-specific saved evals are kept separate."
+            : persistenceMessage;
+          updateUi(resultMessage, { config, syncFields: true });
+          if (routeChanged && configMode === "local") {
+            window.setTimeout(() => window.location.reload(), 350);
+          }
         }
 
+        provider.addEventListener("change", () => {
+          captureDraft();
+          selectedProvider = provider.value === "openai-compatible"
+            ? "openai-compatible"
+            : "anthropic";
+          renderConfig(drafts[selectedProvider], { syncFields: true });
+          updateUi("Configure this route, then save the connection.", {
+            config: drafts[selectedProvider],
+            syncFields: false,
+          });
+        });
+        for (const field of [endpoint, worker, reviewer]) {
+          field.addEventListener("input", () => renderDraft());
+        }
         saveButton.addEventListener("click", saveFromInput);
         input.addEventListener("keydown", (event) => {
           if (event.key !== "Enter") return;
@@ -1782,20 +2151,43 @@ body {
           saveFromInput();
         });
         removeButton.addEventListener("click", () => {
-          remove();
+          captureDraft();
+          removeKey(drafts[selectedProvider]);
           input.value = "";
-          updateUi();
+          updateUi("Saved key removed for this provider endpoint.", {
+            config: drafts[selectedProvider],
+            syncFields: false,
+          });
         });
         input.dataset.keyControlReady = "true";
         document.documentElement.dataset.keyControlReady = "true";
-        updateUi();
+        updateUi("", { config: savedConfig, syncFields: true });
       }
 
+      window.CasaFlowModelStore = Object.freeze({
+        read: readConfig,
+        save: saveConfig,
+        validate: validateConfig,
+        isReady,
+        fingerprint,
+        routeLabel,
+        providerLabel,
+        endpointHost: (value = readConfig()) => {
+          const config = normalizeConfig(value);
+          if (config.provider === "anthropic") return "api.anthropic.com";
+          try {
+            return new URL(config.endpoint).hostname;
+          } catch {
+            return "configured endpoint";
+          }
+        },
+      });
+
       window.CasaFlowKeyStore = Object.freeze({
-        read,
-        save,
-        remove,
-        mode: () => storageMode,
+        read: readKey,
+        save: saveKey,
+        remove: removeKey,
+        mode: () => keyStorageMode,
         updateUi,
       });
 
@@ -1812,15 +2204,110 @@ body {
     })();
   </script>
 
+  <!-- BEGIN CASAFLOW OBSERVABILITY -->
+  <script>
+// This source is inlined into both standalone prototypes by scripts/sync-observability.mjs.
+// Model keys never enter this object or its requests.
+window.CasaFlowObservability = (() => {
+  let configPromise;
+  let currentExperiment = null;
+  const status = (message, url, label) => {
+    const node = document.getElementById('braintrust-status');
+    if (!node) return;
+    node.replaceChildren(document.createTextNode(message));
+    if (url) {
+      const link = document.createElement('a');
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.textContent = ' ' + label;
+      node.append(link);
+    }
+  };
+  async function ready() {
+    if (!configPromise) configPromise = (async () => {
+      if (!/^https?:$/.test(location.protocol)) { status('Open the Railway demo to record traces in Braintrust.'); return { enabled: false }; }
+      try {
+        const response = await fetch('/api/observability/config', { signal: AbortSignal.timeout(15000) });
+        if (!response.ok) { status('Open the Railway demo to record traces in Braintrust.'); return { enabled: false }; }
+        const config = await response.json();
+        status(config.enabled ? 'Braintrust connected. New runs record model calls and evaluation results.' : 'Braintrust is not configured on this host.', config.projectUrl, 'Open Braintrust');
+        return config;
+      } catch {
+        status('Braintrust is unavailable on this host. Model runs still work.');
+        return { enabled: false };
+      }
+    })();
+    return configPromise;
+  }
+  async function post(path, body) {
+    const config = await ready();
+    if (!config.enabled) return null;
+    const response = await fetch('/api/observability/' + path, {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-casaflow-session': config.token },
+      body: JSON.stringify(body), signal: AbortSignal.timeout(30000),
+    });
+    if (!response.ok) throw new Error('Telemetry could not be confirmed');
+    return response.json();
+  }
+  async function safe(action) {
+    try { return await action(); } catch {
+      if (currentExperiment) currentExperiment.incomplete = true;
+      status('Braintrust upload was not confirmed. This run may have an incomplete trace; model results remain available here.');
+      return null;
+    }
+  }
+  return Object.freeze({
+    ready,
+    start: async (request, input, models, experimentId) => safe(async () => {
+      const result = await post('runs', { requestId: request.request_id, input, models, experimentId });
+      if (result) status('Recording ' + request.request_id + ' in Braintrust.', result.url, 'View trace');
+      return result;
+    }),
+    call: async (trace, call) => {
+      if (!trace) return;
+      const result = await safe(() => post('runs/' + trace.id + '/calls', call));
+      if (!result) trace.incomplete = true;
+    },
+    finish: async (trace, state) => {
+      if (!trace) return;
+      const result = await safe(() => post('runs/' + trace.id + '/finish', { state }));
+      if (result && !trace.incomplete) status('Latest run recorded in Braintrust.', result.url, 'View trace');
+    },
+    startExperiment: async models => {
+      currentExperiment = await safe(() => post('experiments', { models }));
+      if (currentExperiment) status('Recording a fresh 20-case evaluation.', currentExperiment.url, 'View experiment');
+      return currentExperiment;
+    },
+    finishExperiment: async experiment => {
+      if (!experiment) return;
+      const result = await safe(() => post('experiments/' + experiment.id + '/finish', {}));
+      if (result) {
+        const warning = experiment.incomplete ? 'Some trace uploads were not confirmed. ' : '';
+        status(`${warning}${result.completedCases}/20 cases scored in Braintrust. Blocker recall ${Math.round(result.metrics.blockerRecall * 100)}%; false pauses ${Math.round(result.metrics.falsePauseRate * 100)}%; exact labels ${Math.round(result.metrics.exactAccuracy * 100)}%.`, result.url, 'View experiment');
+        const link = document.getElementById('braintrust-experiment');
+        if (link) { link.href = result.url; link.hidden = false; }
+      }
+      currentExperiment = null;
+    },
+  });
+})();
+window.CasaFlowObservability.ready();
+
+  </script>
+  <!-- END CASAFLOW OBSERVABILITY -->
+
   <script>
     "use strict";
 
-    const WORKER_MODEL = "claude-haiku-4-5";
-    const REVIEWER_MODEL = "claude-sonnet-5";
+    const DEFAULT_WORKER_MODEL = "claude-haiku-4-5";
+    const DEFAULT_REVIEWER_MODEL = "claude-sonnet-5";
     const EXACT_LABEL_CALIBRATION_FLOOR = 0.75;
     const ANTHROPIC_MESSAGES_ENDPOINT = "https://api.anthropic.com/v1/messages";
-    const EVAL_RESULTS_STORAGE_KEY = "casaflowai_eval_results_v1";
-    const TRANSITION_EVAL_STORAGE_KEY = "casaflowai_transition_eval_v1";
+    const EVAL_RESULTS_STORAGE_KEY_BASE = "casaflowai_eval_results_v2";
+    const TRANSITION_EVAL_STORAGE_KEY_BASE = "casaflowai_transition_eval_v2";
+
+    function modelScopedStorageKey(base) {
+      return base + "_" + window.CasaFlowModelStore.fingerprint();
+    }
     const SYSTEM_PROMPT = String.raw`
 ROLE
 CasaFlowAI evaluates contractor-requested activity transitions against an evidence-grounded home-extension project state, recommends the safe next workflow state for contractor review, and escalates missing or conflicting evidence, authority limits, privacy risks, and high-stakes decisions without independently making consequential commitments.
@@ -3960,9 +4447,17 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
 
       for (const entry of runLogEntries) {
         const row = makeElement("div", undefined, "row");
+        const runIdentity = makeElement(
+          "span",
+          entry.caseId + " / " + entry.runId,
+          "case",
+        );
+        runIdentity.append(
+          makeElement("small", entry.modelRoute, "model-route"),
+        );
         row.append(
           makeElement("span", formatRunLogTime(entry.time), "t"),
-          makeElement("span", entry.caseId + " / " + entry.runId, "case"),
+          runIdentity,
           makeElement("span", entry.agentDecision, "decision"),
           makeElement("span", entry.humanAction, entry.actionClass),
         );
@@ -3976,6 +4471,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         time: new Date(),
         caseId: request.request_id,
         runId: state.runId,
+        modelRoute: state.modelRoute || modelRouteLabel(),
         agentDecision: state.agentDecision,
         humanAction,
         actionClass,
@@ -4103,7 +4599,9 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
     function loadTransitionEvaluation() {
       try {
         const saved = JSON.parse(
-          localStorage.getItem(TRANSITION_EVAL_STORAGE_KEY) || "null",
+          localStorage.getItem(
+            modelScopedStorageKey(TRANSITION_EVAL_STORAGE_KEY_BASE),
+          ) || "null",
         );
         return saved &&
           typeof saved === "object" &&
@@ -4119,7 +4617,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       if (!transitionEvaluation) return false;
       try {
         localStorage.setItem(
-          TRANSITION_EVAL_STORAGE_KEY,
+          modelScopedStorageKey(TRANSITION_EVAL_STORAGE_KEY_BASE),
           JSON.stringify(transitionEvaluation),
         );
         return true;
@@ -4385,6 +4883,8 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           calibrationText +
           lastRunText;
       }
+      summary.textContent += " Model route: " +
+        (transitionEvaluation?.modelRoute || modelRouteLabel()) + ".";
 
       body.replaceChildren();
       for (const label of transitionLabels) {
@@ -5148,7 +5648,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           panel,
           "The project snapshot is unchanged. Correct the worker error, then run this case again.",
         );
-        if (state.text.startsWith("No API key is saved.")) {
+        if (state.text.startsWith("Model setup is incomplete.")) {
           const settingsLink = makeElement("a", "Open Settings", "btn primary");
           settingsLink.href = "#settings";
           settingsLink.dataset.openTab = "settings";
@@ -5338,7 +5838,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       renderInspectionSchedule();
     }
 
-    function responseTextFromPayload(payload) {
+    function anthropicResponseText(payload) {
       if (!Array.isArray(payload?.content)) return "";
       return payload.content
         .filter((item) => item?.type === "text" && typeof item.text === "string")
@@ -5347,16 +5847,40 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         .trim();
     }
 
-    function readableApiError(status, payload) {
+    function openAiCompatibleResponseText(payload) {
+      const content = payload?.choices?.[0]?.message?.content;
+      if (typeof content === "string") return content.trim();
+      if (Array.isArray(content)) {
+        return content.map((item) => {
+          if (typeof item === "string") return item;
+          if (typeof item?.text === "string") return item.text;
+          if (typeof item?.text?.value === "string") return item.text.value;
+          return "";
+        }).join("\n").trim();
+      }
+      return typeof payload?.choices?.[0]?.text === "string"
+        ? payload.choices[0].text.trim()
+        : "";
+    }
+
+    function responseTextFromPayload(payload, config) {
+      return config.provider === "anthropic"
+        ? anthropicResponseText(payload)
+        : openAiCompatibleResponseText(payload);
+    }
+
+    function readableApiError(status, payload, config) {
       const rawMessage =
         payload?.error?.message ||
         payload?.message ||
         (typeof payload === "string" ? payload : "") ||
         "No additional error details were returned.";
       const normalized = rawMessage.toLowerCase();
+      const providerName = window.CasaFlowModelStore.providerLabel(config);
 
       if (status === 401 || normalized.includes("api key") && normalized.includes("invalid")) {
-        return "The saved API key was rejected. Open Settings and save a valid Anthropic API key.";
+        return "The saved API key was rejected by " + providerName +
+          ". Open Settings and save the correct key for this endpoint.";
       }
       if (
         status === 402 ||
@@ -5364,81 +5888,135 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         normalized.includes("billing") ||
         normalized.includes("no credit")
       ) {
-        return "The Anthropic account has no available API credit. Add credit, then run the case again.";
+        return providerName +
+          " reports no available API credit. Add credit, then run the case again.";
       }
       if (status === 429) {
-        return "Anthropic is temporarily limiting requests. Wait briefly, then run the case again.";
+        return providerName +
+          " is temporarily limiting requests. Wait briefly, then run the case again.";
       }
       if (status >= 500) {
-        return "Anthropic is temporarily unavailable. Try the case again. Details: " + rawMessage;
+        return providerName +
+          " is temporarily unavailable. Try the case again. Details: " + rawMessage;
       }
       if (
         normalized.includes("model") &&
         (normalized.includes("not found") || normalized.includes("not available") || normalized.includes("does not exist"))
       ) {
-        return "This API key cannot access CasaFlowAI's selected model. The worker uses Claude Haiku 4.5 and the reviewer uses Claude Sonnet 5; confirm both models are enabled for this Anthropic account.";
+        return "This endpoint cannot access CasaFlowAI's selected models. " +
+          "The worker uses " + config.workerModel + " and the reviewer uses " +
+          config.reviewerModel + "; confirm both model IDs and account access.";
       }
-      return "Anthropic returned an error: " + rawMessage;
+      return providerName + " returned an error: " + rawMessage;
     }
 
     async function requestModelText(
       apiKey,
-      model,
+      role,
       systemPrompt,
       messages,
       maxTokens,
+      trace,
     ) {
-      const requestBody = {
-        model,
-        max_tokens: maxTokens,
-        system: systemPrompt,
-        messages,
-      };
-      // Claude Sonnet 5 no longer accepts `temperature`; preserve the worker's
-      // deterministic setting while omitting it for the independent reviewer.
-      if (model === WORKER_MODEL) {
-        requestBody.temperature = 0;
-      }
-      if (model === REVIEWER_MODEL) {
-        // Sonnet 5 thinks adaptively by default. This reviewer has a small,
-        // strict-format output budget, so reserve it for the verdict itself.
-        requestBody.thinking = { type: "disabled" };
-      }
+      const config = readModelConfig();
+      const model = role === "reviewer"
+        ? config.reviewerModel
+        : config.workerModel;
+      let endpoint;
+      let requestBody;
+      let headers;
 
-      const response = await fetch(ANTHROPIC_MESSAGES_ENDPOINT, {
-        method: "POST",
-        headers: {
+      if (config.provider === "anthropic") {
+        endpoint = ANTHROPIC_MESSAGES_ENDPOINT;
+        requestBody = {
+          model,
+          max_tokens: maxTokens,
+          system: systemPrompt,
+          messages,
+        };
+        // Preserve the verified default Anthropic request behavior without
+        // imposing model-specific options on custom routes.
+        if (role === "worker" && model === DEFAULT_WORKER_MODEL) {
+          requestBody.temperature = 0;
+        }
+        if (role === "reviewer" && model === DEFAULT_REVIEWER_MODEL) {
+          requestBody.thinking = { type: "disabled" };
+        }
+        headers = {
           "x-api-key": apiKey,
           "anthropic-version": "2023-06-01",
           "anthropic-dangerous-direct-browser-access": "true",
           "content-type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
+        };
+      } else {
+        endpoint = config.endpoint;
+        const reasoningGuidance = role === "reviewer"
+          ? "Use medium reasoning effort internally. Return only the requested final review fields and do not expose chain-of-thought."
+          : "Use low reasoning effort internally. Return only the requested final package fields and do not expose chain-of-thought.";
+        requestBody = {
+          model,
+          max_tokens: maxTokens,
+          messages: [
+            {
+              role: "system",
+              content: reasoningGuidance + "\n\n" + systemPrompt,
+            },
+            ...messages,
+          ],
+        };
+        headers = { "content-type": "application/json" };
+        if (apiKey) headers.Authorization = "Bearer " + apiKey;
+      }
 
-      const responseBody = await response.text();
-      let payload;
+      const callStart = Date.now() / 1000;
+      let tracePayload;
+      let traceError;
       try {
-        payload = responseBody ? JSON.parse(responseBody) : {};
-      } catch {
-        payload = responseBody;
-      }
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(requestBody),
+        });
 
-      if (!response.ok) {
-        throw new Error(readableApiError(response.status, payload));
-      }
+        const responseBody = await response.text();
+        let payload;
+        try {
+          payload = responseBody ? JSON.parse(responseBody) : {};
+        } catch {
+          payload = responseBody;
+        }
 
-      const rawText = responseTextFromPayload(payload);
-      if (!rawText) {
-        throw new Error(
-          "Anthropic returned no readable agent text. Run the case again.",
-        );
+        tracePayload = payload;
+        if (!response.ok) {
+          throw new Error(readableApiError(response.status, payload, config));
+        }
+
+        const rawText = responseTextFromPayload(payload, config);
+        if (!rawText) {
+          throw new Error(
+            window.CasaFlowModelStore.providerLabel(config) +
+            " returned no readable agent text. Run the case again.",
+          );
+        }
+        return rawText;
+      } catch (error) {
+        traceError = String(error?.message || 'Model request failed');
+        throw error;
+      } finally {
+        await window.CasaFlowObservability.call(trace, {
+          id: crypto.randomUUID(), role, model, provider: config.provider,
+          start: callStart, end: Date.now() / 1000,
+          input: requestBody, output: tracePayload,
+          usage: tracePayload?.usage, error: traceError,
+        });
       }
-      return rawText;
     }
 
-    function requestAgentText(apiKey, messages) {
-      return requestModelText(apiKey, WORKER_MODEL, SYSTEM_PROMPT, messages, 1800);
+    function requestAgentText(apiKey, messages, trace) {
+      const maxTokens = readModelConfig().provider === "openai-compatible"
+        ? 4096
+        : 1800;
+      return requestModelText(apiKey, "worker", SYSTEM_PROMPT, messages, maxTokens, trace);
     }
 
     function requestAgentFormatRepair(
@@ -5446,6 +6024,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       originalMessages,
       invalidWorkerOutput,
       formatDiagnostic,
+      trace,
     ) {
       return requestAgentText(apiKey, [
         ...originalMessages,
@@ -5463,7 +6042,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             "Return exactly the following plain-text labels once each, in this exact order, with a non-empty value after every label and no Markdown, code fence, heading, introduction, or closing text:\n" +
             AGENT_OUTPUT_FIELDS.map((label) => label + ":").join("\n"),
         },
-      ]);
+      ], trace);
     }
 
     function requestAgentContractRepair(
@@ -5471,6 +6050,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       originalMessages,
       invalidWorkerOutput,
       contractWarnings,
+      trace,
     ) {
       return requestAgentText(apiKey, [
         ...originalMessages,
@@ -5488,14 +6068,17 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             "Remove out-of-scope or unsupported claims; add an exact TOP CITED EVIDENCE record only when that record is case-visible and materially used. Do not invent evidence. " +
             "Return exactly the required plain-text labels once each in the original order, with no Markdown or extra prose.",
         },
-      ]);
+      ], trace);
     }
 
-    function requestReviewerText(apiKey, request, workerOutput) {
+    function requestReviewerText(apiKey, request, workerOutput, trace) {
       const reviewerPayload = buildReviewerPayload(request, workerOutput);
+      const maxTokens = readModelConfig().provider === "openai-compatible"
+        ? 1024
+        : 220;
       return requestModelText(
         apiKey,
-        REVIEWER_MODEL,
+        "reviewer",
         REVIEWER_SYSTEM_PROMPT,
         [
           {
@@ -5507,7 +6090,8 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
               JSON.stringify(reviewerPayload, null, 2),
           },
         ],
-        220,
+        maxTokens,
+        trace,
       );
     }
 
@@ -5516,11 +6100,15 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       request,
       workerOutput,
       invalidReviewerOutput,
+      trace,
     ) {
       const reviewerPayload = buildReviewerPayload(request, workerOutput);
+      const maxTokens = readModelConfig().provider === "openai-compatible"
+        ? 1024
+        : 260;
       return requestModelText(
         apiKey,
-        REVIEWER_MODEL,
+        "reviewer",
         REVIEWER_SYSTEM_PROMPT,
         [
           {
@@ -5543,7 +6131,8 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
               "REASON:\nOne concise sentence under 800 characters.",
           },
         ],
-        260,
+        maxTokens,
+        trace,
       );
     }
 
@@ -5576,17 +6165,17 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         reviewerFormatRepairVerified: false,
         reviewerVerdict: "",
         reviewerReason: "",
+        modelRoute: modelRouteLabel(),
       };
       nextRunNumber += 1;
       runStateByRequestId.set(request.request_id, runState);
       updateCaseOutcome(request.request_id);
       const apiKey = readApiKey();
 
-      if (!apiKey) {
+      if (!isModelReady()) {
         runState.status = "error";
-        runState.text =
-          "No API key is saved. Add your Anthropic API key in Settings, save it, and run this case again.";
-        runState.agentDecision = "ERROR / API key missing";
+        runState.text = modelSetupMessage();
+        runState.agentDecision = "ERROR / model setup missing";
         appendRunLogEntry(
           request,
           runState,
@@ -5604,8 +6193,14 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       renderRunAllStatus();
       showCase(request);
 
+      let trace = null;
       try {
         const caseContext = buildAgentCaseContext(request);
+        const modelConfig = readModelConfig();
+        trace = await window.CasaFlowObservability.start(request, caseContext, {
+          provider: modelConfig.provider, worker: modelConfig.workerModel, reviewer: modelConfig.reviewerModel,
+        }, options.braintrustExperimentId);
+        runState.braintrustTraceUrl = trace?.url || '';
         const messages = [
           {
             role: "user",
@@ -5617,7 +6212,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
               JSON.stringify(caseContext, null, 2),
           },
         ];
-        let rawText = await requestAgentText(apiKey, messages);
+        let rawText = await requestAgentText(apiKey, messages, trace);
         let workerParsed = parseLabeledAgentOutput(rawText);
         if (!workerParsed.ok) {
           runState.workerOriginalRawText = rawText;
@@ -5628,6 +6223,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             messages,
             rawText,
             workerParsed.diagnostic,
+            trace,
           );
           workerParsed = parseLabeledAgentOutput(rawText);
           runState.workerFormatRepairVerified = workerParsed.ok;
@@ -5651,6 +6247,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
             messages,
             rawText,
             contractWarnings,
+            trace,
           );
           workerParsed = parseLabeledAgentOutput(rawText);
           citationReview = workerParsed.ok
@@ -5693,6 +6290,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
               apiKey,
               request,
               rawText,
+              trace,
             );
             runState.reviewerRawText = reviewerRawText;
             let reviewerResult = parseReviewerOutput(reviewerRawText);
@@ -5704,6 +6302,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
                 request,
                 rawText,
                 reviewerRawText,
+                trace,
               );
               reviewerResult = parseReviewerOutput(reviewerRawText);
               runState.reviewerFormatRepairVerified = reviewerResult.ok;
@@ -5749,7 +6348,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           String(error?.message || "").toLowerCase().includes("failed to fetch");
         runState.status = "error";
         runState.text = isNetworkFailure
-          ? "The request could not reach Anthropic. Check that you are online and that the browser allows direct API access, then try again."
+          ? modelNetworkFailureMessage()
           : String(error?.message || error || "The agent request failed.");
         runState.agentDecision = "ERROR / agent run failed";
         appendRunLogEntry(
@@ -5759,6 +6358,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           "action-escalate",
         );
       } finally {
+        await window.CasaFlowObservability.finish(trace, runState);
         activeAgentRunCount = Math.max(0, activeAgentRunCount - 1);
         runButton.disabled = Boolean(options.keepRunControlsLocked);
         runButton.textContent = "Run";
@@ -5773,10 +6373,9 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
     async function runAllCases() {
       if (runAllState.status === "running" || activeAgentRunCount > 0) return;
 
-      if (!readApiKey()) {
+      if (!isModelReady()) {
         runAllState.status = "error";
-        runAllState.message =
-          "No API key is saved. Add your Anthropic API key in Settings, then run the sweep again.";
+        runAllState.message = modelSetupMessage();
         renderRunAllStatus();
         return;
       }
@@ -5793,6 +6392,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       transitionEvaluation = {
         completed: false,
         generatedAt: null,
+        modelRoute: modelRouteLabel(),
         results: [],
       };
 
@@ -5805,7 +6405,12 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
       renderRunAllStatus();
       renderTransitionEvaluation();
 
+      let braintrustExperiment = null;
       try {
+        const modelConfig = readModelConfig();
+        braintrustExperiment = await window.CasaFlowObservability.startExperiment({
+          provider: modelConfig.provider, worker: modelConfig.workerModel, reviewer: modelConfig.reviewerModel,
+        });
         for (const request of transitionRequests) {
           runAllState.currentRequestId = request.request_id;
           renderRunAllStatus();
@@ -5813,7 +6418,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           const runState = await runAgentForCase(
             request,
             runButtonByRequestId.get(request.request_id),
-            { keepRunControlsLocked: true },
+            { keepRunControlsLocked: true, braintrustExperimentId: braintrustExperiment?.id },
           );
           syncPrimaryEvalFromTransitionRun(request, runState);
           const outcome = outcomeForRunState(runState);
@@ -5835,6 +6440,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
         transitionEvaluation = {
           completed: true,
           generatedAt: new Date().toISOString(),
+          modelRoute: modelRouteLabel(),
           results: [...runAllState.evaluationResults],
         };
         saveTransitionEvaluation();
@@ -5849,6 +6455,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
           " cases. " +
           String(error?.message || error || "An unexpected error occurred.");
       } finally {
+        await window.CasaFlowObservability.finishExperiment(braintrustExperiment);
         runAllState.currentRequestId = null;
         setAllCaseRunButtonsDisabled(false);
         setPrimaryEvalRunButtonsDisabled(false);
@@ -5935,7 +6542,9 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
     function loadEvalResults() {
       try {
         const saved = JSON.parse(
-          localStorage.getItem(EVAL_RESULTS_STORAGE_KEY) || "{}",
+          localStorage.getItem(
+            modelScopedStorageKey(EVAL_RESULTS_STORAGE_KEY_BASE),
+          ) || "{}",
         );
         return saved && typeof saved === "object" && !Array.isArray(saved)
           ? saved
@@ -5970,7 +6579,7 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
     function saveEvalResults() {
       try {
         localStorage.setItem(
-          EVAL_RESULTS_STORAGE_KEY,
+          modelScopedStorageKey(EVAL_RESULTS_STORAGE_KEY_BASE),
           JSON.stringify(evalResults),
         );
         setEvalSaveStatus("Eval results saved in this browser.");
@@ -6555,6 +7164,36 @@ VERDICT must be exactly Looks right or Needs attention. REASON must be one conci
 
     function readApiKey() {
       return window.CasaFlowKeyStore.read();
+    }
+
+    function readModelConfig() {
+      return window.CasaFlowModelStore.read();
+    }
+
+    function isModelReady() {
+      return window.CasaFlowModelStore.isReady();
+    }
+
+    function modelRouteLabel() {
+      return window.CasaFlowModelStore.routeLabel();
+    }
+
+    function modelSetupMessage() {
+      const config = readModelConfig();
+      return config.provider === "anthropic"
+        ? "Model setup is incomplete. Add your Anthropic API key in Settings, save the connection, and run this case again."
+        : "Model setup is incomplete. Add a valid HTTPS Chat Completions endpoint plus worker and reviewer model IDs in Settings, then save the connection.";
+    }
+
+    function modelNetworkFailureMessage() {
+      const config = readModelConfig();
+      const provider = window.CasaFlowModelStore.providerLabel(config);
+      const host = window.CasaFlowModelStore.endpointHost(config);
+      const corsHelp = config.provider === "openai-compatible"
+        ? " Confirm that the endpoint is HTTPS and allows browser CORS from this site."
+        : "";
+      return "The request could not reach " + provider + " at " + host +
+        ". Check that you are online." + corsHelp;
     }
 
     function updateKeyStatus(message = "") {

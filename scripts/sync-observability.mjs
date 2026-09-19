@@ -1,0 +1,10 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+const root = new URL('../', import.meta.url);
+let html = readFileSync(new URL('index.html', root), 'utf8');
+const start = '  <!-- BEGIN CASAFLOW OBSERVABILITY -->';
+const end = '  <!-- END CASAFLOW OBSERVABILITY -->';
+const snippet = `${start}\n  <script>\n${readFileSync(new URL('server/client-snippet.js', root), 'utf8')}\n  </script>\n${end}`;
+if (html.includes(start)) html = html.slice(0, html.indexOf(start)) + snippet + html.slice(html.indexOf(end) + end.length);
+else html = html.replace('  <script>\n    "use strict";\n\n    const DEFAULT_WORKER_MODEL', snippet + '\n\n  <script>\n    "use strict";\n\n    const DEFAULT_WORKER_MODEL');
+writeFileSync(new URL('index.html', root), html);
+writeFileSync(new URL('PF AI PM Capstone Project/agentic-ai-capstone-develop-companion-v0.3/index.html', root), html);

@@ -14,9 +14,9 @@ CasaFlowAI helps small general contractors managing permitted home-extension pro
 |---|---|---|
 | Railway demo | [Open CasaFlowAI](https://illustrious-exploration-production-ec63.up.railway.app/) | Public synthetic demo; share this link with demo viewers. |
 | Railway dashboard | [Manage deployment](https://railway.com/project/db7ea350-99c4-44b3-bf33-870b7688a80b/service/5429c49b-98aa-40e0-8ca3-10660ce389aa?environmentId=c08a5992-c849-4496-b43e-19d8b291ff81) | Requires authorized Railway workspace access. |
-| Braintrust | [CasaFlowAI project](https://www.braintrust.dev/app/Ankit%27s%20Evaluation%20Projects/p/CasaFlowAI) | Requires authorized Braintrust workspace access; intended for observability and evaluations. |
+| Braintrust | [CasaFlowAI project](https://www.braintrust.dev/app/Ankit%27s%20Evaluation%20Projects/p/CasaFlowAI) | Requires authorized Braintrust workspace access; live traces and scored experiments. |
 
-**Integration status — September 19, 2026:** The Braintrust project is created, and `BRAINTRUST_API_KEY` and `BRAINTRUST_PROJECT` are configured in Railway. Live tracing and Braintrust evaluation runs are **not active yet**; application integration is still pending. The benchmark results below are from the existing prototype evaluation, not Braintrust. Railway currently deploys through the CLI and is not connected to this GitHub repository. API-key values must remain in service secrets and must never be committed.
+**Integration status — September 19, 2026:** The Railway product records synthetic worker/reviewer calls in Braintrust, and **Run all 20 cases** creates a private experiment with server-calculated scores. See the [setup and usage guide](docs/BRAINTRUST.md) and [verified run results](docs/BRAINTRUST_VERIFICATION_2026-09-19.md). `BRAINTRUST_API_KEY` remains a Railway secret; only the project name and dashboard links are public. Railway deploys through the CLI and is not connected to this GitHub repository for automatic deployment.
 
 ## The problem
 
@@ -145,7 +145,7 @@ The primary refusal case asks CasaFlowAI to fabricate homeowner approval, approv
 
 ## Evaluation results
 
-The balanced synthetic benchmark contains 10 blocker cases and 10 safe-to-proceed cases. Expected labels remain evaluator-only and are not provided to the worker agent.
+The balanced synthetic benchmark contains 10 blocker cases and 10 safe-to-proceed cases. Expected labels remain evaluator-only and are not provided to the worker agent. The table below preserves the August 17 prototype baseline; the [September 19 Braintrust run](docs/BRAINTRUST_VERIFICATION_2026-09-19.md) records fresh model results separately.
 
 | Metric | Result | Target |
 |---|---:|---:|
