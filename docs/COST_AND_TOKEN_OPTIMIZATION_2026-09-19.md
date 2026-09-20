@@ -34,6 +34,42 @@ GROUP BY metadata.role, metadata.model
 
 Grouping additionally by `span_attributes.name` yielded worker 1: 20 calls, 385,607 input / 16,659 output; worker 2: four calls, 85,011 / 3,567; reviewer 2: 16 calls, 374,214 / 2,424; reviewer 3: four calls, 99,193 / 611. Reviewer 3 means review after a worker repair, not an additional reviewer call.
 
+## Public latency benchmarks and measured product latency
+
+Public benchmark snapshot checked September 19, 2026: [Artificial Analysis release comparison](https://artificialanalysis.ai/models/releases/comparisons/claude-sonnet-5-vs-claude-4-5-haiku). These figures compare Haiku 4.5 non-reasoning with Sonnet 5 non-reasoning, high effort. They are external benchmark results, not measurements of CasaFlowAI or latency guarantees. The live benchmark may change.
+
+| Metric | Haiku 4.5 | Sonnet 5 |
+|---|---:|---:|
+| Time to first token | 0.69 seconds | 1.25 seconds |
+| Output generation speed | Approximately 80 tokens/second | Approximately 61 tokens/second |
+| Reported response time for 500 output tokens | 6.93 seconds | 9.43 seconds |
+
+In this benchmark, Haiku has approximately 45% lower time to first token and 27% lower response time for 500 output tokens. Reasoning configuration, prompt length, output length, provider load, and caching affect latency; these comparisons do not establish the difference for our worker and reviewer tasks.
+
+Our [verified operational trace](BRAINTRUST_VERIFICATION_2026-09-19.md) took **17.94 seconds** for the complete worker-and-reviewer workflow, with 52,254 tokens. This is one observation, not an average or p95. The saved verification does not establish separate Haiku/Sonnet latency distributions. Review follows the worker response, so end-to-end latency includes both stages, any repairs, and application overhead. Future measurements should report per-model and complete-workflow p50/p95 latency, separating first-pass and repaired cases; record time to first token where streaming instrumentation supports it.
+
+## Scaling the measured workflow
+
+The following projections use the measured 20-case token totals and repair rate. They assume the same workload mix, no caching, and unchanged list prices; they are not load-test results.
+
+| Demand at 100 fully reviewed cases/minute | Haiku worker, including repairs | Sonnet reviewer |
+|---|---:|---:|
+| API requests/minute | 120 | 100 |
+| Input tokens/minute | 2,353,090 | 2,367,035 |
+| Output tokens/minute | 101,130 | 15,175 |
+
+This workload is input-heavy. **If** the account allows 2,000,000 input tokens/minute separately for each model, the input-only theoretical ceiling is approximately **84 fully reviewed cases/minute**, before operational headroom and other constraints. Sonnet's input budget is slightly more restrictive: 2,000,000 / (473,407 / 20) = 84.49 cases/minute. This is a conditional example, not a statement of this account's configured limits or demonstrated capacity.
+
+Anthropic applies request, input-token, and output-token limits separately by model. Check the account's Console or API response headers for actual allowances. Cached input tokens do not count toward input-token rate limits for Haiku 4.5 and Sonnet 5. Ramp traffic gradually and use bounded concurrency, queues, and retries that respect `retry-after`. The current prototype also needs production infrastructure work; higher model quotas alone do not establish application scalability. [Anthropic rate-limit documentation](https://platform.claude.com/docs/en/api/rate-limits).
+
+| Fully reviewed cases | Projected model cost |
+|---|---:|
+| 1,000 | $77.45 |
+| 10,000 | $774.46 |
+| 100,000 | $7,744.56 |
+
+Costs use the unrounded measured average of $1.548912 / 20 = **$0.0774456 per case**, including repairs and review. They exclude hosting, subscriptions, taxes, and other overhead. Caching repeated policies and instructions is the first scaling experiment because the baseline had no cache usage and input represented 97.6% of tokens. Its actual savings and throughput benefit require measurement.
+
 ## Why the prompts are large
 
 Source inspection of `index.html` shows both agents receive the seven-policy bundle. The reviewer also receives the worker's answer. Every case uses pretty-printed JSON, and repair calls resend context plus the prior answer and repair instructions.
@@ -57,6 +93,14 @@ Policies constitute about 57% of case-context characters; static instructions pl
 5. **Evaluate cheaper model routing.** Use deterministic code for known graph, date and permission rules. Compare cheaper models on narrow semantic checks. Retain current review and human approval until evidence supports a change.
 
 For every candidate, compare input/output/cache tokens, repair rate, cost per completed reviewed case, latency distribution, and quality against the same baseline. Rerun the two operational workflows, five primary cases, and full 20-case suite for material changes. Existing minimum gates: blocker recall at least 90%, false pauses at most 10%, exact match at least 75%, all 20 outputs valid, and no hard boundary or privacy failures. The small suite should be expanded for new routing behaviors.
+
+## Coming next: evaluate reviewer thinking
+
+The current direct-Anthropic configuration explicitly disables thinking for Sonnet 5 and caps its final review at 220 output tokens (260 for a format repair). The reviewer returns only VERDICT and REASON. Adaptive thinking has **not** been evaluated against this baseline; enabling it is a proposed experiment, not a demonstrated improvement or an implemented change.
+
+Compare the current reviewer with adaptive thinking at medium effort, keeping the worker outputs and evidence identical. Increase the experimental `max_tokens` allowance to accommodate thinking plus the final answer while preserving concise final-review instructions. Sonnet 5 counts both against the output cap, so simply enabling thinking with the existing 220-token cap would risk truncation. [Anthropic Sonnet 5 guidance](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5).
+
+Include correct worker packages and deliberately flawed packages with overlooked prerequisites, unsupported citations, and incorrect next actions. Measure error-detection recall, false alarms on correct packages, per-review and end-to-end p50/p95 latency, output truncation, and cost per reviewed case. Reviewer completion alone does not establish reviewer accuracy, and the existing workflow blocker-recall result does not isolate the reviewer's contribution. Adopt the change only if measured error-detection improvements justify the added latency and cost while preserving the existing quality gates.
 
 ## TypeSafe AI fit
 
