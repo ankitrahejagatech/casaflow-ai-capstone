@@ -235,6 +235,8 @@ The next product milestone is a contractor setting up one project, inviting the 
 | 7 | **Quality and cost experiments** | Test caching, smaller evidence packages, fewer repair calls, and TypeSafe AI for narrow typed judgments against the existing quality baseline. |
 | 8 | **Observed pilot and iteration** | Begin with three contractors and three homeowners; measure coordination time, homeowner clarity, decision quality, and adoption. Use findings to prioritize further work. |
 
+**Parallel commercial workstream:** validate the buyer, willingness to pay, acquisition approach, retention, and unit economics alongside product development, before major investment in integrations or a native app.
+
 ### Feedback: current capabilities and the missing connection
 
 Today, the independent AI reviewer checks recommendations, contractors have Approve/Edit/Escalate controls, and SiteOps supports human verdicts and notes saved in the browser. The Braintrust integration records model runs and scores benchmark experiments. The homeowner message UI currently displays a confirmation and contractor alert; it does not persist or deliver the message.
@@ -248,6 +250,30 @@ TypeSafe AI is a future experiment, not an implemented integration or a validate
 See the [existing cost and token optimization plan](docs/COST_AND_TOKEN_OPTIMIZATION_2026-09-19.md) for the measured baseline and proposed experiments. Material agent changes must pass the existing regression and quality gates.
 
 These plans extend the MVP deliberately. Shared messaging, production integrations, and AI homeowner Q&A require additional implementation and evaluation; they are not claims about the current public demo. Pilot readiness comes before real-data use, and pilot feedback can change the order of later work.
+
+### Monetization plan: hypotheses to validate
+
+The proposed paying customer is the contractor business, which receives the coordination benefit. Homeowners would participate free within an invited project. Pricing below is an initial test hypothesis, not researched market pricing, a published offer, or evidence of willingness to pay.
+
+| Stage | Proposed approach | Validation question |
+|---|---|---|
+| Discovery pilot | Free, time-limited pilot with three contractors and three homeowners, with agreed feedback sessions | Does the workflow save time and become part of regular project coordination? |
+| Paid pilot | Test **$99–$199 per contractor business per month**, with a small active-project allowance to be determined | Will contractors pay after experiencing the benefit? |
+| Ongoing subscription | Base subscription with pricing that increases by active projects; homeowner participation included | Does revenue grow with customer value and usage, with sustainable retention and margins? |
+
+Avoid per-message charges and homeowner seat fees in the initial pricing tests so participation is easy. Determine project allowances after measuring document processing, model usage, storage, onboarding, and support costs. Track cost per active project, support effort, gross margin, paid conversion, renewal, and reasons for cancellation; model cost per recommendation alone is not sufficient to establish unit economics.
+
+### Go-to-market plan: focused local validation
+
+Initial customer: small general contractors managing permitted residential home extensions in San Jose. Proposed positioning to test: **“Know what can move forward, what’s blocked, and keep your homeowner informed.”**
+
+1. **Recruit through direct relationships and referrals.** Find three contractors willing to bring one project and its homeowner, subject to private-pilot readiness.
+2. **Provide hands-on onboarding.** Help organize starting records and demonstrate one real coordination workflow.
+3. **Measure value and adoption.** Track time per project update, repeated status questions, weekly use, correction rates, homeowner clarity, and decision quality. The existing target is 30% less contractor coordination time per update, not an achieved result.
+4. **Test paid continuation.** Ask pilot participants to continue at a stated price and record purchasing objections. Payment and renewal provide stronger evidence than positive feedback alone.
+5. **Earn referrals and a consented case study.** Expand locally after repeatable value and quality are demonstrated, within the pilot expansion gates below.
+
+The commercial learning sequence is **buyer interviews → pricing tests → paid pilot → retention and unit economics**. Pilot findings should determine packaging, acquisition investment, and which integrations to build next.
 
 ## Pilot direction
 
